@@ -44,6 +44,7 @@
 #include <ias/user/command/command_state.h>
 #include <ias/user/command/command_list_controllers.h>
 #include <ias/user/command/command_execute_feature.h>
+#include <ias/user/command/command_say.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -267,9 +268,14 @@ void ServerApplication::initializeUserServer( void ) {
 }
 
 void ServerApplication::initializeDispatcher( void ) {
-    mDispatcher.registerCommand(CommandStop::kIdentifier,new CommandStop(this));
-    mDispatcher.registerCommand(CommandState::kIdentifier,
-                                new CommandState(&mContainerDevices));
+    mDispatcher.registerCommand(
+        CommandStop::kIdentifier,
+        new CommandStop(this)
+    );
+    mDispatcher.registerCommand(
+        CommandState::kIdentifier,
+        new CommandState(&mContainerDevices)
+    );
     mDispatcher.registerCommand(
         CommandListControllers::kIdentifier,
         new CommandListControllers(&mContainerControllers)
