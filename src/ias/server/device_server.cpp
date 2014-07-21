@@ -128,12 +128,12 @@ void DeviceServer::dispatchCommand( void ) {
     char parameter[parameterLength + 1];
     if( !readBytes(deviceIdentifier,deviceLength) ) return;
     if( !readBytes(identifier,identifierLength) ) return;
-    if( !readBytes(parameter,parameterLength) ) return;
+    if( parameterLength > 0 && !readBytes(parameter,parameterLength) ) return;
     deviceIdentifier[deviceLength] = 0;
     identifier[identifierLength] = 0;
     parameter[parameterLength] = 0;
     // Format the message
-    // TODO I have a fealing std::string handles this the wrong way.
+    message += 0x01;
     message += identifierLength;
     message += parameterLength;
     message.append(identifier);

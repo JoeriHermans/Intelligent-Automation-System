@@ -26,6 +26,7 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // Application dependencies.
+#include <ias/application/constants.h>
 #include <ias/user/command/command_say.h>
 
 // END Includes. /////////////////////////////////////////////////////
