@@ -217,15 +217,12 @@ void ControllerApplication::startDeviceProcesses( void ) {
         ss >> path;
         nArguments = numWords(command);
         char * argv[nArguments + 1];
-        std::cout << "Command: " << command << std::endl;
-        std::cout << "Number of arguments: " << nArguments << std::endl;
         argv[nArguments] = (char *) 0;
         argv[0] = new char[path.length() + 1];
         strcpy(argv[0],path.c_str());
         for( int i = 1 ; i < nArguments ; ++i ) {
             ss >> argument;
             argv[i] = new char[argument.length() + 1];
-            std::cout << argument << std::endl;
             strcpy(argv[i],argument.c_str());
         }
         status = posix_spawn(&processId,path.c_str(),nullptr,nullptr,

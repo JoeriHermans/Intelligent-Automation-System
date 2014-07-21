@@ -114,7 +114,6 @@ void ControllerSession::controllerDisconnect( void ) {
     mFlagRunning = false;
     if( mController != nullptr ) {
         mController->setConnected(nullptr);
-        std::cout << "Controller disconnected." << std::endl;
     }
 }
 
@@ -138,7 +137,6 @@ void ControllerSession::run( void ) {
     reader = getSocket()->getReader();
     while( mFlagRunning && getSocket()->isConnected() ) {
         nBytes = reader->readByte((char *) &messageType);
-        std::cout << "Message type: " << std::to_string(messageType) << std::endl;
         if( nBytes == 0 ) { 
             stop();
         } else {

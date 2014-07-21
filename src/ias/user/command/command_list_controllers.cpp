@@ -70,7 +70,7 @@ std::string CommandListControllers::execute( const std::string & params ) {
             output += kOnline;
         else
             output += kOffline;
-        if( i > 0 && i < ( n - 1 ) )
+        if( n > 1 && i < ( n - 1 ) )
             output += '\n';
     }
     
