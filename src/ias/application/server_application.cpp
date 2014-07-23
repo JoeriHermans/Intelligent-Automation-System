@@ -284,6 +284,10 @@ void ServerApplication::initializeDispatcher( void ) {
         CommandExecuteFeature::kIdentifier,
         new CommandExecuteFeature(&mContainerDevices)
     );
+    mDispatcher.registerCommand(
+        CommandSay::kIdentifier,
+        new CommandSay()
+    );
 }
 
 ServerApplication::ServerApplication( const int argc,

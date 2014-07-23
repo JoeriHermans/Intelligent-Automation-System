@@ -28,6 +28,7 @@
 // Application dependencies.
 #include <ias/application/constants.h>
 #include <ias/user/command/command_say.h>
+#include <ias/ai/nlp/sentence.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -48,8 +49,10 @@ CommandSay::~CommandSay( void ) {
 
 std::string CommandSay::execute( const std::string & parameters ) {
     std::string output;
-    
+
     if( parameters.length() > 0 ) {
+        Sentence sentence(parameters);
+        
         // TODO Implement.
         output = kProtocolAck;
     } else {
