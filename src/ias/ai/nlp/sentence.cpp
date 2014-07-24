@@ -80,14 +80,24 @@ std::size_t Sentence::numEntities( void ) const {
     return ( mEntities.size() );
 }
 
+std::size_t Sentence::numWords( void ) const {
+    std::size_t nEntities;
+    std::size_t n;
+    
+    nEntities = mEntities.size();
+    n = 0;
+    for( std::size_t i = 0 ; i < nEntities ; ++i ) {
+        if( isWord(i) )
+            ++n;
+    }
+    
+    return ( n );
+}
+
 const std::string & Sentence::getEntity( const std::size_t index ) const {
     return ( mEntities.at(index) );
 }
 
 bool Sentence::isWord( const std::size_t index ) const {
     return ( !std::ispunct(mEntities.at(index)[0]) );
-}
-
-bool Sentence::isQuestion( void ) const {
-    return ( mEntities.back() == "?" );
 }

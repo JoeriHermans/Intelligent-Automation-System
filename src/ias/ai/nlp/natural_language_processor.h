@@ -1,5 +1,7 @@
 /**
- * A class which describes the properties and actions of a sentence.
+ * A class which describes the actions and properties of a natural language
+ * processor. The processor will take a raw string and analyze it for actions,
+ * queries, ...
  *
  * @date					Jul 23, 2014
  * @author					Joeri HERMANS
@@ -20,18 +22,23 @@
  * limitations under the License.
  */
 
-#ifndef SENTENCE_H_
-#define SENTENCE_H_
+#ifndef NATURAL_LANGUAGE_PROCESSOR_H_
+#define NATURAL_LANGUAGE_PROCESSOR_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
 #include <string>
-#include <vector>
+
+// Application dependencies.
+#include <ias/ai/nlp/sentence.h>
+#include <ias/device/action/action.h>
+#include <ias/device/device.h>
+#include <ias/util/container.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class Sentence {
+class NaturalLanguageProcessor {
 
 	public:
 
@@ -42,16 +49,30 @@ class Sentence {
 
 	// BEGIN Private members. ////////////////////////////////////////
         
-    std::vector<std::string> mEntities;
+    /**
+     * Contains all devices which are currently monitored by IAS.
+     * 
+     * @note    By default, this member will be equal to the null reference.
+     */
+    Container<Device *> * mDevices;
+    
+    /**
+     * Contains all users which are currently present in IAS.
+     * 
+     * @note    By default, this member will be equal to the null reference.
+     */
+    Container<User *> * mUsers;
         
 	// END Private members. //////////////////////////////////////////
 
 	// BEGIN Private methods. ////////////////////////////////////////
     
-    void addEntity( const std::string & entity );
+    inline void initialize( void );
     
-    void parse( const std::string & sentence );
-        
+    void setDeviceContainer( Container<Device *> * devices );
+    
+    void setUserContainer( Container<User *> * users );
+    
 	// END Private methods. //////////////////////////////////////////
 
 	protected:
@@ -62,32 +83,27 @@ class Sentence {
 	public:
 
 	// BEGIN Constructors. ///////////////////////////////////////////
-        
-    Sentence( const std::string & sentence );
-        
+    
+    NaturalLanguageProcessor( Container<Device *> * devices,
+                              Container<User *> * users );
+    
 	// END Constructors. /////////////////////////////////////////////
 
 	// BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Sentence( void );
+    virtual ~NaturalLanguageProcessor( void );
     
 	// END Destructor. ///////////////////////////////////////////////
 
 	// BEGIN Public methods. /////////////////////////////////////////
+	
+    void process( const std::string & raw );
     
-    std::size_t numEntities( void ) const;
-    
-    std::size_t numWords( void ) const;
-    
-    const std::string & getEntity( const std::size_t index ) const;
-    
-    bool isWord( const std::size_t index ) const;
-    
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
 	// BEGIN Static methods. /////////////////////////////////////////
 	// END Static methods. ///////////////////////////////////////////
 
 };
 
-#endif /* SENTENCE_H_ */
+#endif /* NATURAL_LANGUAGE_PROCESSOR_H_ */
