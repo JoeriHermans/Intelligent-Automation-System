@@ -27,6 +27,7 @@
 
 // System dependencies.
 #include <string>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/util/identifiable.h>

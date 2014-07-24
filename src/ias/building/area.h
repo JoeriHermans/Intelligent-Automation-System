@@ -29,6 +29,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/device/device.h>
@@ -73,9 +74,9 @@ class Area : public Identifiable {
     std::map<std::string,Device *> mDevices;
     
     /**
-     * A vector which holds all adjacent areas.
+     * A map which holds all adjacent areas.
      */
-    std::vector<Area *> mAreas;
+    std::map<std::string,Area *> mAreas;
     
     /**
      * Contains mutexes for the editing of class members.
@@ -90,11 +91,13 @@ class Area : public Identifiable {
 
 	// BEGIN Private methods. ////////////////////////////////////////
         
-    inline void intialize( void );
+    inline void initialize( void );
     
     void setId( const std::size_t id );
     
     void setDevices( const std::vector<Device *> & devices );
+    
+    void setAdjacentAreas( const std::vector<Area *> & areas );
         
 	// END Private methods. //////////////////////////////////////////
 

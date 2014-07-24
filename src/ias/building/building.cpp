@@ -51,6 +51,10 @@ Building::Building( const std::size_t id,
     setDescription(description);
 }
 
+Building::~Building( void ) {
+    // Nothing to do here.
+}
+
 std::size_t Building::getId( void ) const {
     return ( mId );
 }
