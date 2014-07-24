@@ -34,6 +34,7 @@
 #include <ias/ai/nlp/sentence.h>
 #include <ias/device/action/action.h>
 #include <ias/device/device.h>
+#include <ias/user/user.h>
 #include <ias/util/container.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -48,7 +49,7 @@ class NaturalLanguageProcessor {
 	private:
 
 	// BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains all devices which are currently monitored by IAS.
      * 

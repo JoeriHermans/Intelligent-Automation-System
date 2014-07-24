@@ -29,6 +29,7 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // Application dependencies.
+#include <ias/ai/nlp/natural_language_processor.h>
 #include <ias/user/command/command.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -46,7 +47,13 @@ class CommandSay : public Command {
 	private:
 
 	// BEGIN Private members. ////////////////////////////////////////
-	// END Private members. //////////////////////////////////////////
+	
+    /**
+     * A pointer to the IAS natural language processor.
+     */
+    NaturalLanguageProcessor * mProcessor;
+    
+    // END Private members. //////////////////////////////////////////
 
 	// BEGIN Private methods. ////////////////////////////////////////
 	// END Private methods. //////////////////////////////////////////
@@ -60,7 +67,7 @@ class CommandSay : public Command {
 
 	// BEGIN Constructors. ///////////////////////////////////////////
     
-    CommandSay( void );
+    CommandSay( NaturalLanguageProcessor * p );
     
 	// END Constructors. /////////////////////////////////////////////
 

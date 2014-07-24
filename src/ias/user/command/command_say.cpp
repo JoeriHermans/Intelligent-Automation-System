@@ -25,6 +25,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <cassert>
+
 // Application dependencies.
 #include <ias/application/constants.h>
 #include <ias/user/command/command_say.h>
@@ -38,9 +41,12 @@ const char CommandSay::kIdentifier[] = "say";
 
 // END Constants. ////////////////////////////////////////////////////
 
-CommandSay::CommandSay( void ) :
+CommandSay::CommandSay( NaturalLanguageProcessor * p ) :
     Command(kIdentifier) {
-    // TODO Implement.
+    // Checking the precondition.
+    assert( p != nullptr );
+    
+    mProcessor = p;
 }
 
 CommandSay::~CommandSay( void ) {
@@ -51,9 +57,7 @@ std::string CommandSay::execute( const std::string & parameters ) {
     std::string output;
 
     if( parameters.length() > 0 ) {
-        Sentence sentence(parameters);
-        
-        // TODO Implement.
+        mProcessor->process(parameters);
         output = kProtocolAck;
     } else {
         output = kProtocolNack;

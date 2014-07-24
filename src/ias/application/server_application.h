@@ -27,6 +27,7 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // Application dependencies.
+#include <ias/ai/nlp/natural_language_processor.h>
 #include <ias/application/application.h>
 #include <ias/controller/controller.h>
 #include <ias/device/device.h>
@@ -69,6 +70,11 @@ class ServerApplication : public Application {
     Container<Member *> mContainerMembers;
     Container<ValueType *> mContainerValueTypes;
     Container<User *> mContainerUsers;
+    
+    /**
+     * Contains the IAS natural language processor.
+     */
+    NaturalLanguageProcessor * mNlp;
     
     /**
      * Contains the database connection.
@@ -132,6 +138,8 @@ class ServerApplication : public Application {
     void fillControllers( void );
     
     void initializeSalts( void );
+    
+    void initializeNlp( void );
     
     void initializeControllerServer( void );
     

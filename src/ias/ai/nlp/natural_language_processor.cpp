@@ -26,6 +26,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/ai/nlp/natural_language_processor.h>
@@ -66,5 +67,6 @@ NaturalLanguageProcessor::~NaturalLanguageProcessor( void ) {
 void NaturalLanguageProcessor::process( const std::string & raw ) {
     Sentence sentence(raw);
     
+    std::cout << raw << std::endl;
     // TODO Implement.
 }

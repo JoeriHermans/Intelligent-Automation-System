@@ -53,6 +53,7 @@ inline void ServerApplication::initialize( void ) {
     mServerController = nullptr;
     mServerUser = nullptr;
     mFlagRunning = true;
+    mNlp = nullptr;
 }
 
 void ServerApplication::setup( const int argc , const char ** argv ) {
@@ -70,6 +71,7 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
         if( mDbConnection != nullptr ) {
             initializeSalts();
             fillContainers();
+            initializeNlp();
             initializeDispatcher();
             initializeControllerServer();
             initializeUserServer();
@@ -226,6 +228,11 @@ void ServerApplication::initializeSalts( void ) {
     gSaltPost = postSalt;
 }
 
+void ServerApplication::initializeNlp( void ) {
+    mNlp = new NaturalLanguageProcessor(&mContainerDevices,
+                                        &mContainerUsers);
+}
+
 void ServerApplication::initializeControllerServer( void ) {
     ServerSocket * serverSocket;
     std::string stringPort;
@@ -286,7 +293,7 @@ void ServerApplication::initializeDispatcher( void ) {
     );
     mDispatcher.registerCommand(
         CommandSay::kIdentifier,
-        new CommandSay()
+        new CommandSay(mNlp)
     );
 }
 
@@ -300,6 +307,7 @@ ServerApplication::~ServerApplication( void ) {
     delete mDbConnection; mDbConnection = nullptr;
     delete mServerController; mServerController = nullptr;
     delete mServerUser; mServerUser = nullptr;
+    delete mNlp; mNlp = nullptr;
 }
 
 void ServerApplication::run( void ) {
