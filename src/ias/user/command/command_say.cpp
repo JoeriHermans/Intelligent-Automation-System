@@ -43,9 +43,6 @@ const char CommandSay::kIdentifier[] = "say";
 
 CommandSay::CommandSay( NaturalLanguageProcessor * p ) :
     Command(kIdentifier) {
-    // Checking the precondition.
-    assert( p != nullptr );
-    
     mProcessor = p;
 }
 
@@ -56,7 +53,7 @@ CommandSay::~CommandSay( void ) {
 std::string CommandSay::execute( const std::string & parameters ) {
     std::string output;
 
-    if( parameters.length() > 0 ) {
+    if( parameters.length() > 0 && mProcessor != nullptr ) {
         mProcessor->process(parameters);
         output = kProtocolAck;
     } else {

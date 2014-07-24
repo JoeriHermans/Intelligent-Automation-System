@@ -1,9 +1,7 @@
 /**
- * A class which describes the actions and properties of a natural language
- * processor. The processor will take a raw string and analyze it for actions,
- * queries, ...
+ * A class which describes the properties and actions of a building.
  *
- * @date					Jul 23, 2014
+ * @date					Jul 24, 2014
  * @author					Joeri HERMANS
  * @version					0.1
  *
@@ -22,8 +20,8 @@
  * limitations under the License.
  */
 
-#ifndef NATURAL_LANGUAGE_PROCESSOR_H_
-#define NATURAL_LANGUAGE_PROCESSOR_H_
+#ifndef BUILDING_H_
+#define BUILDING_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
@@ -31,15 +29,11 @@
 #include <string>
 
 // Application dependencies.
-#include <ias/ai/nlp/sentence.h>
-#include <ias/device/action/action.h>
-#include <ias/device/device.h>
-#include <ias/user/user.h>
-#include <ias/util/container.h>
+#include <ias/util/identifiable.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class NaturalLanguageProcessor {
+class Building {
 
 	public:
 
@@ -49,9 +43,42 @@ class NaturalLanguageProcessor {
 	private:
 
 	// BEGIN Private members. ////////////////////////////////////////
+        
+    /**
+     * Contains the unique id of a device.
+     */
+    std::size_t mId;
+    
+    /**
+     * Contains the unique identifier of a device.
+     */
+    std::string mIdentifier;
+    
+    /**
+     * Contains the name of the device.
+     */
+    std::string mName;
+    
+    /**
+     * Contains the description of the device.
+     */
+    std::string mDescription;
+    
+    /**
+     * Contains mutexes for the editing of class members.
+     */
+    mutable std::mutex mMutexIdentifier;
+    mutable std::mutex mMutexName;
+    mutable std::mutex mMutexDescription;
+        
 	// END Private members. //////////////////////////////////////////
 
 	// BEGIN Private methods. ////////////////////////////////////////
+    
+    inline void initialize( void );
+    
+    void setId( const std::size_t id );
+    
 	// END Private methods. //////////////////////////////////////////
 
 	protected:
@@ -63,25 +90,42 @@ class NaturalLanguageProcessor {
 
 	// BEGIN Constructors. ///////////////////////////////////////////
     
-    NaturalLanguageProcessor( void );
+    Building( const std::size_t id,
+              const std::string & identifier,
+              const std::string & name,
+              const std::string & description );
     
 	// END Constructors. /////////////////////////////////////////////
 
 	// BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~NaturalLanguageProcessor( void );
+    virtual ~Building( void );
     
 	// END Destructor. ///////////////////////////////////////////////
 
 	// BEGIN Public methods. /////////////////////////////////////////
-	
-    virtual void process( const std::string & raw ) = 0;
+        
+    virtual std::size_t getId( void ) const;
     
-    // END Public methods. ///////////////////////////////////////////
+    virtual const std::string & getIdentifier( void ) const;
+    
+    virtual void setIdentifier( const std::string & identifier );
+    
+    virtual const std::string & getName( void ) const;
+    
+    virtual void setName( const std::string & name );
+    
+    virtual const std::string & getDescription( void ) const;
+    
+    virtual bool hasDescription( void ) const;
+    
+    virtual void setDescription( const std::string & description );
+        
+	// END Public methods. ///////////////////////////////////////////
 
 	// BEGIN Static methods. /////////////////////////////////////////
 	// END Static methods. ///////////////////////////////////////////
 
 };
 
-#endif /* NATURAL_LANGUAGE_PROCESSOR_H_ */
+#endif /* BUILDING_H_ */

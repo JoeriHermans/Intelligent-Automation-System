@@ -229,8 +229,8 @@ void ServerApplication::initializeSalts( void ) {
 }
 
 void ServerApplication::initializeNlp( void ) {
-    mNlp = new NaturalLanguageProcessor(&mContainerDevices,
-                                        &mContainerUsers);
+    // TODO Implement.
+    mNlp = nullptr;
 }
 
 void ServerApplication::initializeControllerServer( void ) {
