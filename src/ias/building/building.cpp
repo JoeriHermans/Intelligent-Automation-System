@@ -41,14 +41,20 @@ void Building::setId( const std::size_t id ) {
     mId = id;
 }
 
+void Building::setAreas( const std::vector<Area *> & areas ) {
+    mAreas = areas;
+}
+
 Building::Building( const std::size_t id,
                     const std::string & identifier,
                     const std::string & name,
-                    const std::string & description ) {
+                    const std::string & description,
+                    const std::vector<Area *> & areas ) {
     setId(id);
     setIdentifier(identifier);
     setName(name);
     setDescription(description);
+    setAreas(areas);
 }
 
 Building::~Building( void ) {
@@ -97,4 +103,12 @@ void Building::setDescription( const std::string & description ) {
     mMutexDescription.lock();
     mDescription = description;
     mMutexDescription.unlock();
+}
+
+std::size_t Building::numAreas( void ) const {
+    return ( mAreas.size() );
+}
+
+const std::vector<Area *> & Building::getAreas( void ) const {
+    return ( mAreas );
 }

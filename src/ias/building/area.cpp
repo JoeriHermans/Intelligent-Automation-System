@@ -220,3 +220,86 @@ std::size_t Area::numDevices( void ) const {
     
     return ( n );
 }
+
+bool Area::containsAdjacentArea( const std::string & identifier ) const {
+    auto it = mAreas.find(identifier);
+    
+    return ( it != mAreas.end() );
+}
+
+bool Area::containsAdjacentArea( const std::size_t id ) const {
+    bool contains;
+    
+    contains = false;
+    mMutexAreas.lock();
+    for( auto it = mAreas.begin() ; it != mAreas.end() ; ++it ) {
+        if( it->second->getId() == id ) {
+            contains = true;
+            break;
+        }
+    }
+    mMutexAreas.unlock();
+    
+    return ( contains );
+}
+
+Area * Area::getAdjacentArea( const std::string & identifier ) const {
+    Area * area;
+    
+    mMutexAreas.lock();
+    auto it = mAreas.find(identifier);
+    if( it != mAreas.end() )
+        area = it->second;
+    else
+        area = nullptr;
+    mMutexAreas.unlock();
+    
+    return ( area );
+}
+
+Area * Area::getAdjacentArea( const std::size_t id ) const {
+    Area * area;
+    
+    area = nullptr;
+    mMutexAreas.lock();
+    for( auto it = mAreas.begin() ; it != mAreas.end() ; ++it ) {
+        if( it->second->getId() == id ) {
+            area = it->second;
+            break;
+        }
+    }
+    mMutexAreas.unlock();
+    
+    return ( area );
+}
+
+void Area::removeAdjacentArea( const Area * area ) {
+    // Checking the precondition.
+    assert( area != nullptr );
+    
+    mMutexAreas.lock();
+    mAreas.erase(area->getIdentifier());
+    mMutexAreas.unlock();
+}
+
+std::vector<Area *> Area::getAdjacentAreas( void ) const {
+    std::vector<Area *> areas;
+    
+    mMutexAreas.lock();
+    for( auto it = mAreas.begin() ; it != mAreas.end() ; ++it ) {
+        areas.push_back(it->second);
+    }
+    mMutexAreas.unlock();
+    
+    return ( areas );
+}
+
+std::size_t Area::numAdjacentAreas( void ) const {
+    std::size_t n;
+    
+    mMutexAreas.lock();
+    n = mAreas.size();
+    mMutexAreas.unlock();
+    
+    return ( n );
+}

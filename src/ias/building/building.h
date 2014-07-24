@@ -27,9 +27,11 @@
 
 // System dependencies.
 #include <string>
+#include <vector>
 #include <mutex>
 
 // Application dependencies.
+#include <ias/building/area.h>
 #include <ias/util/identifiable.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -71,6 +73,11 @@ class Building {
     mutable std::mutex mMutexIdentifier;
     mutable std::mutex mMutexName;
     mutable std::mutex mMutexDescription;
+    
+    /**
+     * Contains all areas in a building.
+     */
+    std::vector<Area *> mAreas;
         
     // END Private members. //////////////////////////////////////////
 
@@ -79,6 +86,8 @@ class Building {
     inline void initialize( void );
     
     void setId( const std::size_t id );
+    
+    void setAreas( const std::vector<Area *> & areas );
     
     // END Private methods. //////////////////////////////////////////
 
@@ -94,7 +103,8 @@ class Building {
     Building( const std::size_t id,
               const std::string & identifier,
               const std::string & name,
-              const std::string & description );
+              const std::string & description,
+              const std::vector<Area *> & areas );
     
     // END Constructors. /////////////////////////////////////////////
 
@@ -106,21 +116,25 @@ class Building {
 
     // BEGIN Public methods. /////////////////////////////////////////
         
-    virtual std::size_t getId( void ) const;
+    std::size_t getId( void ) const;
     
-    virtual const std::string & getIdentifier( void ) const;
+    const std::string & getIdentifier( void ) const;
     
-    virtual void setIdentifier( const std::string & identifier );
+    void setIdentifier( const std::string & identifier );
     
-    virtual const std::string & getName( void ) const;
+    const std::string & getName( void ) const;
     
-    virtual void setName( const std::string & name );
+    void setName( const std::string & name );
     
-    virtual const std::string & getDescription( void ) const;
+    const std::string & getDescription( void ) const;
     
-    virtual bool hasDescription( void ) const;
+    bool hasDescription( void ) const;
     
-    virtual void setDescription( const std::string & description );
+    void setDescription( const std::string & description );
+    
+    std::size_t numAreas( void ) const;
+    
+    const std::vector<Area *> & getAreas( void ) const;
         
     // END Public methods. ///////////////////////////////////////////
 
