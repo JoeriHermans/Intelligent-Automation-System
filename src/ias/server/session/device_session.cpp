@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties and actions of a device session.
  *
- * @date					July 7, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    July 7, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

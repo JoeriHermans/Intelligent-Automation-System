@@ -1,9 +1,9 @@
 /**
  * A server which is responsible for interacting with devices.
  *
- * @date					July 7, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    July 7, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -41,14 +41,14 @@
 
 class DeviceServer : public Server {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
     
     /**
      * A map which holds all active sessions and their threads.
@@ -97,9 +97,9 @@ class DeviceServer : public Server {
      */
     bool mFlagRunning;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     inline void initialize( void );
     
@@ -119,30 +119,30 @@ class DeviceServer : public Server {
     
     bool readBytes( char * buffer , const unsigned int n );
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
     
     DeviceServer( ServerSocket * serverSocket,
                   Socket * socket,
                   const std::vector<std::string> & devices );
     
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
         
     virtual ~DeviceServer( void );
         
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
     
     virtual void start( void );
 
@@ -154,10 +154,10 @@ class DeviceServer : public Server {
     
     virtual void update( void * argument );
     
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

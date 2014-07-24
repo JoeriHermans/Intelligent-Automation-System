@@ -2,9 +2,9 @@
  * An abstract factory which is responsible for fetching instances from a
  * database.
  *
- * @date					Jul 5, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 5, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -38,23 +38,23 @@
 template<class T>
 class DatabaseFactory : public Factory<T> {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * Contains the connection with the database.
      */
     DatabaseConnection * mDbConnection;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     void setDbConnection( DatabaseConnection * connection ) {
         // Checking the precondition.
@@ -63,41 +63,41 @@ class DatabaseFactory : public Factory<T> {
         mDbConnection = connection;
     }
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
     
     DatabaseConnection * getDbConnection( void ) const {
         return ( mDbConnection );
     }
     
-	// END Protected methods. ////////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
     
     DatabaseFactory( DatabaseConnection * connection ) {
         setDbConnection( connection );
     }
     
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
     
     virtual ~DatabaseFactory( void ) {
         // Nothing to do here.
     }
     
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
-	// END Public methods. ///////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

@@ -2,9 +2,9 @@
  * A class which describes the properties and actions of an observable
  * instance.
  *
- * @date					Jul 2, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 2, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

@@ -1,9 +1,9 @@
 /**
  * A class which describes the abstract properties of a session.
  *
- * @date					July 6, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    July 6, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -36,23 +36,23 @@
 
 class Session : public Observable {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * Contains the socket which is associated with the session.
      */
     Socket * mSocket;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     void setSocket( Socket * socket ) {
         // Checking the preconditions.
@@ -61,11 +61,11 @@ class Session : public Observable {
         mSocket = socket;
     }
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
     
     bool readBytes( char * buffer , const std::size_t n ) {
         std::size_t bytesRead;
@@ -89,27 +89,27 @@ class Session : public Observable {
         return ( true );
     }
     
-	// END Protected methods. ////////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
         
     Session( Socket * socket ) {
         setSocket(socket);
     }
         
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
     
     virtual ~Session( void ) {
         delete mSocket; mSocket = nullptr;
     }
     
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
     
     virtual void run( void ) = 0;
     
@@ -119,10 +119,10 @@ class Session : public Observable {
         return ( mSocket );
     }
     
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

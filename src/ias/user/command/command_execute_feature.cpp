@@ -1,9 +1,9 @@
 /**
  * A command which is responsible for executing a feature on a certain device.
  *
- * @date					Jul 19, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 19, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

@@ -3,9 +3,9 @@
  * is defined as an entity which will trigger a specific feature of a device
  * with a (optional) parameter.
  *
- * @date					Jul 20, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 20, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

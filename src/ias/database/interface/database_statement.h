@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties of a database statement.
  *
- * @date					Jul 21, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 21, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -39,89 +39,89 @@ class DatabaseConnection;
 
 class DatabaseStatement {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
 
-	/**
-	 * Contains a pointer to the database connection object.
-	 *
-	 * @note    By default, this member will be equal
-	 *          to the NULL reference.
-	 */
-	DatabaseConnection * mConnection;
+    /**
+     * Contains a pointer to the database connection object.
+     *
+     * @note    By default, this member will be equal
+     *          to the NULL reference.
+     */
+    DatabaseConnection * mConnection;
 
-	/**
-	 * Contains the raw query which needs to be performed.
-	 */
-	std::string mQuery;
+    /**
+     * Contains the raw query which needs to be performed.
+     */
+    std::string mQuery;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
 
-	inline void initialize( void ) {
-		// Initialize the class members.
-		mConnection = nullptr;
-	}
+    inline void initialize( void ) {
+        // Initialize the class members.
+        mConnection = nullptr;
+    }
 
-	inline void setConnection( DatabaseConnection * connection ) {
-		// Checking the precondition.
-		assert( connection != nullptr );
+    inline void setConnection( DatabaseConnection * connection ) {
+        // Checking the precondition.
+        assert( connection != nullptr );
 
-		mConnection = connection;
-	}
+        mConnection = connection;
+    }
 
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
 
-	DatabaseConnection * getConnection( void ) {
-		return ( mConnection );
-	}
+    DatabaseConnection * getConnection( void ) {
+        return ( mConnection );
+    }
 
-	const std::string & getQuery( void ) const {
-		return ( mQuery );
-	}
+    const std::string & getQuery( void ) const {
+        return ( mQuery );
+    }
 
-	// END Protected methods. ////////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	DatabaseStatement( DatabaseConnection * connection, 
-	                   const std::string & statement ) {
-		initialize();
-		setConnection( connection );
-		mQuery = statement;
-	}
+    DatabaseStatement( DatabaseConnection * connection, 
+                       const std::string & statement ) {
+        initialize();
+        setConnection( connection );
+        mQuery = statement;
+    }
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~DatabaseStatement( void ) {
-		// Nothing to do here.
-	}
+    virtual ~DatabaseStatement( void ) {
+        // Nothing to do here.
+    }
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	virtual DatabaseResult * execute( void ) = 0;
+    virtual DatabaseResult * execute( void ) = 0;
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

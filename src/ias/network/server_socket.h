@@ -2,9 +2,9 @@
  * A class which describes the properties and actions of an abstract server
  * socket.
  *
- * @date					Jul 6, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 6, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -37,23 +37,23 @@
 
 class ServerSocket {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * Contains the port to which this socket will bind or is bounded to.
      */
     unsigned int mPort;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     void setPort( const unsigned int port ) {
         // Checking the precondition.
@@ -62,35 +62,35 @@ class ServerSocket {
         mPort = port;
     }
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
     
     unsigned int getPort( void ) const {
         return ( mPort );
     }
     
-	// END Protected methods. ////////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
         
     ServerSocket( const unsigned int port ) {
         setPort(port);
     }
         
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
     
     virtual ~ServerSocket( void ){}
     
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
     
     virtual void stopListening( void ) = 0;
     
@@ -102,10 +102,10 @@ class ServerSocket {
     
     virtual Socket * acceptSocket( const std::time_t seconds ) = 0;
     
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

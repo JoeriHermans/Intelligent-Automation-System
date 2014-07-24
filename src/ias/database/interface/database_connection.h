@@ -2,9 +2,9 @@
  * A class describing the properties and actions of a database
  * connection.
  *
- * @date					Jul 21, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 21, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -38,102 +38,102 @@
 
 class DatabaseConnection {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
 
-	/**
-	 * Contains the username of the database connection.
-	 */
-	std::string mUsername;
+    /**
+     * Contains the username of the database connection.
+     */
+    std::string mUsername;
 
-	/**
-	 * Contains the password of the database connection.
-	 */
-	std::string mPassword;
+    /**
+     * Contains the password of the database connection.
+     */
+    std::string mPassword;
 
-	/**
-	 * Contains the name of the database we will be using.
-	 */
-	std::string mSchema;
+    /**
+     * Contains the name of the database we will be using.
+     */
+    std::string mSchema;
 
-	/**
-	 * Contains the address of the database server.
-	 */
-	std::string mHost;
+    /**
+     * Contains the address of the database server.
+     */
+    std::string mHost;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
-	// END Private methods. //////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	DatabaseConnection( const std::string & username,
-						const std::string & password,
-						const std::string & schema,
-						const std::string & host ) {
-		mUsername = username;
-		mPassword = password;
-		mSchema = schema;
-		mHost = host;
-	}
+    DatabaseConnection( const std::string & username,
+                        const std::string & password,
+                        const std::string & schema,
+                        const std::string & host ) {
+        mUsername = username;
+        mPassword = password;
+        mSchema = schema;
+        mHost = host;
+    }
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~DatabaseConnection( void ) {
-	    // Nothing to do here.
-	}
+    virtual ~DatabaseConnection( void ) {
+        // Nothing to do here.
+    }
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	virtual const std::string & getUsername( void ) const {
-		return ( mUsername );
-	}
+    virtual const std::string & getUsername( void ) const {
+        return ( mUsername );
+    }
 
-	virtual const std::string & getPassword( void ) const {
-		return ( mPassword );
-	}
+    virtual const std::string & getPassword( void ) const {
+        return ( mPassword );
+    }
 
-	virtual const std::string & getSchema( void ) const {
-		return ( mSchema );
-	}
+    virtual const std::string & getSchema( void ) const {
+        return ( mSchema );
+    }
 
-	virtual const std::string & getHost( void ) const {
-		return ( mHost );
-	}
+    virtual const std::string & getHost( void ) const {
+        return ( mHost );
+    }
 
-	virtual bool isConnected( void ) const = 0;
+    virtual bool isConnected( void ) const = 0;
 
-	virtual bool connect( void ) = 0;
+    virtual bool connect( void ) = 0;
 
-	virtual DatabaseStatement * createStatement( const std::string & sql ) = 0;
+    virtual DatabaseStatement * createStatement( const std::string & sql ) = 0;
 
-	virtual DatabasePreparedStatement * prepareStatement( 
-	    const std::string & sql ) = 0;
+    virtual DatabasePreparedStatement * prepareStatement( 
+        const std::string & sql ) = 0;
 
-	virtual void * getLink( void ) = 0;
+    virtual void * getLink( void ) = 0;
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

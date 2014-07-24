@@ -4,9 +4,9 @@
  * based on the probability distributions which have been derrived from
  * the specified string.
  *
- * @date					Jul 20, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 20, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

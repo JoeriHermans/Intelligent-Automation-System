@@ -2,9 +2,9 @@
  * A value type factory which fetches value type instances from
  * a database.
  *
- * @date					Jul 4, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 4, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

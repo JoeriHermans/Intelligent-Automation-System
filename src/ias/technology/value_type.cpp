@@ -1,9 +1,9 @@
 /**
  * A class which describes the actions and properties of a value type.
  *
- * @date					Jul 3, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 3, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

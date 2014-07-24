@@ -1,9 +1,9 @@
 /**
  * A class which describes the actions and properties of a device channel.
  *
- * @date					Jul 7, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 7, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

@@ -1,9 +1,9 @@
 /**
  * A class which describes the actions and properties of a MySQL statement.
  *
- * @date					Jul 22, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 22, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -38,59 +38,59 @@
 
 class MySqlStatement : public DatabaseStatement {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
 
-	/**
-	 * Contains a pointer to the mysql connection which will handle
-	 * this statement.
-	 *
-	 * @note    By default, this member will be equal
-	 *          to the NULL reference.
-	 */
-	MYSQL * mConnection;
+    /**
+     * Contains a pointer to the mysql connection which will handle
+     * this statement.
+     *
+     * @note    By default, this member will be equal
+     *          to the NULL reference.
+     */
+    MYSQL * mConnection;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
 
-	inline void setConnection( MYSQL * connection );
+    inline void setConnection( MYSQL * connection );
 
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	MySqlStatement( MySqlConnection * connection , const std::string & query );
+    MySqlStatement( MySqlConnection * connection , const std::string & query );
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~MySqlStatement( void );
+    virtual ~MySqlStatement( void );
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	virtual DatabaseResult * execute( void );
+    virtual DatabaseResult * execute( void );
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

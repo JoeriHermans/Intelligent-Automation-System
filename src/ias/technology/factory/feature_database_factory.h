@@ -2,9 +2,9 @@
  * A database factory which is responsible for fetching technology features
  * from a database.
  *
- * @date					Jul 5, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 5, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -35,23 +35,23 @@
 
 class FeatureDatabaseFactory : public DatabaseFactory<Feature *> {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * Contains the container of value types.
      */
     Container<ValueType *> * mTypesContainer;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     void setTypesContainer( Container<ValueType *> * types );
     
@@ -61,36 +61,36 @@ class FeatureDatabaseFactory : public DatabaseFactory<Feature *> {
                                const std::string & description,
                                const std::string & parameterTypeId ) const;
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
     
     FeatureDatabaseFactory( DatabaseConnection * connection,
                             Container<ValueType *> * types );
     
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
     
     virtual ~FeatureDatabaseFactory( void );
     
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
     
     virtual std::vector<Feature *> fetchAll( void );
     
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

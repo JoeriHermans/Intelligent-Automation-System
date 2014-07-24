@@ -2,9 +2,9 @@
  * A class which is responsible for extracting technology members from a
  * database.
  *
- * @date					Jul 5, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 5, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -35,23 +35,23 @@
 
 class MemberDatabaseFactory : public DatabaseFactory<Member *> {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * A container which holds all value types in IAS.
      */
     Container<ValueType *> * mTypesContainer;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     void setTypesContainer( Container<ValueType *> * types );
     
@@ -62,36 +62,36 @@ class MemberDatabaseFactory : public DatabaseFactory<Member *> {
                              const std::string & defaultValue,
                              const std::string & valueTypeId ) const;
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
     MemberDatabaseFactory( DatabaseConnection * connection,
                            Container<ValueType *> * valueTypes );
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
     
     virtual ~MemberDatabaseFactory( void );
     
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
     
     virtual std::vector<Member *> fetchAll( void );
     
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

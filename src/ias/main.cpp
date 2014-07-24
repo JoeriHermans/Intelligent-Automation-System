@@ -2,9 +2,9 @@
  * A set of functions and method which assist the main function to set up
  * the requested feature of the Intelligent Automation System.
  *
- * @date					Jul 2, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 2, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties and actions of a user.
  *
- * @date					Jul 9, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 9, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

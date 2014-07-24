@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties and actions of an area.
  *
- * @date					Jul 24, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 24, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -39,14 +39,14 @@
 
 class Area : public Identifiable {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * Contains the unique id of a device.
@@ -87,9 +87,9 @@ class Area : public Identifiable {
     mutable std::mutex mMutexDevices;
     mutable std::mutex mMutexAreas;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
         
     inline void initialize( void );
     
@@ -99,16 +99,16 @@ class Area : public Identifiable {
     
     void setAdjacentAreas( const std::vector<Area *> & areas );
         
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
         
     Area( const std::size_t id,
           const std::string & identifier,
@@ -128,15 +128,15 @@ class Area : public Identifiable {
           const std::vector<Device *> & devices,
           const std::vector<Area *> & areas );
         
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
         
     virtual ~Area( void );
         
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
         
     virtual std::size_t getId( void ) const;
     
@@ -182,10 +182,10 @@ class Area : public Identifiable {
     
     std::size_t numAdjacentAreas( void ) const;
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

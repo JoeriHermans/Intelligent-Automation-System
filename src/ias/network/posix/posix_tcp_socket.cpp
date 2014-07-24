@@ -1,9 +1,9 @@
 /**
  * A class which represents the properties and actions of a POSIX TCP socket.
  *
- * @date					July 6, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    July 6, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

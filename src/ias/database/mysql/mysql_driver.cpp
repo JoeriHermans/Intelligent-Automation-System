@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties of a MySQL database driver.
  *
- * @date					Jul 23, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 23, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -35,22 +35,22 @@ const char MySqlDriver::kMySqlIdentifier[] = "mysql";
 // END Class constants. //////////////////////////////////////////////
 
 MySqlDriver::MySqlDriver( void )
-	: DatabaseDriver(kMySqlIdentifier) {
-	// Nohting to do here.
+    : DatabaseDriver(kMySqlIdentifier) {
+    // Nohting to do here.
 }
 
 MySqlDriver::~MySqlDriver( void )
 {
-	// Nothing to do here.
+    // Nothing to do here.
 }
 
 DatabaseConnection * MySqlDriver::initializeConnection( 
     const std::string & username, const std::string & password,
     const std::string & schema, const std::string & host ) {
-	DatabaseConnection * connection;
+    DatabaseConnection * connection;
 
-	// Allocate the mysql connection object.
-	connection = new MySqlConnection(username,password,schema,host);
-	
-	return ( connection );
+    // Allocate the mysql connection object.
+    connection = new MySqlConnection(username,password,schema,host);
+    
+    return ( connection );
 }

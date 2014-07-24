@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties of a MySQL database connection.
  *
- * @date					Jul 21, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 21, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -36,63 +36,63 @@
 // END Includes. /////////////////////////////////////////////////////
 
 inline void MySqlConnection::initialize( void ) {
-	// Initialize the members of the class.
-	mConnection = mysql_init( nullptr );
+    // Initialize the members of the class.
+    mConnection = mysql_init( nullptr );
 }
 
 MySqlConnection::MySqlConnection( const std::string & username,
                                   const std::string & password,
                                   const std::string & schema,
                                   const std::string & host )
-	: DatabaseConnection(username,password,schema,host) {
-	// Nothing to do here.
-	initialize();
+    : DatabaseConnection(username,password,schema,host) {
+    // Nothing to do here.
+    initialize();
 }
 
 MySqlConnection::~MySqlConnection( void ) {
-	mysql_close( mConnection );
-	mysql_library_end();
+    mysql_close( mConnection );
+    mysql_library_end();
 }
 
 bool MySqlConnection::isConnected( void ) const
 {
-	return ( mConnection != nullptr );
+    return ( mConnection != nullptr );
 }
 
 bool MySqlConnection::connect( void ) {
-	bool connected;
-	my_bool argument;
+    bool connected;
+    my_bool argument;
 
-	// Enable automatic reconnection by default.
-	argument = 1;
-	// Enable the automatic reconnect option.
-	mysql_options(mConnection,MYSQL_OPT_RECONNECT,&argument);
-	// Try to connect to the MySQL server.
-	connected = ( mysql_real_connect(mConnection,
-	                                 getHost().c_str(),
-	                                 getUsername().c_str(), 
-	                                 getPassword().c_str(), 
-	                                 getSchema().c_str(),
-	                                 3306,nullptr,0) != nullptr );
+    // Enable automatic reconnection by default.
+    argument = 1;
+    // Enable the automatic reconnect option.
+    mysql_options(mConnection,MYSQL_OPT_RECONNECT,&argument);
+    // Try to connect to the MySQL server.
+    connected = ( mysql_real_connect(mConnection,
+                                     getHost().c_str(),
+                                     getUsername().c_str(), 
+                                     getPassword().c_str(), 
+                                     getSchema().c_str(),
+                                     3306,nullptr,0) != nullptr );
 
-	return ( connected );
+    return ( connected );
 }
 
 DatabaseStatement * MySqlConnection::createStatement( const std::string & sql ) {
-	DatabaseStatement * statement;
-	
-	// Checking the precondition.
-	assert( sql.length() > 0 );
+    DatabaseStatement * statement;
+    
+    // Checking the precondition.
+    assert( sql.length() > 0 );
 
-	// Check if the connection with the server is still active.
-	if( mysql_ping(mConnection) == 0 )
-		// Allocate a new mysql statement.
-		statement = new MySqlStatement(this,sql);
-	else
-		// No statement should be allocated.
-		statement = nullptr;
+    // Check if the connection with the server is still active.
+    if( mysql_ping(mConnection) == 0 )
+        // Allocate a new mysql statement.
+        statement = new MySqlStatement(this,sql);
+    else
+        // No statement should be allocated.
+        statement = nullptr;
 
-	return ( statement );
+    return ( statement );
 }
 
 DatabasePreparedStatement * MySqlConnection::prepareStatement( 
@@ -100,11 +100,11 @@ DatabasePreparedStatement * MySqlConnection::prepareStatement(
     // Checking the precondition.
     assert( sql.length() > 0 );
     
-	// TODO Implement.
-	return ( nullptr );
+    // TODO Implement.
+    return ( nullptr );
 }
 
 void * MySqlConnection::getLink( void )
 {
-	return ( (void *) mConnection );
+    return ( (void *) mConnection );
 }

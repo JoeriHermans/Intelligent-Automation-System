@@ -1,9 +1,9 @@
 /**
  * A command which will force the IAS server to stop.
  *
- * @date					Jul 18, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 18, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

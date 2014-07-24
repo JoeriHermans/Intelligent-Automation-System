@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties and actions of a sentence.
  *
- * @date					Jul 23, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 23, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties of a MySQL database driver.
  *
- * @date					Jul 23, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 23, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -32,56 +32,56 @@
 
 class MySqlDriver : public DatabaseDriver {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
 
-	/**
-	 * Contains the identifier of the MySQL database driver.
-	 *
-	 * @return  The constant static string "mysql".
-	 */
-	static const char kMySqlIdentifier[];
+    /**
+     * Contains the identifier of the MySQL database driver.
+     *
+     * @return  The constant static string "mysql".
+     */
+    static const char kMySqlIdentifier[];
 
-	// END Class constants. //////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
-	// END Private members. //////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
-	// END Private methods. //////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	MySqlDriver( void );
+    MySqlDriver( void );
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~MySqlDriver( void );
+    virtual ~MySqlDriver( void );
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	virtual DatabaseConnection * initializeConnection( 
-	    const std::string & username, const std::string & password,
+    virtual DatabaseConnection * initializeConnection( 
+        const std::string & username, const std::string & password,
         const std::string & schema, const std::string & host );
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

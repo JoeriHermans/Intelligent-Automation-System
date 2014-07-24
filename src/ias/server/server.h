@@ -2,9 +2,9 @@
  * A class which describes the abstract properties and actions of a server
  * routine.
  *
- * @date					Jul 6, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 6, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -38,14 +38,14 @@
 
 class Server : public Observer {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
     
     /**
      * Contains the socket which will listen for incoming connections.
@@ -54,9 +54,9 @@ class Server : public Observer {
      */
     ServerSocket * mServerSocket;
         
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     void setServerSocket( ServerSocket * socket ) {
         // Checking the precondition.
@@ -65,37 +65,37 @@ class Server : public Observer {
         mServerSocket = socket;
     }
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
     
     ServerSocket * getServerSocket( void ) const {
         return ( mServerSocket );
     }
     
-	// END Protected methods. ////////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
     
     Server( ServerSocket * socket ) {
         setServerSocket(socket);
     }
     
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
     virtual ~Server( void ) {
         delete mServerSocket; mServerSocket = nullptr;
     }
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
     virtual void start( void ) = 0;
 
@@ -107,10 +107,10 @@ class Server : public Observer {
     
     virtual void update( void * argument ) = 0;
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

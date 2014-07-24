@@ -1,9 +1,9 @@
 /**
  * A class which describes the actions and properties of a MySQL statement.
  *
- * @date					Jul 22, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 22, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -33,35 +33,35 @@
 // END Includes. /////////////////////////////////////////////////////
 
 inline void MySqlStatement::setConnection( MYSQL * connection ) {
-	// Checking the precondition.
-	assert( connection != nullptr );
+    // Checking the precondition.
+    assert( connection != nullptr );
 
-	mConnection = connection;
+    mConnection = connection;
 }
 
 MySqlStatement::MySqlStatement( MySqlConnection * connection , const std::string & query )
-	: DatabaseStatement( connection , query ) {
-	// Set the connection member.
-	setConnection((MYSQL *) connection->getLink());
+    : DatabaseStatement( connection , query ) {
+    // Set the connection member.
+    setConnection((MYSQL *) connection->getLink());
 }
 
 MySqlStatement::~MySqlStatement( void ) {
-	// Nothing to do here, yet.
+    // Nothing to do here, yet.
 }
 
 DatabaseResult * MySqlStatement::execute( void ) {
-	MYSQL_RES * mysqlResult;
-	MySqlResult * result;
+    MYSQL_RES * mysqlResult;
+    MySqlResult * result;
 
-	// Initialize the result.
-	result = nullptr;
-	// Try to execute the specified query.
-	if( mysql_query(mConnection,getQuery().c_str()) == 0 ) {
-		// Retrieve the mysql-result from the connection.
-		mysqlResult = mysql_store_result(mConnection);
-		// Allocate a new instance.
-		result = new MySqlResult(mysqlResult);
-	}
+    // Initialize the result.
+    result = nullptr;
+    // Try to execute the specified query.
+    if( mysql_query(mConnection,getQuery().c_str()) == 0 ) {
+        // Retrieve the mysql-result from the connection.
+        mysqlResult = mysql_store_result(mConnection);
+        // Allocate a new instance.
+        result = new MySqlResult(mysqlResult);
+    }
 
-	return ( result );
+    return ( result );
 }

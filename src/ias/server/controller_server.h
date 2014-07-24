@@ -2,9 +2,9 @@
  * A class which will handle incoming connections from controllers and dispatch
  * them accordingly.
  *
- * @date					July 6, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    July 6, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -44,14 +44,14 @@
 
 class ControllerServer : public Server {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * A containers which holds the set of all controllers available in
@@ -85,9 +85,9 @@ class ControllerServer : public Server {
      */
     std::mutex mMutexSessions;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
     
     inline void initialize( void );
     
@@ -97,29 +97,29 @@ class ControllerServer : public Server {
     
     void signalSessions( void );
     
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
         
     ControllerServer( ServerSocket * socket,
                       Container<Controller *> * controllers );
         
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
     
     virtual ~ControllerServer( void );
     
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
     
     virtual void start( void );
     
@@ -131,11 +131,11 @@ class ControllerServer : public Server {
     
     virtual void update( void * argument );
     
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
     
-	// END Static methods. ///////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

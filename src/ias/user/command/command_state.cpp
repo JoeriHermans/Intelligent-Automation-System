@@ -2,9 +2,9 @@
  * A command which describes the properties of a "state" command. The state
  * command will list the state of the specified device.
  *
- * @date					Jul 19, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 19, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

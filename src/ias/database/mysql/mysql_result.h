@@ -1,9 +1,9 @@
 /**
  * A class which describes the actions and properties of a MySQL result.
  *
- * @date					Jul 22, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 22, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -36,70 +36,70 @@ class MySqlResultRow;
 
 class MySqlResult : public DatabaseResult {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
 
-	/**
-	 * Contains the result set we retrieved.
-	 *
-	 * @note    By default, this member will be equal
-	 *          to the NULL reference.
-	 */
-	MYSQL_RES * mResultSet;
+    /**
+     * Contains the result set we retrieved.
+     *
+     * @note    By default, this member will be equal
+     *          to the NULL reference.
+     */
+    MYSQL_RES * mResultSet;
 
-	/**
-	 * Contains the value of the next row.
-	 *
-	 * @note    By default, this member will be equal
-	 *          to the NULL reference.
-	 */
-	MYSQL_ROW mNextRow;
+    /**
+     * Contains the value of the next row.
+     *
+     * @note    By default, this member will be equal
+     *          to the NULL reference.
+     */
+    MYSQL_ROW mNextRow;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
 
-	inline void initialize( void );
+    inline void initialize( void );
 
-	inline void setResultSet( MYSQL_RES * resultSet );
+    inline void setResultSet( MYSQL_RES * resultSet );
 
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	MySqlResult( MYSQL_RES * resultSet );
+    MySqlResult( MYSQL_RES * resultSet );
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~MySqlResult( void );
+    virtual ~MySqlResult( void );
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	virtual bool hasNext( void );
+    virtual bool hasNext( void );
 
-	virtual DatabaseResultRow * next( void );
+    virtual DatabaseResultRow * next( void );
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

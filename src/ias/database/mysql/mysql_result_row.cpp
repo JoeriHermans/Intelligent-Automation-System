@@ -2,9 +2,9 @@
  * A class which describes the properties and actions of a MySQL
  * result row.
  *
- * @date					Jul 22, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 22, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -33,39 +33,39 @@
 // END Includes. /////////////////////////////////////////////////////
 
 inline void MySqlResultRow::initialize( void ) {
-	mResultRow = nullptr;
-	mNumColumns = 0;
+    mResultRow = nullptr;
+    mNumColumns = 0;
 }
 
 inline void MySqlResultRow::setNumColumns( const std::size_t numColumns ) {
-	mNumColumns = numColumns;
+    mNumColumns = numColumns;
 }
 
 MySqlResultRow::MySqlResultRow( const std::size_t numColumns, 
                                 MYSQL_ROW resultRow ) {
-	initialize();
-	setNumColumns( numColumns );
-	mResultRow = resultRow;
-	for( std::size_t i = 0 ; i < numColumns ; ++i )
-	{
-	    if( mResultRow[i] != nullptr )
-	        mColumns.push_back(mResultRow[i]);
-	    else
-	        mColumns.push_back("");
-	}
+    initialize();
+    setNumColumns( numColumns );
+    mResultRow = resultRow;
+    for( std::size_t i = 0 ; i < numColumns ; ++i )
+    {
+        if( mResultRow[i] != nullptr )
+            mColumns.push_back(mResultRow[i]);
+        else
+            mColumns.push_back("");
+    }
 }
 
 MySqlResultRow::~MySqlResultRow( void ) {
-	// Nothing to do here.
+    // Nothing to do here.
 }
 
 std::size_t MySqlResultRow::numColumns( void ) const {
-	return ( mNumColumns );
+    return ( mNumColumns );
 }
 
 const std::string & MySqlResultRow::getColumn( 
     const std::size_t columnIndex ) const {
-	assert( columnIndex < mNumColumns );
+    assert( columnIndex < mNumColumns );
 
-	return ( mColumns.at(columnIndex) );
+    return ( mColumns.at(columnIndex) );
 }

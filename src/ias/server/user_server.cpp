@@ -2,9 +2,9 @@
  * A class which describes the properties and actions of a user server. A
  * user servers allows for users to connect and execute commands remotely.
  *
- * @date					Jul 18, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 18, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

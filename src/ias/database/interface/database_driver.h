@@ -2,9 +2,9 @@
  * A class which describes the abstract properties and actions of
  * a database driver.
  *
- * @date					Jul 23. 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 23. 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -37,65 +37,65 @@
 
 class DatabaseDriver {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
 
-	/**
-	 * Contains the unique identifier of the database driver.
-	 *
-	 * @note    By default, this member will be equal
-	 *          to the NULL reference.
-	 */
-	std::string mIdentifier;
+    /**
+     * Contains the unique identifier of the database driver.
+     *
+     * @note    By default, this member will be equal
+     *          to the NULL reference.
+     */
+    std::string mIdentifier;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
-	// END Private methods. //////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	DatabaseDriver( const std::string & identifier ) {
-		mIdentifier = identifier;
-	}
+    DatabaseDriver( const std::string & identifier ) {
+        mIdentifier = identifier;
+    }
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~DatabaseDriver( void ) {
-		// Nothing to do here.
-	}
+    virtual ~DatabaseDriver( void ) {
+        // Nothing to do here.
+    }
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	const std::string & getIdentifier( void ) const {
-		return ( mIdentifier );
-	}
+    const std::string & getIdentifier( void ) const {
+        return ( mIdentifier );
+    }
 
-	virtual DatabaseConnection * initializeConnection( 
-	    const std::string & username, const std::string & password,
-	    const std::string & schema, const std::string & host ) = 0;
+    virtual DatabaseConnection * initializeConnection( 
+        const std::string & username, const std::string & password,
+        const std::string & schema, const std::string & host ) = 0;
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

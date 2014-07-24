@@ -2,9 +2,9 @@
  * A class which describes the properties and actions of a database
  * prepared statement.
  *
- * @date					Jul 21, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 21, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -40,81 +40,81 @@ class DatabaseConnection;
 
 class DatabasePreparedStatement {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
 
-	/**
-	 * Contains the database connection of the prepared statement.
-	 *
-	 * @note    By default, this member will be equal
-	 *          to the NULL reference.
-	 */
-	DatabaseConnection * mConnection;
+    /**
+     * Contains the database connection of the prepared statement.
+     *
+     * @note    By default, this member will be equal
+     *          to the NULL reference.
+     */
+    DatabaseConnection * mConnection;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
 
-	inline void initialize( void ) {
-		// Initialize the members of the class.
-		mConnection = nullptr;
-	}
+    inline void initialize( void ) {
+        // Initialize the members of the class.
+        mConnection = nullptr;
+    }
 
-	inline void setConnection( DatabaseConnection * connection ) {
-		// Checking the precondition.
-		assert( connection != nullptr );
+    inline void setConnection( DatabaseConnection * connection ) {
+        // Checking the precondition.
+        assert( connection != nullptr );
 
-		mConnection = connection;
-	}
+        mConnection = connection;
+    }
 
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
 
-	DatabaseConnection * getConnection( void ) {
-		return ( mConnection );
-	}
+    DatabaseConnection * getConnection( void ) {
+        return ( mConnection );
+    }
 
-	// END Protected methods. ////////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	DatabasePreparedStatement( DatabaseConnection * connection ) {
-		initialize();
-		setConnection( connection );
-	}
+    DatabasePreparedStatement( DatabaseConnection * connection ) {
+        initialize();
+        setConnection( connection );
+    }
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~DatabasePreparedStatement( void ) {
-		// Nothing to do here.
-	}
+    virtual ~DatabasePreparedStatement( void ) {
+        // Nothing to do here.
+    }
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	virtual DatabaseResult * execute( void ) = 0;
+    virtual DatabaseResult * execute( void ) = 0;
 
-	virtual void setParameter( const std::size_t index, 
-	                           const std::string & value ) = 0;
+    virtual void setParameter( const std::size_t index, 
+                               const std::string & value ) = 0;
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

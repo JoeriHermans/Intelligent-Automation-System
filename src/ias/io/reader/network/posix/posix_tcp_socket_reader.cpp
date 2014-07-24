@@ -1,9 +1,9 @@
 /**
  * A reader which is responsible for reading bytes from a POSIX TCP socket.
  *
- * @date					Jul 6, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 6, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

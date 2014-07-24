@@ -1,9 +1,9 @@
 /**
  * A class which describes the actions and properties of a value type.
  *
- * @date					Jul 3, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 3, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -37,15 +37,15 @@
 
 class ValueType : public Identifiable {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
-	
+    // BEGIN Private members. ////////////////////////////////////////
+    
     /**
      * Contains the unique id of a device.
      */
@@ -81,8 +81,8 @@ class ValueType : public Identifiable {
         
     // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
-	
+    // BEGIN Private methods. ////////////////////////////////////////
+    
     inline void initialize( void );
     
     void compilePattern( const std::string & regex );
@@ -91,14 +91,14 @@ class ValueType : public Identifiable {
     
     // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
     
     ValueType( const std::size_t id,
                const std::string & identifier,
@@ -106,16 +106,16 @@ class ValueType : public Identifiable {
                const std::string & description,
                const std::string & pattern );
     
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
-	
+    // BEGIN Destructor. /////////////////////////////////////////////
+    
     virtual ~ValueType( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
-	
+    // BEGIN Public methods. /////////////////////////////////////////
+    
     virtual std::size_t getId( void ) const;
     
     virtual const std::string & getIdentifier( void ) const;
@@ -136,8 +136,8 @@ class ValueType : public Identifiable {
     
     // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

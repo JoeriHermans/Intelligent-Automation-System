@@ -2,9 +2,9 @@
  * A class represents a persitent set of properties. A property contains a
  * key-value relation.
  *
- * @date					Jun 3, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jun 3, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

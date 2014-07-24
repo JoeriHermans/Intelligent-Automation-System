@@ -1,9 +1,9 @@
 /**
  * A command which will force the IAS server to stop.
  *
- * @date					Jul 18, 2014
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 18, 2014
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -33,18 +33,18 @@
 
 class CommandStop : public Command {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	
+    // BEGIN Class constants. ////////////////////////////////////////
+    
     static const char kIdentifier[];
         
     // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
-	
+    // BEGIN Private members. ////////////////////////////////////////
+    
     /**
      * Contains a reference to the server application.
      */
@@ -52,39 +52,39 @@ class CommandStop : public Command {
     
     // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
-	
+    // BEGIN Private methods. ////////////////////////////////////////
+    
     void setApplication( ServerApplication * application );
     
     // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
-	
+    // BEGIN Constructors. ///////////////////////////////////////////
+    
     CommandStop( ServerApplication * application );
     
     // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
-	
+    // BEGIN Destructor. /////////////////////////////////////////////
+    
     virtual ~CommandStop( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
-	
+    // BEGIN Public methods. /////////////////////////////////////////
+    
     virtual std::string execute( const std::string & parameters );
     
     // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 

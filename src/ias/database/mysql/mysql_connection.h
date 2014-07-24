@@ -1,9 +1,9 @@
 /**
  * A class which describes the properties of a MySQL database connection.
  *
- * @date					Jul 21, 2013
- * @author					Joeri HERMANS
- * @version					0.1
+ * @date                    Jul 21, 2013
+ * @author                    Joeri HERMANS
+ * @version                    0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -36,69 +36,69 @@
 
 class MySqlConnection : public DatabaseConnection {
 
-	public:
+    public:
 
-	// BEGIN Class constants. ////////////////////////////////////////
-	// END Class constants. //////////////////////////////////////////
+    // BEGIN Class constants. ////////////////////////////////////////
+    // END Class constants. //////////////////////////////////////////
 
-	private:
+    private:
 
-	// BEGIN Private members. ////////////////////////////////////////
+    // BEGIN Private members. ////////////////////////////////////////
 
-	/**
-	 * Contains the MySQL connection structure.
-	 *
-	 * @note    By default, this member will be equal to
-	 *          the NULL reference.
-	 */
-	MYSQL * mConnection;
+    /**
+     * Contains the MySQL connection structure.
+     *
+     * @note    By default, this member will be equal to
+     *          the NULL reference.
+     */
+    MYSQL * mConnection;
 
-	// END Private members. //////////////////////////////////////////
+    // END Private members. //////////////////////////////////////////
 
-	// BEGIN Private methods. ////////////////////////////////////////
+    // BEGIN Private methods. ////////////////////////////////////////
 
-	inline void initialize( void );
+    inline void initialize( void );
 
-	// END Private methods. //////////////////////////////////////////
+    // END Private methods. //////////////////////////////////////////
 
-	protected:
+    protected:
 
-	// BEGIN Protected methods. //////////////////////////////////////
-	// END Protected methods. ////////////////////////////////////////
+    // BEGIN Protected methods. //////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////
 
-	public:
+    public:
 
-	// BEGIN Constructors. ///////////////////////////////////////////
+    // BEGIN Constructors. ///////////////////////////////////////////
 
-	MySqlConnection( const std::string & username,
+    MySqlConnection( const std::string & username,
                      const std::string & password,
                      const std::string & schema,
                      const std::string & host );
 
-	// END Constructors. /////////////////////////////////////////////
+    // END Constructors. /////////////////////////////////////////////
 
-	// BEGIN Destructor. /////////////////////////////////////////////
+    // BEGIN Destructor. /////////////////////////////////////////////
 
-	virtual ~MySqlConnection( void );
+    virtual ~MySqlConnection( void );
 
-	// END Destructor. ///////////////////////////////////////////////
+    // END Destructor. ///////////////////////////////////////////////
 
-	// BEGIN Public methods. /////////////////////////////////////////
+    // BEGIN Public methods. /////////////////////////////////////////
 
-	virtual bool isConnected( void ) const;
+    virtual bool isConnected( void ) const;
 
-	virtual bool connect( void );
+    virtual bool connect( void );
 
-	virtual DatabaseStatement * createStatement( const std::string & sql );
+    virtual DatabaseStatement * createStatement( const std::string & sql );
 
-	virtual DatabasePreparedStatement * prepareStatement( const std::string & sql );
+    virtual DatabasePreparedStatement * prepareStatement( const std::string & sql );
 
-	virtual void * getLink( void );
+    virtual void * getLink( void );
 
-	// END Public methods. ///////////////////////////////////////////
+    // END Public methods. ///////////////////////////////////////////
 
-	// BEGIN Static methods. /////////////////////////////////////////
-	// END Static methods. ///////////////////////////////////////////
+    // BEGIN Static methods. /////////////////////////////////////////
+    // END Static methods. ///////////////////////////////////////////
 
 };
 
