@@ -66,7 +66,9 @@ class NaturalLanguageProcessor {
      */
     std::vector<std::pair<std::string,std::string>> mAreas;
     std::vector<std::pair<std::string,std::string>> mDevices;
+    std::vector<std::size_t> mDeviceIds;
     std::vector<std::pair<std::string,std::string>> mFeatures;
+    std::vector<std::size_t> mFeatureIds;
         
     // END Private members. //////////////////////////////////////////
 
@@ -85,6 +87,41 @@ class NaturalLanguageProcessor {
     void buildDevices( void );
     
     void buildFeatures( void );
+    
+    void calculateDistribution( 
+        const std::vector<std::pair<std::string,std::string>> & v, 
+        const Sentence & sentence,
+        double * p ) const;
+    
+    void evaluateWindow( const std::vector<std::pair<std::string,std::string>> & v,
+                         const Sentence & sentence,
+                         double * p ) const;
+    
+    void evaluateSubsets( const std::vector<std::pair<std::string,std::string>> & v,
+                          const Sentence & sentence,
+                          double * p ) const;
+    
+    std::vector<std::string> getWords( const Sentence & sentence ) const;
+    
+    void mapArea( double * p , const double * pA ) const;
+    
+    void mapFeature( double * p , const double * pPostD ) const;
+    
+    double totalProbability( const double * p , const std::size_t n ) const;
+    
+    void add( double * dest, 
+              const double * a, 
+              const double * b, 
+              const std::size_t n ) const;
+    
+    void divide( double * dest,
+                 const double * a,
+                 const double factor,
+                 const std::size_t n ) const;
+    
+    std::size_t getDeviceIndex( const std::size_t id ) const;
+    
+    std::size_t getFeatureIndex( const std::size_t id ) const;
     
     // END Private methods. //////////////////////////////////////////
 
