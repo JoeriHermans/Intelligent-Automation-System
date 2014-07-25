@@ -42,4 +42,6 @@ void trim( std::string & s );
 
 std::size_t numWords( const std::string & string );
 
+std::size_t editDistance( const std::string & a , const std::string & b );
+
 #endif /* UTIL_H_ */

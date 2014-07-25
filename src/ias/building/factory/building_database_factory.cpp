@@ -95,7 +95,7 @@ std::vector<Building *> BuildingDatabaseFactory::fetchAll( void ) {
     std::string identifier;
     std::string name;
     std::string description;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT * "
         "FROM buildings;"

@@ -119,3 +119,21 @@ std::size_t numWords( const std::string & string ) {
     
     return ( n );
 }
+
+std::size_t editDistance( const std::string & a , const std::string & b )
+{
+    const std::size_t len1 = a.size(), len2 = b.size();
+    std::vector<std::vector<std::size_t> > d(len1 + 1,
+                            std::vector<std::size_t>(len2 + 1));
+
+    d[0][0] = 0;
+    for( std::size_t i = 1 ; i <= len1 ; ++i ) d[i][0] = i;
+    for( std::size_t i = 1 ; i <= len2 ; ++i ) d[0][i] = i;
+    for( std::size_t i = 1 ; i <= len1 ; ++i )
+        for( std::size_t j = 1 ; j <= len2 ; ++j )
+            d[i][j] = std::min(std::min(
+                d[i - 1][j] + 1,d[i][j - 1] + 1),
+                d[i - 1][j - 1] + (a[i - 1] == b[j - 1] ? 0 : 1) );
+
+    return ( d[len1][len2] );
+}

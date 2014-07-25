@@ -29,11 +29,14 @@
 
 // System dependencies.
 #include <string>
+#include <vector>
+#include <utility>
 
 // Application dependencies.
 #include <ias/ai/nlp/sentence.h>
 #include <ias/device/action/action.h>
 #include <ias/device/device.h>
+#include <ias/building/area.h>
 #include <ias/user/user.h>
 #include <ias/util/container.h>
 
@@ -49,9 +52,40 @@ class NaturalLanguageProcessor {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+        
+    /**
+     * Contains entities which are required to do the NLP.
+     */
+    const Container<Area *> * mContainerAreas;
+    const Container<Device *> * mContainerDevices;
+    const Container<Technology *> * mContainerTechnologies;
+    
+    /**
+     * Vectors which represent the elements of the discrete probability
+     * distributions.
+     */
+    std::vector<std::pair<std::string,std::string>> mAreas;
+    std::vector<std::pair<std::string,std::string>> mDevices;
+    std::vector<std::pair<std::string,std::string>> mFeatures;
+        
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+    
+    void setAreaContainer( const Container<Area *> * areas );
+    
+    void setDeviceContainer( const Container<Device *> * devices );
+    
+    void setTechnologyContainer( const Container<Technology *> * technologies );
+    
+    void buildDistributions( void );
+    
+    void buildAreas( void );
+    
+    void buildDevices( void );
+    
+    void buildFeatures( void );
+    
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -63,7 +97,9 @@ class NaturalLanguageProcessor {
 
     // BEGIN Constructors. ///////////////////////////////////////////
     
-    NaturalLanguageProcessor( void );
+    NaturalLanguageProcessor( const Container<Area *> * areas,
+                              const Container<Device *> * devices,
+                              const Container<Technology *> * technologies );
     
     // END Constructors. /////////////////////////////////////////////
 
@@ -75,7 +111,7 @@ class NaturalLanguageProcessor {
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    virtual void process( const std::string & raw ) = 0;
+    virtual void process( const std::string & raw );
     
     // END Public methods. ///////////////////////////////////////////
 

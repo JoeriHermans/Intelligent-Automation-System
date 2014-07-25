@@ -30,6 +30,7 @@
 #include <iostream>
 
 // Application dependencies.
+#include <ias/ai/nlp/natural_language_processor.h>
 #include <ias/application/server_application.h>
 #include <ias/application/constants.h>
 #include <ias/building/factory/area_factory_database.h>
@@ -253,8 +254,9 @@ void ServerApplication::initializeSalts( void ) {
 }
 
 void ServerApplication::initializeNlp( void ) {
-    // TODO Implement.
-    mNlp = nullptr;
+    mNlp = new NaturalLanguageProcessor(&mContainerAreas,
+                                        &mContainerDevices,
+                                        &mContainerTechnologies);
 }
 
 void ServerApplication::initializeControllerServer( void ) {
