@@ -132,7 +132,7 @@ Area * AreaDatabaseFactory::getArea( const std::vector<Area *> & areas,
 
 AreaDatabaseFactory::AreaDatabaseFactory( DatabaseConnection * dbConnection,
                                           const Container<Device *> * d ) :
-    DatabaseFactory(dbConnection) {
+    DatabaseFactory<Area *>(dbConnection) {
     setDeviceContainer(d);
 }
 

@@ -231,7 +231,13 @@ void ServerApplication::fillAreas( void ) {
 }
 
 void ServerApplication::fillBuildings( void ) {
+    BuildingDatabaseFactory factory(mDbConnection,&mContainerAreas);
+    std::vector<Building *> buildings;
     
+    buildings = factory.fetchAll();
+    for( auto it = buildings.begin() ; it != buildings.end() ; ++it ) {
+        mContainerBuildings.add((*it));
+    }
 }
 
 void ServerApplication::initializeSalts( void ) {

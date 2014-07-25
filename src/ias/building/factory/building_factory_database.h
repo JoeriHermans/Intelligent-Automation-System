@@ -27,8 +27,10 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // Application dependencies.
+#include <ias/building/area.h>
 #include <ias/building/building.h>
 #include <ias/factory/database_factory.h>
+#include <ias/util/container.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -42,9 +44,20 @@ class BuildingDatabaseFactory : public DatabaseFactory<Building *> {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+        
+    /**
+     * A contains which holds all areas which are registered to IAS.
+     */
+    const Container<Area *> * mAreas;
+        
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+    
+    void setAreaContainer( const Container<Area *> * areas );
+    
+    std::vector<Area *> fetchAreas( const std::size_t id ) const;
+    
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -55,12 +68,22 @@ class BuildingDatabaseFactory : public DatabaseFactory<Building *> {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
+        
+    BuildingDatabaseFactory( DatabaseConnection * dbConnection,
+                             Container<Area *> * areas );
+        
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
+    
+    virtual ~BuildingDatabaseFactory( void );
+    
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
+    
+    virtual std::vector<Building *> fetchAll( void );
+    
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
