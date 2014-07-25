@@ -273,6 +273,13 @@ Area * Area::getAdjacentArea( const std::size_t id ) const {
     return ( area );
 }
 
+void Area::addAdjacentArea( Area * area ) {
+    // Checking the precondition.
+    assert( area != nullptr && !containsAdjacentArea(area->getIdentifier()) );
+    
+    mAreas[area->getIdentifier()] = area;
+}
+
 void Area::removeAdjacentArea( const Area * area ) {
     // Checking the precondition.
     assert( area != nullptr );

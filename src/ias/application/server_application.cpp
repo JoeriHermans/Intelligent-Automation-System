@@ -32,6 +32,8 @@
 // Application dependencies.
 #include <ias/application/server_application.h>
 #include <ias/application/constants.h>
+#include <ias/building/factory/area_factory_database.h>
+#include <ias/building/factory/building_factory_database.h>
 #include <ias/device/factory/device_database_factory.h>
 #include <ias/technology/factory/value_type_database_factory.h>
 #include <ias/technology/factory/member_database_factory.h>
@@ -140,6 +142,8 @@ void ServerApplication::fillContainers( void ) {
     fillTechnologies();
     fillDevices();
     fillControllers();
+    fillAreas();
+    fillBuildings();
 }
 
 void ServerApplication::fillUsers( void ) {
@@ -214,6 +218,20 @@ void ServerApplication::fillControllers( void ) {
     for( auto it = controllers.begin() ; it != controllers.end() ; ++it ) {
         mContainerControllers.add((*it));
     }
+}
+
+void ServerApplication::fillAreas( void ) {
+    AreaDatabaseFactory factory(mDbConnection,&mContainerDevices);
+    std::vector<Area *> areas;
+    
+    areas = factory.fetchAll();
+    for( auto it = areas.begin() ; it != areas.end() ; ++it ) {
+        mContainerAreas.add((*it));
+    }
+}
+
+void ServerApplication::fillBuildings( void ) {
+    
 }
 
 void ServerApplication::initializeSalts( void ) {

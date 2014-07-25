@@ -29,6 +29,8 @@
 // Application dependencies.
 #include <ias/ai/nlp/natural_language_processor.h>
 #include <ias/application/application.h>
+#include <ias/building/area.h>
+#include <ias/building/building.h>
 #include <ias/controller/controller.h>
 #include <ias/device/device.h>
 #include <ias/database/interface/database_connection.h>
@@ -70,6 +72,8 @@ class ServerApplication : public Application {
     Container<Member *> mContainerMembers;
     Container<ValueType *> mContainerValueTypes;
     Container<User *> mContainerUsers;
+    Container<Building *> mContainerBuildings;
+    Container<Area *> mContainerAreas;
     
     /**
      * Contains the IAS natural language processor.
@@ -136,6 +140,10 @@ class ServerApplication : public Application {
     void fillDevices( void );
     
     void fillControllers( void );
+    
+    void fillBuildings( void );
+    
+    void fillAreas( void );
     
     void initializeSalts( void );
     

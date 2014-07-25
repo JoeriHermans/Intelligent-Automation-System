@@ -176,6 +176,8 @@ class Area : public Identifiable {
     
     Area * getAdjacentArea( const std::size_t id ) const;
     
+    void addAdjacentArea( Area * area );
+    
     void removeAdjacentArea( const Area * area );
     
     std::vector<Area *> getAdjacentAreas( void ) const;
