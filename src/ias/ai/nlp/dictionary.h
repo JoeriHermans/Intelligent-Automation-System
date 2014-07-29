@@ -1,11 +1,11 @@
 /**
- * A class which describes the actions and properties of a natural language
- * processor. The processor will take a raw string and analyze it for actions,
- * queries, ...
+ * A class which describes the properties and actions of a dictionary. A
+ * dictionary is responsible for storing a large set of words and the associated
+ * indices.
  *
- * @date                    Jul 23, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    Jul 28, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -22,27 +22,19 @@
  * limitations under the License.
  */
 
-#ifndef NATURAL_LANGUAGE_PROCESSOR_H_
-#define NATURAL_LANGUAGE_PROCESSOR_H_
+#ifndef DICTIONARY_H_
+#define DICTIONARY_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
 #include <string>
-#include <vector>
-#include <utility>
-
-// Application dependencies.
-#include <ias/ai/nlp/sentence.h>
-#include <ias/device/action/action.h>
-#include <ias/device/device.h>
-#include <ias/building/area.h>
-#include <ias/user/user.h>
-#include <ias/util/container.h>
+#include <mutex>
+#include <unordered_map>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class NaturalLanguageProcessor {
+class Dictionary {
 
     public:
 
@@ -52,24 +44,34 @@ class NaturalLanguageProcessor {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+    
     /**
-     * Contains entities which are required to do the NLP.
+     * Contains the normalized words which are available to this dictionary
+     * together with their associated index.
      */
-    const Container<Area *> * mContainerAreas;
-    const Container<Device *> * mContainerDevices;
-    const Container<Technology *> * mContainerTechnologies;
-
+    std::unordered_map<std::string,std::size_t> mWords;
+    
+    /**
+     * Contains the value of the next index for the new word.
+     */
+    std::size_t mNextIndex;
+    
+    /**
+     * A flag which indicates that words can be added to the dictionary.
+     */
+    bool mLock;
+    
+    /**
+     * Contains the mutex which is responsible for thread-safe operations.
+     */
+    mutable std::mutex mMutexStorage;
+    
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-
-    void setAreaContainer( const Container<Area *> * areas );
-
-    void setDeviceContainer( const Container<Device *> * devices );
-
-    void setTechnologyContainer( const Container<Technology *> * technologies );
-
+    
+    inline void initialize( void );
+    
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -80,22 +82,32 @@ class NaturalLanguageProcessor {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-
-    NaturalLanguageProcessor( const Container<Area *> * areas,
-                              const Container<Device *> * devices,
-                              const Container<Technology *> * technologies );
-
+    
+    Dictionary( void );
+    
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~NaturalLanguageProcessor( void );
+    virtual ~Dictionary( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    virtual void process( const std::string & raw );
+    void add( const std::string & word );
+    
+    bool contains( const std::string & word ) const;
+    
+    void lock( void );
+    
+    void unlock( void );
+    
+    bool locked( void ) const;
+    
+    std::size_t index( const std::string & word ) const;
+    
+    std::size_t size( void ) const;
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -104,4 +116,4 @@ class NaturalLanguageProcessor {
 
 };
 
-#endif /* NATURAL_LANGUAGE_PROCESSOR_H_ */
+#endif /* DICTIONARY_H_ */
