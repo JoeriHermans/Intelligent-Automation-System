@@ -24,6 +24,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/device/factory/device_database_factory.h>
@@ -56,17 +57,27 @@ Device * DeviceDatabaseFactory::allocateDevice( const std::string & id,
     return ( d );
 }
 
+void DeviceDatabaseFactory::setDeviceMonitor( DeviceMonitor * deviceMonitor ) {
+    // Checking the precondition.
+    assert( deviceMonitor != nullptr );
+    
+    mDeviceMonitor = deviceMonitor;
+}
+
 DeviceDatabaseFactory::DeviceDatabaseFactory( DatabaseConnection * connection,
-                                              Container<Technology *> * tech ) :
-   DatabaseFactory<Device *>(connection) {
+                                              Container<Technology *> * tech,
+                                              DeviceMonitor * deviceMonitor ) :
+    DatabaseFactory<Device *>(connection) {
     setTechnologyContainer(tech);
+    setDeviceMonitor(deviceMonitor);
 }
 
 std::vector<Device *> DeviceDatabaseFactory::fetchAll( void ) {
     DatabaseStatement * statement;
     DatabaseResult * result;
     DatabaseResultRow * row;
-    std::vector<Device *> technologies;
+    std::vector<Device *> devices;
+    Device * device;
     std::string id;
     std::string identifier;
     std::string description;
@@ -87,11 +98,15 @@ std::vector<Device *> DeviceDatabaseFactory::fetchAll( void ) {
                 name = row->getColumn(4);
                 description = row->getColumn(5);
                 technologyId = row->getColumn(2);
-                technologies.push_back(allocateDevice(id,
-                                                      identifier,
-                                                      name,
-                                                      description,
-                                                      technologyId));
+                device = allocateDevice(id,
+                                        identifier,
+                                        name,
+                                        description,
+                                        technologyId);
+                // Check if a device monitor is required.
+                if( row->getColumn(6) == "1" )
+                    device->addObserver(mDeviceMonitor);
+                devices.push_back(device);
                 delete row;
             }
             delete result;
@@ -99,5 +114,5 @@ std::vector<Device *> DeviceDatabaseFactory::fetchAll( void ) {
         delete statement;
     }
     
-    return ( technologies );
+    return ( devices );
 }

@@ -33,6 +33,7 @@
 #include <ias/building/building.h>
 #include <ias/controller/controller.h>
 #include <ias/device/device.h>
+#include <ias/device/device_monitor.h>
 #include <ias/database/interface/database_connection.h>
 #include <ias/database/interface/database_driver.h>
 #include <ias/database/mysql/mysql_driver.h>
@@ -112,6 +113,12 @@ class ServerApplication : public Application {
      * A flag which can be used to stop the server application.
      */
     bool mFlagRunning;
+    
+    /**
+     * A device monitor which is responsible for reporting state updates to
+     * the storage medium.
+     */
+    DeviceMonitor * mDeviceMonitor;
         
     // END Private members. //////////////////////////////////////////
 

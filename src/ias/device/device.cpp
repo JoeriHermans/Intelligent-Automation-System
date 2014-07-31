@@ -29,6 +29,7 @@
 // Application dependencies.
 #include <ias/controller/controller.h>
 #include <ias/device/device.h>
+#include <ias/device/struct_device_update.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -140,14 +141,18 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
         // Value has wrong type.
         result = 2;
         if( type->matches(value) ) {
+            struct device_update dUpdate;
+            
             mState[key] = std::pair<std::string,const ValueType *>(value,type);
+            dUpdate.mDevice = this;
+            dUpdate.mStateIdentifier = key;
+            dUpdate.mValue = value;
+            notifyObservers((void *) &dUpdate);
             // Value was successfully set.
             result = 0;
         }
     }
     mMutexTechnology.unlock();
-    if( result == 0 )
-        notifyObservers((void *) &key);
     
     return ( result );
 }

@@ -1,9 +1,11 @@
 /**
- * A class which is responsible for extracting devices from a database.
+ * A class which describes the actions and properties of a device monitor. A
+ * device monitor is responsible for monitoring changes in the state of
+ * registered devices and reporting that with a certain task.
  *
- * @date                    Jul 5, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    Jul 31, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -20,20 +22,18 @@
  * limitations under the License.
  */
 
-#ifndef DEVICE_DATABASE_FACTORY_H_
-#define DEVICE_DATABASE_FACTORY_H_
+#ifndef DEVICE_MONITOR_H_
+#define DEVICE_MONITOR_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // Application dependencies.
-#include <ias/device/device.h>
-#include <ias/device/device_monitor.h>
-#include <ias/factory/database_factory.h>
-#include <ias/util/container.h>
+#include <ias/database/interface/database_connection.h>
+#include <ias/util/observer.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class DeviceDatabaseFactory : public DatabaseFactory<Device *> {
+class DeviceMonitor : public Observer {
 
     public:
 
@@ -45,28 +45,15 @@ class DeviceDatabaseFactory : public DatabaseFactory<Device *> {
     // BEGIN Private members. ////////////////////////////////////////
         
     /**
-     * A container which contains all technologies.
+     * Contains the database connection.
      */
-    Container<Technology *> * mTechnologiesContainer;
-    
-    /**
-     * Contains the device monitor.
-     */
-    DeviceMonitor * mDeviceMonitor;
-        
+    DatabaseConnection * mDbConnection;
+     
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
     
-    void setTechnologyContainer( Container<Technology *> * technologies );
-    
-    Device * allocateDevice( const std::string & id,
-                             const std::string & identifier,
-                             const std::string & name,
-                             const std::string & description,
-                             const std::string & technologyId ) const;
-    
-    void setDeviceMonitor( DeviceMonitor * deviceMonitor );
+    void setDatabaseConnection( DatabaseConnection * dbConnection );
     
     // END Private methods. //////////////////////////////////////////
 
@@ -78,19 +65,22 @@ class DeviceDatabaseFactory : public DatabaseFactory<Device *> {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
+        
+    DeviceMonitor( DatabaseConnection * dbConnection );
+        
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    DeviceDatabaseFactory( DatabaseConnection * connection,
-                           Container<Technology *> * technologies,
-                           DeviceMonitor * deviceMonitor );
+    virtual ~DeviceMonitor( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    virtual std::vector<Device *> fetchAll( void );
+    virtual void update( void );
+    
+    virtual void update( void * argument );
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -99,4 +89,4 @@ class DeviceDatabaseFactory : public DatabaseFactory<Device *> {
 
 };
 
-#endif /* DEVICE_DATABASE_FACTORY_H_ */
+#endif /* DEVICE_MONITOR_H_ */

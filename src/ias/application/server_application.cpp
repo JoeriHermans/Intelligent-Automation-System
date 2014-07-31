@@ -72,6 +72,7 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
         connectToDatabase();
         // Check if a connection with the database is available.
         if( mDbConnection != nullptr ) {
+            mDeviceMonitor = new DeviceMonitor(mDbConnection);
             initializeSalts();
             fillContainers();
             initializeNlp();
@@ -88,10 +89,10 @@ void ServerApplication::readConfiguration( const std::string & filePath ) {
     std::string key;
     std::string value;
     std::size_t i;
-    
+
     // Checking the precondition.
     assert( !filePath.empty() );
-    
+
     while( std::getline(file,line) ) {
         trim(line);
         if( line.empty() || line.at(0) == '#' )
@@ -202,7 +203,8 @@ void ServerApplication::fillTechnologies( void ) {
 }
 
 void ServerApplication::fillDevices( void ) {
-   DeviceDatabaseFactory factory(mDbConnection,&mContainerTechnologies);
+   DeviceDatabaseFactory factory(
+       mDbConnection,&mContainerTechnologies,mDeviceMonitor);
    std::vector<Device *> devices;
    
    devices = factory.fetchAll();
