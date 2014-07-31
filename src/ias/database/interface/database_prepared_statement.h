@@ -98,9 +98,7 @@ class DatabasePreparedStatement {
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~DatabasePreparedStatement( void ) {
-        // Nothing to do here.
-    }
+    virtual ~DatabasePreparedStatement( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 

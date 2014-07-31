@@ -1,9 +1,10 @@
 /**
- * A class which describes the abstract properties and actions of a task.
+ * A class which describes the properties and actions of the not equals
+ * operator.
  *
- * @date                    Jul 2, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    Jul 31, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -20,17 +21,27 @@
  * limitations under the License.
  */
 
-#ifndef TASK_H_
-#define TASK_H_
+#ifndef OPERATOR_NOT_EQUALS_H_
+#define OPERATOR_NOT_EQUALS_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
+
+// Application dependencies.
+#include <ias/operator/operator.h>
+
 // END Includes. /////////////////////////////////////////////////////
 
-class Task {
+class OperatorNotEquals : public Operator {
 
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+        
+    /**
+     * Contains the unique identifier of the not equals operator.
+     */
+    static const char kIdentifier[];
+        
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -49,20 +60,21 @@ class Task {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
-    Task( void ) = default;
-        
+    
+    OperatorNotEquals( void );
+    
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Task( void ) = default;
+    virtual ~OperatorNotEquals( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    virtual void execute( void ) = 0;
+    virtual bool evaluate( const std::string & leftExpression,
+                           const std::string & rightExpression ) const;
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -71,4 +83,4 @@ class Task {
 
 };
 
-#endif /* TASK_H_ */
+#endif /* OPERATOR_NOT_EQUALS_H_ */

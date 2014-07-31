@@ -87,9 +87,7 @@ class DatabaseFactory : public Factory<T> {
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~DatabaseFactory( void ) {
-        // Nothing to do here.
-    }
+    virtual ~DatabaseFactory( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

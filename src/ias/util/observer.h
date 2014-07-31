@@ -51,13 +51,13 @@ class Observer {
 
     // BEGIN Constructors. ///////////////////////////////////////////
         
-    Observer( void ){}
+    Observer( void ) = default;
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Observer( void ){}
+    virtual ~Observer( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

@@ -76,9 +76,7 @@ class DatabaseDriver {
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~DatabaseDriver( void ) {
-        // Nothing to do here.
-    }
+    virtual ~DatabaseDriver( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 

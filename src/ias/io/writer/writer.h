@@ -57,13 +57,13 @@ class Writer {
 
     // BEGIN Constructors. ///////////////////////////////////////////
         
-    Writer( void ){}
+    Writer( void ) = default;
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Writer( void ){}
+    virtual ~Writer( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

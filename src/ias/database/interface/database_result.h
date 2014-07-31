@@ -55,17 +55,13 @@ class DatabaseResult {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    DatabaseResult( void ) {
-        // Nothing to do here.
-    }
+    DatabaseResult( void ) = default;
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~DatabaseResult( void ) {
-        // Nothing to do here.
-    }
+    virtual ~DatabaseResult( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 

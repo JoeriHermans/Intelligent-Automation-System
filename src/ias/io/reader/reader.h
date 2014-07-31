@@ -57,13 +57,13 @@ class Reader {
 
     // BEGIN Constructors. ///////////////////////////////////////////
         
-    Reader( void ){}
+    Reader( void ) = default;
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Reader( void ) {}
+    virtual ~Reader( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

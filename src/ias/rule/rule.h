@@ -1,9 +1,9 @@
 /**
- * A class which describes the abstract properties and actions of a task.
+ * A class which describes the actions and properties of a rule.
  *
- * @date                    Jul 2, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    Jul 31, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -20,13 +20,17 @@
  * limitations under the License.
  */
 
-#ifndef TASK_H_
-#define TASK_H_
+#ifndef RULE_H_
+#define RULE_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
+
+// Application dependencies.
+#include <ias/util/observer.h>
+
 // END Includes. /////////////////////////////////////////////////////
 
-class Task {
+class Rule : public Observer {
 
     public:
 
@@ -36,6 +40,22 @@ class Task {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+        
+    /**
+     * Contains the unique identifier of the rule.
+     */
+    std::size_t mId;
+    
+    /**
+     * Contains the name of the rule.
+     */
+    std::string mName;
+    
+    /**
+     * Contains the description of the rule.
+     */
+    std::string mDescription;
+        
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -50,13 +70,18 @@ class Task {
 
     // BEGIN Constructors. ///////////////////////////////////////////
         
-    Task( void ) = default;
+    Rule( const std::size_t id, 
+          const std::string & name );
+    
+    Rule( const std::size_t id, 
+          const std::string & name, 
+          const std::string & description );
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Task( void ) = default;
+    virtual ~Rule( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
@@ -71,4 +96,4 @@ class Task {
 
 };
 
-#endif /* TASK_H_ */
+#endif /* RULE_H_ */

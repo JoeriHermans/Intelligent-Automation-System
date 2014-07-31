@@ -51,13 +51,13 @@ class Application {
 
     // BEGIN Constructors. ///////////////////////////////////////////
         
-    Application( void ){}
+    Application( void ) = default;
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Application( void ){}
+    virtual ~Application( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

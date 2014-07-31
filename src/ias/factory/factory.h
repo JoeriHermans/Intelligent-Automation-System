@@ -55,13 +55,13 @@ class Factory {
 
     // BEGIN Constructors. ///////////////////////////////////////////
     
-    Factory( void ){}
+    Factory( void ) = default;
     
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Factory( void ){}
+    virtual ~Factory( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

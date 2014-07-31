@@ -86,7 +86,7 @@ class ServerSocket {
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~ServerSocket( void ){}
+    virtual ~ServerSocket( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

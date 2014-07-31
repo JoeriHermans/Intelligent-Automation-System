@@ -1,9 +1,9 @@
 /**
- * A class which describes the abstract properties and actions of a task.
+ * Describes the actions and properties of the equals operator.
  *
- * @date                    Jul 2, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    Jul 31, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -20,17 +20,27 @@
  * limitations under the License.
  */
 
-#ifndef TASK_H_
-#define TASK_H_
+#ifndef OPERATOR_EQUALS_H_
+#define OPERATOR_EQUALS_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
+
+// Application dependencies.
+#include <ias/operator/operator.h>
+
 // END Includes. /////////////////////////////////////////////////////
 
-class Task {
+class OperatorEquals : public Operator {
 
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+    
+    /**
+     * Contains the identifier of the equals operator.
+     */
+    static const char kIdentifier[];
+        
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -49,20 +59,21 @@ class Task {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
-    Task( void ) = default;
-        
+    
+    OperatorEquals( void );
+    
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Task( void ) = default;
+    virtual ~OperatorEquals( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    virtual void execute( void ) = 0;
+    virtual bool evaluate( const std::string & leftExpression,
+                           const std::string & rightExpression ) const;
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -71,4 +82,4 @@ class Task {
 
 };
 
-#endif /* TASK_H_ */
+#endif /* OPERATOR_EQUALS_H_ */

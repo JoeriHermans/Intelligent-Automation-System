@@ -55,13 +55,13 @@ class Socket {
 
     // BEGIN Constructors. ///////////////////////////////////////////
         
-    Socket( void ){}
+    Socket( void ) = default;
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Socket( void ){}
+    virtual ~Socket( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

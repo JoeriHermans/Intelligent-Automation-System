@@ -1,9 +1,9 @@
 /**
- * A class which describes the abstract properties and actions of a task.
+ * A class which describes the properties and actions of an operator.
  *
- * @date                    Jul 2, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    Jul 31, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -20,13 +20,18 @@
  * limitations under the License.
  */
 
-#ifndef TASK_H_
-#define TASK_H_
+#ifndef OPERATOR_H_
+#define OPERATOR_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
+
+// System dependencies.
+#include <cassert>
+#include <string>
+
 // END Includes. /////////////////////////////////////////////////////
 
-class Task {
+class Operator {
 
     public:
 
@@ -36,9 +41,21 @@ class Task {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+        
+    /**
+     * Contains the identifier of the operator.
+     */
+    std::string mIdentifier;
+        
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+    
+    void setIdentifier( const std::string & identifier ) {
+        // Checking the precondition.
+        assert( identifier.length() > 0 );
+    }
+    
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -50,19 +67,26 @@ class Task {
 
     // BEGIN Constructors. ///////////////////////////////////////////
         
-    Task( void ) = default;
+    Operator( const std::string & identifier ) {
+        setIdentifier(identifier);
+    }
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Task( void ) = default;
+    virtual ~Operator( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    virtual void execute( void ) = 0;
+    const std::string & getIdentifier( void ) const {
+        return ( mIdentifier );
+    }
+    
+    virtual bool evaluate( const std::string & leftExpression,
+                           const std::string & rightExpression ) const = 0;
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -71,4 +95,4 @@ class Task {
 
 };
 
-#endif /* TASK_H_ */
+#endif /* OPERATOR_H_ */
