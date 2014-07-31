@@ -1,5 +1,6 @@
 /**
- * A class which describes the actions and properties of a rule.
+ * A class which describes the properties and actions of a rule condition set.
+ * A rule conditions evaluates the boolean value of a whole set.
  *
  * @date                    Jul 31, 2014
  * @author                  Joeri HERMANS
@@ -20,8 +21,8 @@
  * limitations under the License.
  */
 
-#ifndef RULE_H_
-#define RULE_H_
+#ifndef RULE_CONDITION_SET_H_
+#define RULE_CONDITION_SET_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
@@ -29,13 +30,11 @@
 #include <vector>
 
 // Application dependencies.
-#include <ias/rule/rule_action.h>
-#include <ias/rule/rule_condition_set.h>
-#include <ias/util/observer.h>
+#include <ias/rule/rule_condition.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class Rule : public Observer {
+class RuleConditionSet {
 
     public:
 
@@ -47,45 +46,15 @@ class Rule : public Observer {
     // BEGIN Private members. ////////////////////////////////////////
         
     /**
-     * Contains the unique identifier of the rule.
+     * Contains the conditions which need to be evaluated in this set.
      */
-    std::size_t mId;
-    
-    /**
-     * Contains the name of the rule.
-     */
-    std::string mName;
-    
-    /**
-     * Contains the description of the rule.
-     */
-    std::string mDescription;
-    
-    /**
-     * Contains all condition sets which need to be evaluated before
-     * a action set can be executed.
-     */
-    std::vector<RuleConditionSet *> mConditions;
-    
-    /**
-     * Contains all actions which need to be executed when a condition-set
-     * has been positively evaluated.
-     */
-    std::vector<RuleAction *> mActions;
+    std::vector<RuleCondition *> mConditions;
         
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
     
-    void setId( const std::size_t id );
-    
-    void setName( const std::string & name );
-    
-    void setDescription( const std::string & description );
-    
-    void setConditions( const std::vector<RuleConditionSet *> & conditions );
-    
-    void setActions( const std::vector<RuleAction *> & actions );
+    void setConditions( const std::vector<RuleCondition *> & conditions );
     
     // END Private methods. //////////////////////////////////////////
 
@@ -97,39 +66,20 @@ class Rule : public Observer {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
-    Rule( const std::size_t id, 
-          const std::string & name,
-          const std::vector<RuleConditionSet *> & conditions,
-          const std::vector<RuleAction *> & actions );
     
-    Rule( const std::size_t id, 
-          const std::string & name, 
-          const std::string & description,
-          const std::vector<RuleConditionSet *> & conditions,
-          const std::vector<RuleAction *> & actions );
+    RuleConditionSet( const std::vector<RuleCondition *> & conditions );
         
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Rule( void );
+    virtual ~RuleConditionSet( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    std::size_t getId( void ) const;
-    
-    const std::string & getName( void ) const;
-    
-    const std::string & getDescription( void ) const;
-    
-    void enforce( void );
-    
-    virtual void update( void );
-    
-    virtual void update( void * argument );
+    bool evaluate( void ) const;
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -138,4 +88,4 @@ class Rule : public Observer {
 
 };
 
-#endif /* RULE_H_ */
+#endif /* RULE_CONDITION_SET_H_ */
