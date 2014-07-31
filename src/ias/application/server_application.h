@@ -48,6 +48,10 @@
 #include <ias/util/container.h>
 #include <ias/util/properties.h>
 #include <ias/user/command/command_dispatcher.h>
+#include <ias/operator/operator_equals.h>
+#include <ias/operator/operator_greater_than.h>
+#include <ias/operator/operator_less_than.h>
+#include <ias/operator/operator_not_equals.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -80,6 +84,11 @@ class ServerApplication : public Application {
      * Contains the IAS natural language processor.
      */
     NaturalLanguageProcessor * mNlp;
+    
+    /**
+     * Contains the set of operators which are available to IAS.
+     */
+    std::map<std::string,Operator *> mOperators;
     
     /**
      * Contains the database connection.
@@ -161,6 +170,10 @@ class ServerApplication : public Application {
     void initializeUserServer( void );
     
     void initializeDispatcher( void );
+    
+    void registerOperators( void );
+    
+    void cleanupOperators( void );
     
     // END Private methods. //////////////////////////////////////////
 

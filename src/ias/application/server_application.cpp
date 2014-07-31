@@ -73,6 +73,7 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
         // Check if a connection with the database is available.
         if( mDbConnection != nullptr ) {
             mDeviceMonitor = new DeviceMonitor(mDbConnection);
+            registerOperators();
             initializeSalts();
             fillContainers();
             initializeNlp();
@@ -325,6 +326,19 @@ void ServerApplication::initializeDispatcher( void ) {
     );
 }
 
+void ServerApplication::registerOperators( void ) {
+    mOperators[OperatorEquals::kIdentifier] = new OperatorEquals();
+    mOperators[OperatorGreaterThan::kIdentifier] = new OperatorGreaterThan();
+    mOperators[OperatorLessThan::kIdentifier] = new OperatorLessThan();
+    mOperators[OperatorNotEquals::kIdentifier] = new OperatorNotEquals();
+}
+
+void ServerApplication::cleanupOperators( void ) {
+    for( auto it = mOperators.begin() ; it != mOperators.end() ; ++it ) {
+        delete it->second;
+    }
+}
+
 ServerApplication::ServerApplication( const int argc,
                                       const char ** argv ) {
     initialize();
@@ -336,6 +350,7 @@ ServerApplication::~ServerApplication( void ) {
     delete mServerController; mServerController = nullptr;
     delete mServerUser; mServerUser = nullptr;
     delete mNlp; mNlp = nullptr;
+    cleanupOperators();
 }
 
 void ServerApplication::run( void ) {

@@ -36,17 +36,17 @@ class OperatorLessThan : public Operator {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-    // END Class constants. //////////////////////////////////////////
-
-    private:
-
-    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * Contains the unique identifier of the less than operator.
      */
     static const char kIdentifier[];
         
+    // END Class constants. //////////////////////////////////////////
+
+    private:
+
+    // BEGIN Private members. ////////////////////////////////////////
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////

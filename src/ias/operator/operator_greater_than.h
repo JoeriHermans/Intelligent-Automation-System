@@ -36,17 +36,17 @@ class OperatorGreaterThan : public Operator {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-    // END Class constants. //////////////////////////////////////////
-
-    private:
-
-    // BEGIN Private members. ////////////////////////////////////////
         
     /**
      * Contains the constant unique identifier of the greater than operator.
      */
     static const char kIdentifier[];
-       
+        
+    // END Class constants. //////////////////////////////////////////
+
+    private:
+
+    // BEGIN Private members. ////////////////////////////////////////
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
