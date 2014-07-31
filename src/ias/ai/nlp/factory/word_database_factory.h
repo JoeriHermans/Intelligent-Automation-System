@@ -1,9 +1,7 @@
 /**
- * A class which describes the properties and actions of a dictionary. A
- * dictionary is responsible for storing a large set of words and the associated
- * indices.
+ * A class which describes the properties and actions of a word database.
  *
- * @date                    Jul 28, 2014
+ * @date                    Jul 31, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -22,20 +20,20 @@
  * limitations under the License.
  */
 
-#ifndef DICTIONARY_H_
-#define DICTIONARY_H_
+#ifndef WORD_DATABASE_FACTORY_H_
+#define WORD_DATABASE_FACTORY_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
 #include <string>
-#include <mutex>
-#include <vector>
-#include <unordered_map>
+
+// Application dependencies.
+#include <ias/factory/database_factory.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class Dictionary {
+class WordDatabaseFactory : public DatabaseFactory<std::string> {
 
     public:
 
@@ -45,36 +43,18 @@ class Dictionary {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-
+    
     /**
-     * Contains the normalized words which are available to this dictionary
-     * together with their associated index.
+     * Contains the unique id of the dictionary.
      */
-    std::unordered_map<std::string,std::size_t> mWords;
-
-    /**
-     * Contains the value of the next index for the new word.
-     */
-    std::size_t mNextIndex;
-
-    /**
-     * A flag which indicates that words can be added to the dictionary.
-     */
-    bool mLock;
-
-    /**
-     * Contains the mutex which is responsible for thread-safe operations.
-     */
-    mutable std::mutex mMutexStorage;
-
+    std::size_t mDictionaryId;
+        
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-
-    inline void initialize( void );
     
-    void fillDictionary( const std::vector<std::string> & words );
-
+    void setDictionaryId( const std::size_t id );
+    
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -85,34 +65,21 @@ class Dictionary {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
-    Dictionary( void );
-    
-    Dictionary( const std::vector<std::string> & words );
-    
+        
+    WordDatabaseFactory( DatabaseConnection * dbConnection,
+                         const std::size_t dictionaryId );
+        
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Dictionary( void );
+    virtual ~WordDatabaseFactory( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    void add( const std::string & word );
-    
-    bool contains( const std::string & word ) const;
-    
-    void lock( void );
-    
-    void unlock( void );
-    
-    bool locked( void ) const;
-    
-    std::size_t index( const std::string & word ) const;
-    
-    std::size_t size( void ) const;
+    virtual std::vector<std::string> fetchAll( void );
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -121,4 +88,4 @@ class Dictionary {
 
 };
 
-#endif /* DICTIONARY_H_ */
+#endif /* WORD_DATABASE_FACTORY_H_ */

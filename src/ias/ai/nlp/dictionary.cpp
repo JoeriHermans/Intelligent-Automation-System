@@ -37,8 +37,20 @@ inline void Dictionary::initialize( void ) {
     mLock = false;
 }
 
+void Dictionary::fillDictionary( const std::vector<std::string> & words ) {
+    for( std::string w : words ) {
+        mWords[w] = mNextIndex;
+        ++mNextIndex;
+    }
+}
+
 Dictionary::Dictionary( void ) {
     initialize();
+}
+
+Dictionary::Dictionary( const std::vector<std::string> & words ) {
+    initialize();
+    fillDictionary(words);
 }
 
 Dictionary::~Dictionary( void ) {
