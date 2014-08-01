@@ -87,9 +87,9 @@ bool controllerRequested( const int argc , const char ** argv ) {
 void usage( void ) {
     std::cout << "Intelligent Automation System 0.2" << std::endl << std::endl;
     std::cout << "Basic usage:" << std::endl;
-    std::cout << "Run as server: \t\tias --server [options]" << std::endl;
-    std::cout << "Run as controller: \tias --controller [options]" << std::endl;
-    std::cout << "Run as client: \tias --client <hostname> [options]" << std::endl;
+    std::cout << "Run as server: \t\tias --server --config <path> [options]" << std::endl;
+    std::cout << "Run as controller: \tias --controller --config <path> [options]" << std::endl;
+    std::cout << "Run as client: \tias --client [hostname] [options]" << std::endl;
     std::cout << std::endl;
     std::cout << "Basic options:" << std::endl;
     std::cout << "\t--config [file path]" << std::endl;
