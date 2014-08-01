@@ -1,8 +1,9 @@
 /**
- * A database factory which is responsible for extracting rules from a
- * database.
+ * A class which describes the properties and actions of a dynamic rule
+ * condition, i.e., the rule condition can depend on the current state of other
+ * devices.
  *
- * @date                    Jul 21, 2014
+ * @date                    Aug 1, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -21,24 +22,22 @@
  * limitations under the License.
  */
 
-#ifndef RULE_DATABASE_FACTORY_H_
-#define RULE_DATABASE_FACTORY_H_
+#ifndef RULE_CONDITION_DYNAMIC_H_
+#define RULE_CONDITION_DYNAMIC_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <map>
+#include <string>
 
 // Application dependencies.
 #include <ias/device/device.h>
-#include <ias/factory/database_factory.h>
-#include <ias/rule/rule.h>
 #include <ias/operator/operator.h>
-#include <ias/util/container.h>
+#include <ias/rule/rule_condition.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
+class RuleConditionDynamic : public RuleCondition {
 
     public:
 
@@ -50,30 +49,33 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
     // BEGIN Private members. ////////////////////////////////////////
     
     /**
-     * A container which contains all devices which are known to IAS.
+     * Contains the devices which need to be evaluated.
      */
-    Container<Device *> * mDeviceContainer;
+    Device * mDeviceLeft;
+    Device * mDeviceRight;
     
     /**
-     * Contains the operator map.
+     * Contains the member identifiers of the devices which need to be compared.
      */
-    std::map<std::string,Operator *> * mOperators;
+    std::string mMemberLeft;
+    std::string mMemberRight;
+    
+    /**
+     * contains the operator of the condition.
+     */
+    const Operator * mOperator;
     
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+   
+    void setDevices( Device * deviceLeft,
+                     Device * deviceRight );
     
-    void setDeviceContainer( Container<Device *> * devices );
+    void setMemberIdentifiers( const std::string & memberLeft,
+                               const std::string & memberRight );
     
-    void setOperators( std::map<std::string,Operator *> * operators );
-    
-    std::vector<RuleConditionSet *> fetchConditionSets( const std::size_t id );
-    
-    std::vector<RuleCondition *> fetchConditions( const std::size_t id );
-    
-    std::vector<RuleAction *> fetchActions( const std::size_t id );
-    
-    Operator * fetchOperator( const std::string & identifier ) const;
+    void setOperator( const Operator * op );
     
     // END Private methods. //////////////////////////////////////////
 
@@ -86,21 +88,23 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
 
     // BEGIN Constructors. ///////////////////////////////////////////
     
-    RuleDatabaseFactory( DatabaseConnection * dbConnection,
-                         Container<Device *> * devices,
-                         std::map<std::string,Operator *> * operators );
+    RuleConditionDynamic( Device * deviceLeft,
+                          const std::string & memberLeft,
+                          Device * deviceRight,
+                          const std::string & memberRight,
+                          const Operator * op );
     
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~RuleDatabaseFactory( void );
+    virtual ~RuleConditionDynamic( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
-    virtual std::vector<Rule *> fetchAll( void );
+    virtual bool evaluate( void ) const;
     
     // END Public methods. ///////////////////////////////////////////
 
@@ -109,4 +113,4 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
 
 };
 
-#endif /* RULE_DATABASE_FACTORY_H_ */
+#endif /* RULE_CONDITION_DYNAMIC_H_ */

@@ -25,9 +25,15 @@
 
 // System dependencies.
 #include <cassert>
+#include <cstdlib>
 
 // Application dependencies.
+#include <ias/database/interface/database_statement.h>
+#include <ias/database/interface/database_result.h>
+#include <ias/database/interface/database_result_row.h>
 #include <ias/rule/factory/rule_database_factory.h>
+#include <ias/rule/rule_condition_static.h>
+#include <ias/rule/rule_condition_dynamic.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -38,10 +44,162 @@ void RuleDatabaseFactory::setDeviceContainer( Container<Device *> * devices ) {
     mDeviceContainer = devices;
 }
 
-RuleDatabaseFactory::RuleDatabaseFactory( DatabaseConnection * dbConnection,
-                                          Container<Device *> * devices ) :
+void RuleDatabaseFactory::setOperators( std::map<std::string,Operator *> * op ) {
+    // Checking the precondition.
+    assert( op != nullptr );
+    
+    mOperators = op;
+}
+
+std::vector<RuleConditionSet *> RuleDatabaseFactory::fetchConditionSets( 
+    const std::size_t id ) {
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+    DatabaseResultRow * row;
+    std::vector<RuleConditionSet *> conditionSets;
+    std::string query;
+    std::size_t conditionSetId;
+    
+    query =
+        "SELECT id "
+        "FROM rule_condition_sets "
+        "WHERE set_id = " + std::to_string(id);
+    statement = getDbConnection()->createStatement(query);
+    if( statement != nullptr ) {
+        result = statement->execute();
+        if( result != nullptr ) {
+            while( result->hasNext() ) {
+                std::vector<RuleCondition *> conditions;
+                
+                row = result->next();
+                conditionSetId = (std::size_t) atol(row->getColumn(0).c_str());
+                conditions = fetchConditions(conditionSetId);
+                conditionSets.push_back(new RuleConditionSet(conditions));
+                delete row;
+            }
+            delete result;
+        }
+        delete statement;
+    }
+    
+    return ( conditionSets );
+}
+
+std::vector<RuleCondition *> RuleDatabaseFactory::fetchConditions( 
+    const std::size_t id ) {
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+    DatabaseResultRow * row;
+    std::vector<RuleCondition *> conditions;
+    std::string query;
+    
+    query =
+        "SELECT * "
+        "FROM rule_conditions "
+        "WHERE rule_condition_set_id = " + std::to_string(id);
+    statement = getDbConnection()->createStatement(query);
+    if( statement != nullptr ) {
+        result = statement->execute();
+        if( result != nullptr ) {
+            while( result->hasNext() ) {
+                std::size_t deviceId;
+                std::size_t referencedDeviceId;
+                std::string member;
+                std::string value;
+                std::string referencedMember;
+                RuleCondition * condition;
+                Operator * op;
+                Device * d1;
+                Device * d2;
+                
+                row = result->next();
+                deviceId = (std::size_t) atol(row->getColumn(2).c_str());
+                op = fetchOperator(row->getColumn(3));
+                member = row->getColumn(4);
+                value = row->getColumn(5);
+                d1 = mDeviceContainer->get(deviceId);
+                if( value.length() > 0 ) {
+                    condition = new RuleConditionStatic(d1,member,value,op);
+                } else {
+                    referencedDeviceId =
+                        (std::size_t) atol(row->getColumn(6).c_str());
+                    referencedMember = row->getColumn(7);
+                    condition = new RuleConditionDynamic(d1,member,d2,
+                                                         referencedMember,op);
+                }
+                conditions.push_back(condition);
+                delete row;
+            }
+            delete result;
+        }
+        delete statement;
+    }
+    
+    return ( conditions );
+}
+
+std::vector<RuleAction *> RuleDatabaseFactory::fetchActions( const std::size_t id ) {
+    std::vector<RuleAction *> actions;
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+    DatabaseResultRow * row;
+    std::string query;
+    
+    query =
+        "SELECT * "
+        "FROM rule_actions "
+        "WHERE rule_id = " + std::to_string(id);
+    statement = getDbConnection()->createStatement(query);
+    if( statement != nullptr ) {
+        result = statement->execute();
+        if( result != nullptr ) {
+            while( result->hasNext() ) {
+                std::size_t deviceId;
+                std::string deviceFeature;
+                std::string deviceParameter;
+                Device * d;
+                
+                row = result->next();
+                deviceId = (std::size_t) atol(row->getColumn(2).c_str());
+                deviceFeature = row->getColumn(3);
+                deviceParameter = row->getColumn(4);
+                d = mDeviceContainer->get(deviceId);
+                if( d != nullptr ) {
+                    actions.push_back(
+                        new RuleAction(d,
+                            new Action(deviceFeature,deviceParameter))
+                    );
+                }
+                delete row;
+            }
+            delete result;
+        }
+        delete statement;
+    }
+    
+    return ( actions );
+}
+
+Operator * RuleDatabaseFactory::fetchOperator( 
+    const std::string & identifier ) const {
+    Operator * op;
+    
+    auto it = mOperators->find(identifier);
+    if( it != mOperators->end() )
+        op = it->second;
+    else
+        op = nullptr;
+    
+    return ( nullptr );
+}
+
+RuleDatabaseFactory::RuleDatabaseFactory( 
+    DatabaseConnection * dbConnection,
+    Container<Device *> * devices,
+    std::map<std::string,Operator *> * operators ) :
     DatabaseFactory<Rule *>(dbConnection) {
     setDeviceContainer(devices);
+    setOperators(operators);
 }
 
 RuleDatabaseFactory::~RuleDatabaseFactory( void ) {
@@ -49,9 +207,40 @@ RuleDatabaseFactory::~RuleDatabaseFactory( void ) {
 }
 
 std::vector<Rule *> RuleDatabaseFactory::fetchAll( void ) {
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+    DatabaseResultRow * row;
     std::vector<Rule *> rules;
+    std::size_t id;
+    std::string name;
+    std::string description;
+    Rule * rule;
     
-    // TODO Implement.
+    statement = getDbConnection()->createStatement(
+        "SELECT * "
+        "FROM rules;"
+    );
+    if( statement != nullptr ) {
+        result = statement->execute();
+        if( result != nullptr ) {
+            while( result->hasNext() ) {
+                std::vector<RuleConditionSet *> sets;
+                std::vector<RuleAction *> actions;
+                
+                row = result->next();
+                id = (std::size_t) atol(row->getColumn(0).c_str());
+                name = row->getColumn(1);
+                description = row->getColumn(2);
+                sets = fetchConditionSets(id);
+                actions = fetchActions(id);
+                rule = new Rule(id,name,description,sets,actions);
+                rules.push_back(rule);
+                delete row;
+            }
+            delete result;
+        }
+        delete statement;
+    }
     
     return ( rules );
 }
