@@ -58,6 +58,7 @@ inline void ServerApplication::initialize( void ) {
     mServerUser = nullptr;
     mFlagRunning = true;
     mNlp = nullptr;
+    mDeviceMonitor = nullptr;
 }
 
 void ServerApplication::setup( const int argc , const char ** argv ) {
