@@ -63,7 +63,7 @@ inline void ServerApplication::initialize( void ) {
 
 void ServerApplication::setup( const int argc , const char ** argv ) {
     int index;
-    
+
     // Retrieve the configuration file path.
     index = flagIndex(argc,argv,kFlagConfig);
     if( index >= 0 && (index + 1) <= argc && strlen(argv[index + 1]) > 0 ) {

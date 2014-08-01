@@ -62,7 +62,6 @@ void ControllerSession::authorize( void ) {
             controller = mControllers->get(identifier);
             if( controller != nullptr &&
                 controller->matchesSecurityCode(securityCode) ) {
-                std::cout << "Controller authenticated." << std::endl;
                 mController = controller;
                 mController->setConnected(getSocket());
                 mFlagRunning = true;
@@ -96,11 +95,6 @@ void ControllerSession::controllerUpdate( void ) {
         stateValue[length[2]] = 0;
         device = mController->getDevice(deviceIdentifier);
         if( device != nullptr ) {
-            // TODO Remove debug:
-            std::cout << "- DEBUG:" << std::endl;
-            std::cout << "\t Device: " << deviceIdentifier << std::endl;
-            std::cout << "\t State: " << stateIdentifier << " - " << 
-                stateValue << std::endl;
             device->set(stateIdentifier,stateValue);
             success = true;
         }
