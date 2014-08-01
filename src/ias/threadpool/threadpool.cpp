@@ -211,11 +211,8 @@ void ThreadPool::enqueue( Task * task ) {
 
 void ThreadPool::process( ThreadPool * pool ) {
     std::unique_lock<std::mutex> lock(pool->mThreadLock);
-    std::time_t timeLastProcessedTask;
-    std::time_t timeCurrent;
     Task * task;
 
-    memset(&timeLastProcessedTask,0,sizeof(timeLastProcessedTask));
     while( pool->isRunning() ) {
         task = pool->nextTask();
         if( task != nullptr ) {
@@ -223,10 +220,8 @@ void ThreadPool::process( ThreadPool * pool ) {
             task->execute();
             delete task;
             pool->decrementWorkingThread();
-            time(&timeLastProcessedTask);
             continue;
         }
-        time(&timeCurrent);
         if( !pool->tasksLeft() ) {
             pool->incrementSleepingThread();
             pool->mTaskLoad.wait(lock);
