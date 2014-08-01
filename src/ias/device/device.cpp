@@ -127,6 +127,7 @@ void Device::setDescription( const std::string & description ) {
 
 std::size_t Device::set( const std::string & key , const std::string & value ) {
     std::map<std::string,std::pair<std::string,const ValueType *>>::iterator it;
+    struct device_update dUpdate;
     const ValueType * type;
     std::size_t result;
     
@@ -142,18 +143,18 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
         // Value has wrong type.
         result = 2;
         if( type->matches(value) ) {
-            struct device_update dUpdate;
             
             mState[key] = std::pair<std::string,const ValueType *>(value,type);
             dUpdate.mDevice = this;
             dUpdate.mStateIdentifier = key;
             dUpdate.mValue = value;
-            notifyObservers((void *) &dUpdate);
             // Value was successfully set.
             result = 0;
         }
     }
     mMutexTechnology.unlock();
+    if( result == 0 )
+        notifyObservers((void *) &dUpdate);
     
     return ( result );
 }

@@ -242,7 +242,6 @@ void ServerApplication::fillRules( void ) {
     
     rules = factory.fetchAll();
     for( auto it = rules.begin() ; it != rules.end() ; ++it ) {
-        std::cout << "Adding rule." << std::endl;
         mContainerRules.add((*it));
     }
 }

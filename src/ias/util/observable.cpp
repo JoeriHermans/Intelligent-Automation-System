@@ -52,8 +52,8 @@ bool Observable::containsObserver( const Observer * observer ) const {
 void Observable::addObserver( Observer * observer ) {
     // Checking the precondition.
     assert( observer != nullptr );
-    
-    mObservers.push_back(observer);
+    if( !containsObserver(observer) )
+        mObservers.push_back(observer);
 }
 
 void Observable::removeObservers( void ) {
