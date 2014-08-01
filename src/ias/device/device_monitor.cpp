@@ -33,6 +33,7 @@
 #include <ias/database/interface/database_statement.h>
 #include <ias/device/device_monitor.h>
 #include <ias/device/struct_device_update.h>
+#include <ias/device/task/task_device_update.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -45,10 +46,12 @@ void DeviceMonitor::setDatabaseConnection( DatabaseConnection * dbConnection ) {
 
 DeviceMonitor::DeviceMonitor( DatabaseConnection * dbConnection ) {
     setDatabaseConnection(dbConnection);
+    mPool = new ThreadPool(1);
 }
 
 DeviceMonitor::~DeviceMonitor( void ) {
-    // Nothing to do here.
+    mPool->stop();
+    delete mPool;
 }
 
 void DeviceMonitor::update( void ) {
@@ -65,18 +68,5 @@ void DeviceMonitor::update( void * argument ) {
     assert( argument != nullptr );
     
     dUpdate = (struct device_update *) argument;
-    query =
-        "INSERT INTO device_history_states "
-        "(device_id,technology_member,timestamp,value) "
-        "VALUES (" + 
-            std::to_string(dUpdate->mDevice->getId()) + "," +
-            "\"" + dUpdate->mStateIdentifier + "\"," +
-            std::to_string(std::time(nullptr)) + "," +
-            "\"" + dUpdate->mValue + "\")";
-    statement = mDbConnection->createStatement(query);
-    if( statement != nullptr ) {
-        result = statement->execute();
-        if( result != nullptr )
-            delete result;
-    }
+    mPool->enqueue(new TaskDeviceUpdate(mDbConnection,dUpdate));
 }

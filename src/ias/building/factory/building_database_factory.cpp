@@ -67,6 +67,7 @@ std::vector<Area *> BuildingDatabaseFactory::fetchAreas( const std::size_t id )
                 }
                 delete row;
             }
+            delete result;
         }
         delete statement;
     }

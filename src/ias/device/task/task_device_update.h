@@ -1,9 +1,8 @@
 /**
- * A class which describes the actions and properties of a device monitor. A
- * device monitor is responsible for monitoring changes in the state of
- * registered devices and reporting that with a certain task.
+ * A task which is responsible for updating the state of a device in a
+ * database.
  *
- * @date                    Jul 31, 2014
+ * @date                    Aug 1, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -22,19 +21,19 @@
  * limitations under the License.
  */
 
-#ifndef DEVICE_MONITOR_H_
-#define DEVICE_MONITOR_H_
+#ifndef TASK_DEVICE_UPDATE_H_
+#define TASK_DEVICE_UPDATE_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // Application dependencies.
 #include <ias/database/interface/database_connection.h>
-#include <ias/threadpool/threadpool.h>
-#include <ias/util/observer.h>
+#include <ias/device/struct_device_update.h>
+#include <ias/threadpool/task.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class DeviceMonitor : public Observer {
+class TaskDeviceUpdate : public Task {
 
     public:
 
@@ -44,23 +43,24 @@ class DeviceMonitor : public Observer {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
-    /**
-     * Contains the database connection.
-     */
-    DatabaseConnection * mDbConnection;
     
     /**
-     * Contains the thread pool which is responsible for processing the
-     * device updates.
+     * Contains the database connection we will be using.
      */
-    ThreadPool * mPool;
-     
+    DatabaseConnection * mDbConnection;
+
+    /**
+     * Contains the data which we need to write to the database.
+     */
+    struct device_update mData;
+        
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
     
-    void setDatabaseConnection( DatabaseConnection * dbConnection );
+    void setDatabaseConnection( DatabaseConnection * connection );
+    
+    void setDeviceUpdateData( const struct device_update * data );
     
     // END Private methods. //////////////////////////////////////////
 
@@ -72,23 +72,22 @@ class DeviceMonitor : public Observer {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
-    DeviceMonitor( DatabaseConnection * dbConnection );
-        
+    
+    TaskDeviceUpdate( DatabaseConnection * dbConnection,
+                      const struct device_update * data );
+    
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~DeviceMonitor( void );
+    virtual ~TaskDeviceUpdate( void );
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
-    virtual void update( void );
-    
-    virtual void update( void * argument );
-    
+        
+    virtual void execute( void );
+        
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
@@ -96,4 +95,4 @@ class DeviceMonitor : public Observer {
 
 };
 
-#endif /* DEVICE_MONITOR_H_ */
+#endif /* TASK_DEVICE_UPDATE_H_ */

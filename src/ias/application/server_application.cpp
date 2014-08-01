@@ -362,6 +362,7 @@ ServerApplication::~ServerApplication( void ) {
     delete mServerController; mServerController = nullptr;
     delete mServerUser; mServerUser = nullptr;
     delete mNlp; mNlp = nullptr;
+    delete mDeviceMonitor; mDeviceMonitor = nullptr;
     cleanupOperators();
 }
 

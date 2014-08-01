@@ -26,6 +26,7 @@
 #include <cassert>
 #include <cstring>
 #include <iostream>
+#include <ctime>
 
 // Application dependencies.
 #include <ias/controller/controller.h>
@@ -147,6 +148,7 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
             dUpdate.mDevice = this;
             dUpdate.mStateIdentifier = key;
             dUpdate.mValue = value;
+            dUpdate.mTimestamp = std::time(nullptr);
             // Value was successfully set.
             result = 0;
         }
