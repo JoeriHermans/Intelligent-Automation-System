@@ -143,7 +143,6 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
         // Value has wrong type.
         result = 2;
         if( type->matches(value) ) {
-            
             mState[key] = std::pair<std::string,const ValueType *>(value,type);
             dUpdate.mDevice = this;
             dUpdate.mStateIdentifier = key;
