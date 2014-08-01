@@ -26,6 +26,7 @@
 // System dependencies.
 #include <cassert>
 #include <cstdlib>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/database/interface/database_statement.h>
@@ -63,7 +64,7 @@ std::vector<RuleConditionSet *> RuleDatabaseFactory::fetchConditionSets(
     query =
         "SELECT id "
         "FROM rule_condition_sets "
-        "WHERE set_id = " + std::to_string(id);
+        "WHERE rule_id = " + std::to_string(id);
     statement = getDbConnection()->createStatement(query);
     if( statement != nullptr ) {
         result = statement->execute();
@@ -83,6 +84,21 @@ std::vector<RuleConditionSet *> RuleDatabaseFactory::fetchConditionSets(
     }
     
     return ( conditionSets );
+}
+
+bool RuleDatabaseFactory::deviceRegistered( Device * d ) const {
+    bool result;
+    
+    // Checking the precondition.
+    assert( d != nullptr );
+    
+    if( std::find(mRuleDevices.begin(),mRuleDevices.end(),d) 
+        != mRuleDevices.end() )
+        result = true;
+    else
+        result = false;
+    
+    return ( result );
 }
 
 std::vector<RuleCondition *> RuleDatabaseFactory::fetchConditions( 
@@ -118,12 +134,17 @@ std::vector<RuleCondition *> RuleDatabaseFactory::fetchConditions(
                 member = row->getColumn(4);
                 value = row->getColumn(5);
                 d1 = mDeviceContainer->get(deviceId);
+                if( !deviceRegistered(d1) )
+                    mRuleDevices.push_back(d1);
                 if( value.length() > 0 ) {
                     condition = new RuleConditionStatic(d1,member,value,op);
                 } else {
                     referencedDeviceId =
                         (std::size_t) atol(row->getColumn(6).c_str());
                     referencedMember = row->getColumn(7);
+                    d2 = mDeviceContainer->get(referencedDeviceId);
+                    if( !deviceRegistered(d2) )
+                        mRuleDevices.push_back(d2);
                     condition = new RuleConditionDynamic(d1,member,d2,
                                                          referencedMember,op);
                 }
@@ -185,12 +206,22 @@ Operator * RuleDatabaseFactory::fetchOperator(
     Operator * op;
     
     auto it = mOperators->find(identifier);
-    if( it != mOperators->end() )
+    if( it != mOperators->end() ) {
         op = it->second;
-    else
+    } else {
         op = nullptr;
+    }
     
-    return ( nullptr );
+    return ( op );
+}
+
+void RuleDatabaseFactory::registerRule( Rule * r ) {
+    // Checking the precondition.
+    assert( r != nullptr );
+    
+    for( Device * d : mRuleDevices )
+        d->addObserver(r);
+    mRuleDevices.clear();
 }
 
 RuleDatabaseFactory::RuleDatabaseFactory( 
@@ -234,6 +265,7 @@ std::vector<Rule *> RuleDatabaseFactory::fetchAll( void ) {
                 sets = fetchConditionSets(id);
                 actions = fetchActions(id);
                 rule = new Rule(id,name,description,sets,actions);
+                registerRule(rule);
                 rules.push_back(rule);
                 delete row;
             }

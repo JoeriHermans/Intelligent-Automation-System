@@ -70,6 +70,7 @@ Rule::Rule( const std::size_t id,
     setName(name);
     setConditions(conditions);
     setActions(actions);
+    mEnforcing = true;
 }
 
 Rule::Rule( const std::size_t id,
@@ -82,9 +83,11 @@ Rule::Rule( const std::size_t id,
     setDescription(description);
     setConditions(conditions);
     setActions(actions);
+    mEnforcing = true;
 }
 
 Rule::~Rule( void ) {
+    mEnforcing = false;
     // Free the allocated conditions.
     for( auto conditionSet : mConditions )
         delete conditionSet;
@@ -108,14 +111,16 @@ const std::string & Rule::getDescription( void ) const {
 void Rule::enforce( void ) {
     bool conditionMet;
 
-    conditionMet = false;
-    for( auto it = mConditions.begin(); 
-        it != mConditions.end() && !conditionMet ; ++it ) {
-        conditionMet |= (*it)->evaluate();
-    }
-    if( conditionMet ) {
-        for( auto action : mActions )
-            action->execute();
+    if( mEnforcing ) {
+        conditionMet = false;
+        for( auto it = mConditions.begin(); 
+            it != mConditions.end() && !conditionMet ; ++it ) {
+            conditionMet = (*it)->evaluate();
+        }
+        if( conditionMet ) {
+            for( auto action : mActions )
+                action->execute();
+        }
     }
 }
 

@@ -59,6 +59,12 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
      */
     std::map<std::string,Operator *> * mOperators;
     
+    /**
+     * Contains the temporary device buffer which contains the devices
+     * which we need to observe.
+     */
+    std::vector<Device *> mRuleDevices;
+    
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -74,6 +80,10 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
     std::vector<RuleAction *> fetchActions( const std::size_t id );
     
     Operator * fetchOperator( const std::string & identifier ) const;
+    
+    bool deviceRegistered( Device * d ) const;
+    
+    void registerRule( Rule * r );
     
     // END Private methods. //////////////////////////////////////////
 

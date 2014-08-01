@@ -60,3 +60,7 @@ bool RuleConditionSet::evaluate( void ) const {
     
     return ( result );
 }
+
+const std::vector<RuleCondition *> & RuleConditionSet::getConditions( void ) const {
+    return ( mConditions );
+}

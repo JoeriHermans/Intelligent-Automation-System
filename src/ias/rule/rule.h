@@ -72,6 +72,13 @@ class Rule : public Observer {
      * has been positively evaluated.
      */
     std::vector<RuleAction *> mActions;
+    
+    /**
+     * A boolean which indicates whether the rule can be enforced.
+     * 
+     * @note    By default, this member is true by default.
+     */
+    bool mEnforcing;
         
     // END Private members. //////////////////////////////////////////
 
@@ -86,6 +93,8 @@ class Rule : public Observer {
     void setConditions( const std::vector<RuleConditionSet *> & conditions );
     
     void setActions( const std::vector<RuleAction *> & actions );
+    
+    void unregister( void );
     
     // END Private methods. //////////////////////////////////////////
 

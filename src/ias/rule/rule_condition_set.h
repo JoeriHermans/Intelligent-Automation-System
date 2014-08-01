@@ -81,6 +81,8 @@ class RuleConditionSet {
     
     bool evaluate( void ) const;
     
+    const std::vector<RuleCondition *> & getConditions( void ) const;
+    
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

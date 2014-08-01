@@ -48,6 +48,7 @@
 #include <ias/user/command/command_list_controllers.h>
 #include <ias/user/command/command_execute_feature.h>
 #include <ias/user/command/command_say.h>
+#include <ias/rule/factory/rule_database_factory.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -147,6 +148,7 @@ void ServerApplication::fillContainers( void ) {
     fillControllers();
     fillAreas();
     fillBuildings();
+    fillRules();
 }
 
 void ServerApplication::fillUsers( void ) {
@@ -231,6 +233,17 @@ void ServerApplication::fillAreas( void ) {
     areas = factory.fetchAll();
     for( auto it = areas.begin() ; it != areas.end() ; ++it ) {
         mContainerAreas.add((*it));
+    }
+}
+
+void ServerApplication::fillRules( void ) {
+    RuleDatabaseFactory factory(mDbConnection,&mContainerDevices,&mOperators);
+    std::vector<Rule *> rules;
+    
+    rules = factory.fetchAll();
+    for( auto it = rules.begin() ; it != rules.end() ; ++it ) {
+        std::cout << "Adding rule." << std::endl;
+        mContainerRules.add((*it));
     }
 }
 

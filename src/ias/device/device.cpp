@@ -25,6 +25,7 @@
 // System dependencies.
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/controller/controller.h>

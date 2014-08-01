@@ -52,6 +52,7 @@
 #include <ias/operator/operator_greater_than.h>
 #include <ias/operator/operator_less_than.h>
 #include <ias/operator/operator_not_equals.h>
+#include <ias/rule/rule.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -79,6 +80,7 @@ class ServerApplication : public Application {
     Container<User *> mContainerUsers;
     Container<Building *> mContainerBuildings;
     Container<Area *> mContainerAreas;
+    Container<Rule *> mContainerRules;
     
     /**
      * Contains the IAS natural language processor.
@@ -160,6 +162,8 @@ class ServerApplication : public Application {
     void fillBuildings( void );
     
     void fillAreas( void );
+    
+    void fillRules( void );
     
     void initializeSalts( void );
     
