@@ -227,7 +227,7 @@ void ThreadPool::process( ThreadPool * pool ) {
             continue;
         }
         time(&timeCurrent);
-        if( difftime(timeCurrent,timeLastProcessedTask) > 2 ) {
+        if( !pool->tasksLeft() ) {
             pool->incrementSleepingThread();
             pool->mTaskLoad.wait(lock);
             pool->decrementSleepingThread();
