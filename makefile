@@ -39,3 +39,12 @@ build/%.bc: src/%.cpp
 clean:
 	@rm -f -r build
 	@rm -f -r bin
+	
+install:
+	@mv bin/ias /usr/bin/ias
+	
+configuration:
+	@mkdir -p /etc/ias/configuration
+	@touch /etc/ias/configuration/server
+	@touch /etc/ias/configuration/controller
+	@touch /etc/ias/configuration/controller_devices
