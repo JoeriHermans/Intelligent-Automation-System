@@ -19,6 +19,12 @@ NO_BOLD = \033[0m
 OK_STRING = $(BOLD)$(GREEN_COLOR)[OK]$(NO_COLOR)$(NO_BOLD)
 ARROW = $(YELLOW_COLOR)=>$(NO_COLOR)
 
+# Currently IAS only supports only the MySQL driver.
+DATABASE_DRIVER = mysql
+
+.PHONY: all configuration update_binary
+.DEFAULT: all
+
 all: ias
 
 ias: $(OBJECTS)
@@ -39,12 +45,14 @@ build/%.bc: src/%.cpp
 clean:
 	@rm -f -r build
 	@rm -f -r bin
-	
-install:
-	@mv bin/ias /usr/bin/ias
-	
+
+update_binary:
+	@cp bin/ias /usr/bin/ias
+		
 configuration:
 	@mkdir -p /etc/ias/configuration
-	@touch /etc/ias/configuration/server
-	@touch /etc/ias/configuration/controller
-	@touch /etc/ias/configuration/controller_devices
+	@cp -r configuration /etc/ias
+
+install:
+	@make -s update_binary
+	@make -s configuration
