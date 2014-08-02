@@ -1,0 +1,20 @@
+# IAS 0.1 server configuration.
+# -----------------------------
+#
+# This the the IAS server configuration file.
+
+# Basic controller settings.
+# The controller identifier is the unique identifier of the controller.
+controller_identifier = switchboardc
+# The security code which is associated with the specified controller identifier.
+# This setting will be used to authenticate the controller with the IAS server.
+controller_security_code = securityswitchboarc
+
+# IAS server settings.
+server_address = 127.0.0.1
+server_port = 5000
+
+# Device list.
+# In this file you specify the processes which need to be initiated
+# to start the device processes.
+devices = /etc/ias/configuration/controller_devices

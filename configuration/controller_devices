@@ -1,0 +1,19 @@
+# IAS 0.1 controller devices configuration.
+# -----------------------------------------
+#
+# This the the IAS controller configuration file.
+# In this file you will specify the unique device identifiers with the
+# processes which need to be called by the system to initiate a device process.
+#
+# Example:
+#
+# device0
+# /usr/bin/python3 /home/ias/scripts/weather.py [arguments]
+#
+# The first line indicates the device identifier, this way the controller knows
+# what devices are allowed to connect. Note that the device process needs to
+# authenticate itself with the controller service.
+#
+# The next line indicates the process which needs to be called by the
+# system (with possible arguments).
+#

@@ -1,0 +1,19 @@
+# IAS 0.1 server configuration.
+# -----------------------------
+#
+# This the the IAS server configuration file.
+
+# Database configuration.
+# In IAS 0.1 only the MySQL database driver is currently supported.
+database_driver		= mysql
+database_username	= username
+database_password	= password
+database_schema		= schema
+database_host		= 127.0.0.1
+
+# Network configuration.
+network_bind_port	= 5000
+
+# Security settings.
+security_presalt	= hash_presalt
+security_postsalt	= hash_postsalt
