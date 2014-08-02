@@ -1,7 +1,7 @@
-# IAS 0.1 server configuration.
-# -----------------------------
+# IAS 0.1 controller configuration.
+# ---------------------------------
 #
-# This the the IAS server configuration file.
+# This the the IAS controller configuration file.
 
 # Basic controller settings.
 # The controller identifier is the unique identifier of the controller.
