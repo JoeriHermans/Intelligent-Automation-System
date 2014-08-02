@@ -5,10 +5,10 @@
 
 # Basic controller settings.
 # The controller identifier is the unique identifier of the controller.
-controller_identifier = switchboardc
+controller_identifier = controller_identifier
 # The security code which is associated with the specified controller identifier.
 # This setting will be used to authenticate the controller with the IAS server.
-controller_security_code = securityswitchboarc
+controller_security_code = controller_securitycode
 
 # IAS server settings.
 server_address = 127.0.0.1
