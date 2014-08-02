@@ -1,5 +1,5 @@
-Intelligent Automation System
-=============================
+Intelligent Automation System 0.1
+=================================
 
 TODO
 
