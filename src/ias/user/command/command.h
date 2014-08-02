@@ -28,6 +28,7 @@
 // System dependencies.
 #include <cassert>
 #include <string>
+#include <iostream>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -54,7 +55,7 @@ class Command {
     void setIdentifier( const std::string & identifier ) {
         // Checking the precondition.
         assert( identifier.length() > 0 );
-        
+
         mIdentifier = identifier;
     }
     
@@ -77,14 +78,16 @@ class Command {
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~Command( void ) {
-        // Nothing to do here.
-    }
+    virtual ~Command( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
     
+    virtual const std::string & getIdentifier( void ) const {
+    	return ( mIdentifier );
+    }
+
     virtual std::string execute( const std::string & parameters ) = 0;
     
     // END Public methods. ///////////////////////////////////////////

@@ -48,6 +48,7 @@
 #include <ias/user/command/command_list_controllers.h>
 #include <ias/user/command/command_execute_feature.h>
 #include <ias/user/command/command_say.h>
+#include <ias/user/command/command_list_commands.h>
 #include <ias/rule/factory/rule_database_factory.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -336,6 +337,10 @@ void ServerApplication::initializeDispatcher( void ) {
     mDispatcher.registerCommand(
         CommandSay::kIdentifier,
         new CommandSay(mNlp)
+    );
+    mDispatcher.registerCommand(
+        CommandListCommands::kIdentifier,
+        new CommandListCommands(&mDispatcher)
     );
 }
 

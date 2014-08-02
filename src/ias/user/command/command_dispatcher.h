@@ -27,6 +27,7 @@
 
 // System dependencies.
 #include <string>
+#include <vector>
 #include <map>
 
 // Application dependencies.
@@ -84,6 +85,8 @@ class CommandDispatcher {
     std::string dispatch( const std::string & identifier,
                           const std::string & parameter );
     
+    std::vector<Command *> getCommands( void ) const;
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

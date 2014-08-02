@@ -75,3 +75,13 @@ std::string CommandDispatcher::dispatch( const std::string & identifier,
     
     return ( result );
 }
+
+std::vector<Command *> CommandDispatcher::getCommands( void ) const {
+    std::vector<Command *> commands;
+
+    for( auto it = mCommands.begin() ; it != mCommands.end() ; ++it ) {
+        commands.push_back(it->second);
+    }
+
+    return ( commands );
+}
