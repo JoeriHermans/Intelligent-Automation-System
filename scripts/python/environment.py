@@ -162,7 +162,6 @@ def setLocation( location ):
     updateState("location",gLocation)
     setApiUrl()
     update()
-    sendFullState()
 
 def processFeature(featureIdentifier,parameter):
     global gRunning
@@ -175,8 +174,6 @@ def processFeature(featureIdentifier,parameter):
         setLocation(parameter)
     elif( featureIdentifier == "update" ):
         update()
-    else:
-        gRunning = False
 
 def processCommand():
     global gSocket
@@ -192,9 +189,9 @@ def processCommand():
     featureIdentifier = featureIdentifier.decode("ascii")
     if( parameterLength > 0 ):
         parameter = gSocket.recv(parameterLength)
+        parameter = parameter.decode("ascii")
     else:
         parameter = ""
-    parameter = parameter.decode("ascii")
     processFeature(featureIdentifier,parameter)
     
 
@@ -212,6 +209,7 @@ def main():
     update()
     sendFullState()
     processCommands()
+    print("EXITING")
 
 if( __name__ == "__main__" ):
     main()
