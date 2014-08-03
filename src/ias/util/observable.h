@@ -28,6 +28,8 @@
 
 // System dependencies.
 #include <vector>
+#include <mutex>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/util/observer.h>
@@ -53,6 +55,12 @@ class Observable {
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    /**
+     * A mutex which keeps the observers synchronized.
+     */
+    mutable std::mutex mMutexObservers;
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -82,6 +90,8 @@ class Observable {
     
     void removeObservers( void );
     
+    void removeObserver( const Observer * observer );
+
     void notifyObservers( void );
     
     void notifyObservers( void * argument );

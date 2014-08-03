@@ -49,6 +49,7 @@
 #include <ias/user/command/command_execute_feature.h>
 #include <ias/user/command/command_say.h>
 #include <ias/user/command/command_list_commands.h>
+#include <ias/user/command/command_delete_rule.h>
 #include <ias/rule/factory/rule_database_factory.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -341,6 +342,10 @@ void ServerApplication::initializeDispatcher( void ) {
     mDispatcher.registerCommand(
         CommandListCommands::kIdentifier,
         new CommandListCommands(&mDispatcher)
+    );
+    mDispatcher.registerCommand(
+        CommandDeleteRule::kIdentifier,
+        new CommandDeleteRule(&mContainerDevices,&mContainerRules)
     );
 }
 

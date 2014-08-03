@@ -156,18 +156,21 @@ class Container {
     }
     
     T get( const std::size_t id ) const {
+        T currentElement;
         T element;
         
         // Checking the precondition.
         assert( id > 0 );
         
+        element = nullptr;
         mMutexElements.lock();
-        auto it = 
-            std::lower_bound(mElements.begin(),mElements.end(),id,Compare());
-        if( it != mElements.end() )
-            element = (*it);
-        else
-            element = nullptr;
+        for( auto it = mElements.begin() ; it != mElements.end() ; ++it ) {
+            currentElement = (*it);
+            if( currentElement->getId() == id ) {
+                element = currentElement;
+                break;
+            }
+        }
         mMutexElements.unlock();
         
         return ( element );
