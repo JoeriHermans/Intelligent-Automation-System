@@ -9,6 +9,7 @@
 import sys
 import socket
 import struct
+import requests
 
 # Global members, which are required for the communication
 # with the remote IAS controller.
@@ -32,7 +33,15 @@ gWindDirection = 0
 gLocation = sys.argv[4]
 gCoulds = 0
 gUpdateInterval = sys.argv[5] # In seconds
-gMetrics = sys.argv[6] # If != 0, reported values are in the metric system.
+gMetrics = int(sys.argv[6]) # If != 0, reported values are in the metric system.
+gApiUrl = ""
+
+def setApiUrl():
+    global gApiUrl
+    global gLocation
+    gApiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + gLocation
+    if( gMetrics != 0 ):
+        gApiUrl +=  "&units=metric"
 
 def updateState( stateIdentifier , newValue ):
     global gSocket
@@ -61,12 +70,31 @@ def setInterval( seconds ):
     gUpdateInterval = seconds
     updateState("updateinterval",str(seconds))
 
+def update():
+    global gApiUrl
+    response = requests.get(gApiUrl)
+    data = response.json()
+    # TODO Parse JSON.
+
+def setLocation( location ):
+    global gLocation
+    gLocation = location
+    updateState("location",gLocation)
+    setApiUrl()
+    update()
+    sendFullState()
+
 def processFeature(featureIdentifier,parameter):
+    global gRunning
     if( featureIdentifier == "setinterval" and 
         len(parameter) > 0 and
         parameter.isdigit() ):
         parameter = int(parameter)
         setInterval(parameter)
+    elif( featureIdentifier == "setlocation" and len(parameter) > 0 ):
+        setLocation(parameter)
+    else:
+        gRunning = False
 
 def processCommand():
     global gSocket
@@ -98,6 +126,8 @@ def processCommands():
 
 def main():
     authenticate()
+    setApiUrl()
+    update()
     sendFullState()
     processCommands()
 
