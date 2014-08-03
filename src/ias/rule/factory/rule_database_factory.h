@@ -52,26 +52,26 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
     /**
      * A container which contains all devices which are known to IAS.
      */
-    Container<Device *> * mDeviceContainer;
+    const Container<Device *> * mDeviceContainer;
     
     /**
      * Contains the operator map.
      */
-    std::map<std::string,Operator *> * mOperators;
+    const std::map<std::string,Operator *> * mOperators;
     
     /**
      * Contains the temporary device buffer which contains the devices
      * which we need to observe.
      */
     std::vector<Device *> mRuleDevices;
-    
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
     
-    void setDeviceContainer( Container<Device *> * devices );
+    void setDeviceContainer( const Container<Device *> * devices );
     
-    void setOperators( std::map<std::string,Operator *> * operators );
+    void setOperators( const std::map<std::string,Operator *> * operators );
     
     std::vector<RuleConditionSet *> fetchConditionSets( const std::size_t id );
     
@@ -97,8 +97,8 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
     // BEGIN Constructors. ///////////////////////////////////////////
     
     RuleDatabaseFactory( DatabaseConnection * dbConnection,
-                         Container<Device *> * devices,
-                         std::map<std::string,Operator *> * operators );
+                         const Container<Device *> * devices,
+                         const  std::map<std::string,Operator *> * operators );
     
     // END Constructors. /////////////////////////////////////////////
 
@@ -112,6 +112,8 @@ class RuleDatabaseFactory : public DatabaseFactory<Rule *> {
     
     virtual std::vector<Rule *> fetchAll( void );
     
+    Rule * fetch( const std::size_t id );
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

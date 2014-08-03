@@ -69,6 +69,10 @@ class Factory {
     
     virtual std::vector<T> fetchAll( void ) = 0;
     
+    virtual T fetch( const std::size_t id ) {
+        return ( nullptr );
+    }
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

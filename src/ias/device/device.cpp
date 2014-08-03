@@ -43,7 +43,7 @@ inline void Device::initialize( void ) {
 void Device::setId( const std::size_t id ) {
     // Checking the precondition.
     assert( id > 0 );
-    
+
     mId = id;
 }
 
@@ -135,13 +135,11 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
     // Checking the preconditions.
     assert( !key.empty() && !value.empty() );
     
-    // Key could not be found.
     result = 1;
     mMutexTechnology.lock();
     it = mState.find(key);
     if( it != mState.end() ) {
         type = it->second.second;
-        // Value has wrong type.
         result = 2;
         if( type->matches(value) ) {
             std::cout << "UPDATE: " << mIdentifier << std::endl << "   " << key << ": " << value << std::endl;
@@ -150,7 +148,6 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
             dUpdate.mStateIdentifier = key;
             dUpdate.mValue = value;
             dUpdate.mTimestamp = std::time(nullptr);
-            // Value was successfully set.
             result = 0;
         }
     }

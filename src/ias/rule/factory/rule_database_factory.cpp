@@ -38,14 +38,14 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-void RuleDatabaseFactory::setDeviceContainer( Container<Device *> * devices ) {
+void RuleDatabaseFactory::setDeviceContainer( const Container<Device *> * devices ) {
     // Checking the preconditions.
     assert( devices != nullptr );
     
     mDeviceContainer = devices;
 }
 
-void RuleDatabaseFactory::setOperators( std::map<std::string,Operator *> * op ) {
+void RuleDatabaseFactory::setOperators( const std::map<std::string,Operator *> * op ) {
     // Checking the precondition.
     assert( op != nullptr );
     
@@ -226,8 +226,8 @@ void RuleDatabaseFactory::registerRule( Rule * r ) {
 
 RuleDatabaseFactory::RuleDatabaseFactory( 
     DatabaseConnection * dbConnection,
-    Container<Device *> * devices,
-    std::map<std::string,Operator *> * operators ) :
+    const Container<Device *> * devices,
+    const std::map<std::string,Operator *> * operators ) :
     DatabaseFactory<Rule *>(dbConnection) {
     setDeviceContainer(devices);
     setOperators(operators);
@@ -275,4 +275,45 @@ std::vector<Rule *> RuleDatabaseFactory::fetchAll( void ) {
     }
     
     return ( rules );
+}
+
+Rule * RuleDatabaseFactory::fetch( const std::size_t id ) {
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+    DatabaseResultRow * row;
+    std::string query;
+    Rule * rule;
+
+    // Checking the precondition.
+    assert( id > 0 );
+
+    query =
+            "SELECT * "
+            "FROM rules "
+            "WHERE id = " + std::to_string(id);
+    statement = getDbConnection()->createStatement(query);
+    if( statement != nullptr ) {
+        result = statement->execute();
+        if( result != nullptr ) {
+            if( result->hasNext() ) {
+                std::string name;
+                std::string description;
+                std::vector<RuleConditionSet *> sets;
+                std::vector<RuleAction *> actions;
+
+                row = result->next();
+                name = row->getColumn(1);
+                description = row->getColumn(2);
+                sets = fetchConditionSets(id);
+                actions = fetchActions(id);
+                rule = new Rule(id,name,description,sets,actions);
+                registerRule(rule);
+                delete row;
+            }
+            delete result;
+        }
+        delete statement;
+    }
+
+    return ( rule );
 }
