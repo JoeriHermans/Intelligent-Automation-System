@@ -31,7 +31,7 @@ gTemperatureMax = 0
 gWindSpeed = 0
 gWindDirection = 0
 gLocation = sys.argv[4]
-gCoulds = 0
+gClouds = 0
 gUpdateInterval = sys.argv[5] # In seconds
 gMetrics = int(sys.argv[6]) # If != 0, reported values are in the metric system.
 gApiUrl = ""
@@ -52,6 +52,66 @@ def updateState( stateIdentifier , newValue ):
     data += str.encode(newValue)
     gSocket.sendall(data)
 
+def setSunsetTimestamp( timestamp ):
+    global gSunsetTimestamp
+    if( gSunsetTimestamp != timestamp ):
+        gSunsetTimestamp = timestamp
+        updateState("sunset_timestamp",timestamp)
+
+def setSunriseTimestamp( timestamp ):
+    global gSunriseTimestamp
+    if( gSunriseTimestamp != timestamp ):
+        gSunristTimestamp = timestamp
+        updateState("sunrise_timestamp",timestamp)
+
+def setHumidity( humidity ):
+    global gHumidity
+    if( gHumidity != humidity ):
+        gHumidity = humidity
+        updateState("humidity",humidity)
+
+def setPressure( pressure ):
+    global gPressure
+    if( gPressure != pressure ):
+        gPressure = pressure
+        updateState("pressure",pressure)
+
+def setTemperature( temperature ):
+    global gTemperature
+    if( gTemperature != temperature ):
+        gTemperature = temperature
+        updateState("temperature",temperature)
+
+def setTemperatureMin( temperature ):
+    global gTemperatureMin
+    if( gTemperatureMin != temperature ):
+        gTemperatureMin = temperature
+        updateState("temperature_min",temperature)
+
+def setTemperatureMax( temperature ):
+    global gTemperatureMax
+    if( gTemperatureMax != temperature ):
+        gTemperatureMax = temperature
+        updateState("temperature_max",temperature)
+
+def setWindSpeed( speed ):
+    global gWindSpeed
+    if( gWindSpeed != speed ):
+        gWindSpeed = speed
+        updateState("windspeed",speed)
+
+def setWindDirection( direction ):
+    global gWindDirection
+    if( gWindDirection != direction ):
+        gWindDirection = direction
+        updateState("winddirection",direction)
+
+def setClouds( clouds ):
+    global gClouds
+    if( gClouds != clouds ):
+        gClouds = clouds
+        updateState("clouds",clouds)
+
 def sendFullState():
     global gLocation
     global gUpdateInterval
@@ -70,11 +130,31 @@ def setInterval( seconds ):
     gUpdateInterval = seconds
     updateState("updateinterval",str(seconds))
 
+def parseAndProcessData( json ):
+    # Fetch data from the JSON structure.
+    temperature = json["main"]["temp"]
+    temperature_min = json["main"]["temp_min"]
+    temperature_max = json["main"]["temp_max"]
+    pressure = json["main"]["pressure"]
+    humidity = json["main"]["humidity"]
+    wind_speed = json["wind"]["speed"]
+    wind_direction = json["wind"]["deg"]
+    clouds = json["clouds"]["all"]
+    # Update the retrieved date.
+    setTemperature(str(temperature))
+    setTemperatureMin(str(temperature_min))
+    setTemperatureMax(str(temperature_max))
+    setPressure(str(pressure))
+    setHumidity(str(humidity))
+    setWindSpeed(str(wind_speed))
+    setWindDirection(str(wind_direction))
+    setClouds(str(clouds))
+
 def update():
     global gApiUrl
     response = requests.get(gApiUrl)
     data = response.json()
-    # TODO Parse JSON.
+    parseAndProcessData(data)
 
 def setLocation( location ):
     global gLocation
@@ -93,6 +173,8 @@ def processFeature(featureIdentifier,parameter):
         setInterval(parameter)
     elif( featureIdentifier == "setlocation" and len(parameter) > 0 ):
         setLocation(parameter)
+    elif( featureIdentifier == "update" ):
+        update()
     else:
         gRunning = False
 
