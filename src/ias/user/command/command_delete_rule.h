@@ -1,7 +1,7 @@
 /**
  * A command which is responsible for unregistering rules from IAS>
  *
- * @date                    Jul 19, 2014
+ * @date                    Aug 2, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
