@@ -10,6 +10,8 @@ import sys
 import socket
 import struct
 import requests
+import time
+from threading import Thread
 
 # Global members, which are required for the communication
 # with the remote IAS controller.
@@ -203,13 +205,27 @@ def processCommands():
         except:
             gRunning = False
 
+def environmentMonitor():
+    global gRunning
+    global gUpdateInterval
+    update()
+    sendFullState()
+    lastUpdateTimestamp = int(time.time())
+    while( gRunning ):
+        currentTimestamp = int(time.time())
+        dt = currentTimestamp - lastUpdateTimestamp
+        if( dt > int(gUpdateInterval) ):
+            update()
+            lastUpdateTimestamp = int(time.time())
+        time.sleep(1)
+
 def main():
     authenticate()
     setApiUrl()
-    update()
-    sendFullState()
+    thread = Thread(target = environmentMonitor)
+    thread.start()
     processCommands()
-    print("EXITING")
+    thread.join()
 
 if( __name__ == "__main__" ):
     main()
