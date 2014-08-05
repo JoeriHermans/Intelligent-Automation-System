@@ -202,7 +202,6 @@ void ControllerApplication::authenticateWithServer( void ) {
 }
 
 void ControllerApplication::startDeviceProcesses( void ) {
-    std::stringstream ss;
     std::string path;
     std::string argument;
     std::size_t nArguments;
@@ -212,7 +211,8 @@ void ControllerApplication::startDeviceProcesses( void ) {
     
     for( auto it = mDeviceCommands.begin() ;  it != mDeviceCommands.end() ; ++it ) {
         const std::string & command = (*it);
-        
+        std::stringstream ss;
+
         ss << command;
         ss >> path;
         nArguments = numWords(command);
