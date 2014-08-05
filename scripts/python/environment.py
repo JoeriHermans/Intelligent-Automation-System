@@ -23,17 +23,17 @@ gSocket.connect((gControllerAddress,gControllerPort))
 gRunning = True
 
 # Begin state members.
-gSunsetTimestamp = 0
-gSunriseTimestamp = 0
-gHumidity = 0
-gPressure = 0
-gTemperature = 0
-gTemperatureMin = 0
-gTemperatureMax = 0
-gWindSpeed = 0
-gWindDirection = 0
+gSunsetTimestamp = str(0)
+gSunriseTimestamp = str(0)
+gHumidity = str(0)
+gPressure = str(0)
+gTemperature = str(0)
+gTemperatureMin = str(0)
+gTemperatureMax = str(0)
+gWindSpeed = str(0)
+gWindDirection = str(0)
 gLocation = sys.argv[4]
-gClouds = 0
+gClouds = str(0)
 gUpdateInterval = sys.argv[5] # In seconds
 gMetrics = int(sys.argv[6]) # If != 0, reported values are in the metric system.
 gApiUrl = ""
@@ -142,6 +142,8 @@ def parseAndProcessData( json ):
     wind_speed = json["wind"]["speed"]
     wind_direction = json["wind"]["deg"]
     clouds = json["clouds"]["all"]
+    sunset = json["sys"]["sunset"]
+    sunrise = json["sys"]["sunrise"]
     # Update the retrieved date.
     setTemperature(str(temperature))
     setTemperatureMin(str(temperature_min))
@@ -151,6 +153,8 @@ def parseAndProcessData( json ):
     setWindSpeed(str(wind_speed))
     setWindDirection(str(wind_direction))
     setClouds(str(clouds))
+    setSunriseTimestamp(str(sunrise))
+    setSunsetTimestamp(str(sunset))
 
 def update():
     global gApiUrl
