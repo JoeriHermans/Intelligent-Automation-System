@@ -61,17 +61,19 @@ std::string CommandState::execute( const std::string & parameters ) {
     Member * member;
     std::size_t n;
 
-    device = mDevices->get(parameters);
-    if( device != nullptr ) {
-        const Technology * t = device->getTechnology();
-        const std::vector<Member *> & members = t->getMembers();
-        n = members.size();
-        for( std::size_t i = 0 ; i < n ; ++i ) {
-            member = members.at(i);
-            response += member->getIdentifier() + ": " + 
-                        device->get(member->getIdentifier());
-            if( n > 1 && i < ( n - 1 ) )
-                response += '\n';
+    if( parameters.length() > 0 ) {
+        device = mDevices->get(parameters);
+        if( device != nullptr ) {
+            const Technology * t = device->getTechnology();
+            const std::vector<Member *> & members = t->getMembers();
+            n = members.size();
+            for( std::size_t i = 0 ; i < n ; ++i ) {
+                member = members.at(i);
+                response += member->getIdentifier() + ": " +
+                            device->get(member->getIdentifier());
+                if( n > 1 && i < ( n - 1 ) )
+                    response += '\n';
+            }
         }
     }
     if( response.length() == 0 )
