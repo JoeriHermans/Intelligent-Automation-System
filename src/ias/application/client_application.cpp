@@ -190,7 +190,6 @@ void ClientApplication::processCommands( void ) {
     std::string prefix;
     std::string command;
     std::string identifier;
-    std::stringstream ss;
     Reader * reader;
     Writer * writer;
     std::uint8_t b;
@@ -224,6 +223,8 @@ void ClientApplication::processCommands( void ) {
                     break;
                 bytesWritten += n;
             }
+            std::stringstream ss;
+
             readResponse();
             ss << command;
             ss >> identifier;

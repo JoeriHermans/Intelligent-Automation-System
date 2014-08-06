@@ -117,8 +117,10 @@ void UserServer::start( void ) {
             }
             signalSessions();
             while( mSessions.size() > 0 ||
-                   mInactiveThreads.size() > 0 )
+                   mInactiveThreads.size() > 0 ) {
+                signalSessions();
                 cleanupFinishingThreads();
+            }
         });
     }
 }
