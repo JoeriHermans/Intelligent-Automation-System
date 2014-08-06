@@ -78,7 +78,6 @@ void DeviceServer::startListenThread( void ) {
             }
             cleanupFinishingThreads();
         }
-        std::cout << "Stopping listen thread." << std::endl;
         signalSessions();
         mSocket->closeConnection();
         while( mSessions.size() > 0 ||
@@ -86,7 +85,6 @@ void DeviceServer::startListenThread( void ) {
             signalSessions();
             cleanupFinishingThreads();
         }
-        std::cout << "Listen thread stopped." << std::endl;
     });
 }
 
