@@ -112,4 +112,27 @@ devices         = /etc/ias/configuration/controller_devices
 Architecture
 ------------
 
-TODO
+In the following subsections I will be discussing the different base entities
+and their properties and role within IAS.
+
+#### Technologies
+
+A technology is in essence a model of a device / set of devices with which IAS
+will be interacting with. Such a model consists of:
+
+- _Members_: describe the state of a device which implements a technology. Note
+that a member has a value type. 
+
+ For example, a member of a light bulb could be
+ _on_. This member describes whether a device which implements a technology 
+ _light bulb_ is on or off.
+
+- _Features_: are actions which can be performed by a device which implements the technology. Depending on the model of a feature, a feature could have an optional parameter with a value type.
+
+As a result of the fact that technologies are just models of a physical technology, different controllers can have different implementations of specific a model. This abstraction allows for a whole range of devices which in the end achieve the same result (e.g., turning on a lamp), but which require a different set of actions to achieve that result (e.g., turning on a LED which is connected to an Arduino). 
+
+#### Devices
+
+#### Controllers
+
+#### Rules
