@@ -133,6 +133,32 @@ As a result of the fact that technologies are just models of a physical technolo
 
 #### Devices
 
+Devices are entities which implement a certain technology, and which keep track
+of their own state. As discussed above, a technology implements a set of
+members and features. As a result, a device which implements a specific 
+technology copies the members of the technology it implements and registers 
+state updates from the controller to which the physical device is connected.
+
+Users and the system can perform actions on a device. An action could
+result in a state update, which a device will process.
+
 #### Controllers
 
+Bofore a user or the system can interact with a device which is associated with
+a certain controller, the controller in question needsd to connect to the
+server process. When a connection is mode, the controller will send an
+authorization key, which in turn will be validated by IAS.
+
+When the controller's authorization key has been accepted, a controller can
+notify the server of specific device updates and execute received features.
+
 #### Rules
+
+Rules are entities which contain a set of condition sets and exactly one action
+set. When the conditions in one of the condition sets are met, the rule will
+execute the action set, which in turn will execute a set of device actions.
+
+A condition set consists of a set of _dynamic conditions_ and / or
+_static conditions_. A _dynamic condition_ compares the current value of two
+different devices. This in constrast to a _static condition_ which will compare
+the current value of a member of a certain device with a static value.
