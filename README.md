@@ -162,3 +162,54 @@ A condition set consists of a set of _dynamic conditions_ and / or
 _static conditions_. A _dynamic condition_ compares the current value of two
 different devices. This in constrast to a _static condition_ which will compare
 the current value of a member of a certain device with a static value.
+
+Protocols
+---------
+
+#### Overview
+
+TODO
+
+#### Client protocol
+
+In order to communicate with the IAS process through user commands. One needs
+to send an _authentication packet_ to the IAS process. The structure of such
+an authentication packet is as follows:
+
+##### Request
+
+- Packet identification (1 unsigned byte): 0x00 (authentication)
+- Identifier length (1 unsigned byte): (username length = n)
+- Key length (1 unsigned byte): (password length = m)
+- n signed bytes which contain the username
+- m signed bytes which container the password
+
+##### Response
+
+- Packet identification (1 unsigned byte): 0x00 (authentication)
+- Success identifier (1 unsigned byte): 0x01 || 0x00 (0x01 -> Success)
+
+When a user has been authenticated by the IAS process, it is allowed to execute
+a set of user commands. Such a user command can be executed by constructing
+messages in this way:
+
+##### Request
+
+- Packet identification (1 unsigned byte): 0x01 (command)
+- Identifier length (1 unsigned byte): (command length, parameters included = n)
+- n signed bytes which contain the command, including the optional parameter.
+
+##### Response
+
+- Packet identification (1 unsigned byte): 0x01 (command)
+- Response length (2 unsigned bytes): (response length = n)
+- n signed bytes which contain the response.
+
+
+#### Controller protocol
+
+TODO
+
+#### Device protocol
+
+TODO
