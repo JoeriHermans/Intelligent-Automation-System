@@ -85,7 +85,7 @@ devices         = /etc/ias/configuration/controller_devices
 
 ```
 
-##### /etc/ias/configuration/controller_devices
+###### /etc/ias/configuration/controller_devices
 
 ```sh
 # IAS 0.1 controller devices configuration.
