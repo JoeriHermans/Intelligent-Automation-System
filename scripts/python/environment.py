@@ -133,34 +133,41 @@ def setInterval( seconds ):
     updateState("updateinterval",str(seconds))
 
 def parseAndProcessData( json ):
-    # Fetch data from the JSON structure.
-    temperature = json["main"]["temp"]
-    temperature_min = json["main"]["temp_min"]
-    temperature_max = json["main"]["temp_max"]
-    pressure = json["main"]["pressure"]
-    humidity = json["main"]["humidity"]
-    wind_speed = json["wind"]["speed"]
-    wind_direction = json["wind"]["deg"]
-    clouds = json["clouds"]["all"]
-    sunset = json["sys"]["sunset"]
-    sunrise = json["sys"]["sunrise"]
-    # Update the retrieved date.
-    setTemperature(str(temperature))
-    setTemperatureMin(str(temperature_min))
-    setTemperatureMax(str(temperature_max))
-    setPressure(str(pressure))
-    setHumidity(str(humidity))
-    setWindSpeed(str(wind_speed))
-    setWindDirection(str(wind_direction))
-    setClouds(str(clouds))
-    setSunriseTimestamp(str(sunrise))
-    setSunsetTimestamp(str(sunset))
+    try:
+        # Fetch data from the JSON structure.
+        temperature = json["main"]["temp"]
+        temperature_min = json["main"]["temp_min"]
+        temperature_max = json["main"]["temp_max"]
+        pressure = json["main"]["pressure"]
+        humidity = json["main"]["humidity"]
+        wind_speed = json["wind"]["speed"]
+        wind_direction = json["wind"]["deg"]
+        clouds = json["clouds"]["all"]
+        sunset = json["sys"]["sunset"]
+        sunrise = json["sys"]["sunrise"]
+        # Update the retrieved date.
+        setTemperature(str(temperature))
+        setTemperatureMin(str(temperature_min))
+        setTemperatureMax(str(temperature_max))
+        setPressure(str(pressure))
+        setHumidity(str(humidity))
+        setWindSpeed(str(wind_speed))
+        setWindDirection(str(wind_direction))
+        setClouds(str(clouds))
+        setSunriseTimestamp(str(sunrise))
+        setSunsetTimestamp(str(sunset))
+    except:
+        print("Parsing error occurred.")
 
 def update():
     global gApiUrl
-    response = requests.get(gApiUrl)
-    data = response.json()
-    parseAndProcessData(data)
+    try:
+        response = requests.get(gApiUrl)
+        if( response.status_code == requests.codes.ok ):
+            data = response.json()
+            parseAndProcessData(data)
+    except:
+        print("Request error occurred.")
 
 def setLocation( location ):
     global gLocation

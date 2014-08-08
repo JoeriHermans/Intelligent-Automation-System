@@ -110,12 +110,15 @@ def update():
     updateAll()
     lastUpdate = time.time()
     while gRunning:
-        currentTimestamp = time.time()
-        dt = currentTimestamp - lastUpdate
-        if( dt >= gUpdateInterval ):
-            updateAll()
-            lastUpdate = time.time()
-        time.sleep(0.1)
+        try:
+            currentTimestamp = time.time()
+            dt = currentTimestamp - lastUpdate
+            if( dt >= gUpdateInterval ):
+                updateAll()
+                lastUpdate = time.time()
+                time.sleep(gUpdateInterval)
+        except:
+            gRunning = False
 
 def updateState( stateIdentifier , newValue ):
     global gSocket
@@ -157,7 +160,7 @@ def processCommand():
         parameter = ""
     parameter = parameter.decode("ascii")
     processFeature(featureIdentifier,parameter)
-    
+
 
 def processCommands():
     global gRunning
