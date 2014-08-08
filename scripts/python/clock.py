@@ -101,8 +101,9 @@ def updateAll():
 def setInterval( dt ):
     global gUpdateInterval
     
-    gUpdateInterval = dt
-    print("Updating interval: " + dt)
+    dt = int(dt)
+    if( dt > 0 ):
+        gUpdateInterval = int(dt)
 
 def update():
     global gRunning
@@ -160,7 +161,6 @@ def processCommand():
         parameter = ""
     parameter = parameter.decode("ascii")
     processFeature(featureIdentifier,parameter)
-
 
 def processCommands():
     global gRunning

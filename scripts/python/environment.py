@@ -63,7 +63,7 @@ def setSunsetTimestamp( timestamp ):
 def setSunriseTimestamp( timestamp ):
     global gSunriseTimestamp
     if( gSunriseTimestamp != timestamp ):
-        gSunristTimestamp = timestamp
+        gSunriseTimestamp = timestamp
         updateState("sunrise_timestamp",timestamp)
 
 def setHumidity( humidity ):
@@ -134,28 +134,41 @@ def setInterval( seconds ):
 
 def parseAndProcessData( json ):
     try:
-        # Fetch data from the JSON structure.
-        temperature = json["main"]["temp"]
-        temperature_min = json["main"]["temp_min"]
-        temperature_max = json["main"]["temp_max"]
-        pressure = json["main"]["pressure"]
-        humidity = json["main"]["humidity"]
-        wind_speed = json["wind"]["speed"]
-        wind_direction = json["wind"]["deg"]
-        clouds = json["clouds"]["all"]
-        sunset = json["sys"]["sunset"]
-        sunrise = json["sys"]["sunrise"]
-        # Update the retrieved date.
-        setTemperature(str(temperature))
-        setTemperatureMin(str(temperature_min))
-        setTemperatureMax(str(temperature_max))
-        setPressure(str(pressure))
-        setHumidity(str(humidity))
-        setWindSpeed(str(wind_speed))
-        setWindDirection(str(wind_direction))
-        setClouds(str(clouds))
-        setSunriseTimestamp(str(sunrise))
-        setSunsetTimestamp(str(sunset))
+        message = json["cod"];
+        if( message == "404" ):
+            setTemperature("0");
+            setTemperatureMin("0")
+            setTemperatureMax("0")
+            setPressure("0")
+            setHumidity("0")
+            setWindSpeed("0")
+            setWindDirection("0")
+            setClouds("0")
+            setSunriseTimestamp("0")
+            setSunsetTimestamp("0")
+        else:
+            # Fetch data from the JSON structure.
+            temperature = json["main"]["temp"]
+            temperature_min = json["main"]["temp_min"]
+            temperature_max = json["main"]["temp_max"]
+            pressure = json["main"]["pressure"]
+            humidity = json["main"]["humidity"]
+            wind_speed = json["wind"]["speed"]
+            wind_direction = json["wind"]["deg"]
+            clouds = json["clouds"]["all"]
+            sunset = json["sys"]["sunset"]
+            sunrise = json["sys"]["sunrise"]
+            # Update the retrieved date.
+            setTemperature(str(temperature))
+            setTemperatureMin(str(temperature_min))
+            setTemperatureMax(str(temperature_max))
+            setPressure(str(pressure))
+            setHumidity(str(humidity))
+            setWindSpeed(str(wind_speed))
+            setWindDirection(str(wind_direction))
+            setClouds(str(clouds))
+            setSunriseTimestamp(str(sunrise))
+            setSunsetTimestamp(str(sunset))
     except:
         print("Parsing error occurred.")
 
