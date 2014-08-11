@@ -51,9 +51,9 @@ def processCommand():
     featureIdentifier = featureIdentifier.decode("ascii")
     if( parameterLength > 0 ):
         parameter = gSocket.recv(parameterLength)
+        parameter = parameter.decode("ascii")
     else:
         parameter = ""
-    parameter = parameter.decode("ascii")
     processFeature(featureIdentifier,parameter)
     
 
