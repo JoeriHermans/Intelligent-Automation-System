@@ -49,7 +49,6 @@ void DeviceSession::authorize( void ) {
     std::uint8_t type;
     std::uint8_t deviceIdentifier;
 
-
     if( !readBytes((char *) &type,1) ) return;
     if( type == 0x00 && readBytes((char *) &deviceIdentifier,1) ) {
         char identifier[deviceIdentifier + 1];

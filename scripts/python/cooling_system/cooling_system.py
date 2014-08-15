@@ -1,5 +1,6 @@
 #
-# IAS Basic device framework.
+# An implementation of a technology which allows us to control an industrial
+# cooling system in an efficient way.
 #
 # Author: Joeri Hermans
 #
@@ -7,7 +8,9 @@
 import sys
 import socket
 import struct
-import os
+import time
+from threading import Thread
+from numpy import *
 
 # Global members, which are required for the communication
 # with the remote IAS controller.
@@ -17,10 +20,27 @@ gControllerPort = int(sys.argv[3])
 gSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 gSocket.connect((gControllerAddress,gControllerPort))
 gRunning = True
-# Light state members.
-gState = False
-gCommandOn = "echo '255' > /sys/class/leds/tpacpi\:\:thinklight/brightness"
-gCommandOff = "echo '0' > /sys/class/leds/tpacpi\:\:thinklight/brightness"
+
+# Global state members.
+gUpdateInterval = int(sys.argv[4])
+gTemperatureResolution = 0.1 # In meters
+gCoolingSystemWidth = 2 # In meters
+gCoolingSystemDepth =  1 # In meters
+gCoolingSystemHeight = 1.9 # In meters
+gTemperatureMap = None
+
+## COOLING SYSTEM FUNCTIONS ####################################################
+
+def initializeTemperatureMap():
+    global gTemperatureResolution
+    global gCoolingSystemWidth
+    global gCoolingSystemDepth
+    global gCoolingSystemHeight
+
+def updateTemperatureMap():
+    print("TODO Implement.")
+
+## CORE FUNCTIONS ##############################################################
 
 def updateState( stateIdentifier , newValue ):
     global gSocket
@@ -38,34 +58,9 @@ def authenticate():
     message = struct.pack("!BB",0x00,identifierLength) + bytes(gDeviceIdentifier.encode("ascii"));
     gSocket.sendall(message);
 
-def toggle():
-    global gState
-    if( gState == True ):
-        off()
-    else:
-        on()
-
-def on():
-    global gCommandOn
-    global gState
-    gState = True
-    os.system(gCommandOn)
-    updateState("state","1")
-
-def off():
-    global gCommandOff
-    global gState
-    gState = False
-    os.system(gCommandOff)
-    updateState("state","0")
-
 def processFeature(featureIdentifier,parameter):
-    if( featureIdentifier == "toggle" ):
-        toggle()
-    elif( featureIdentifier == "on" ):
-        on()
-    elif( featureIdentifier == "off" ):
-        off()
+    # TODO Implement
+    print("Executing " + featureIdentifier + " with " + parameter)
 
 def processCommand():
     global gSocket
@@ -91,13 +86,23 @@ def processCommands():
     while( gRunning ):
         try:
             processCommand()
-        except Exception as e:
-            print(e)
+        except:
             gRunning = False
+
+def monitor():
+    global gRunning
+    global gUpdateInterval
+    while( gRunning ):
+        updateTemperatureMap()
+        time.sleep(gUpdateInterval)
 
 def main():
     authenticate()
+    thread = Thread(target = monitor)
+    initializeTemperatureMap()
+    thread.start()
     processCommands()
+    thread.join()
 
 if( __name__ == "__main__" ):
     main()
