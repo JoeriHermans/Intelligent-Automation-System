@@ -365,6 +365,8 @@ void ServerApplication::registerOperators( void ) {
     mOperators[OperatorGreaterThan::kIdentifier] = new OperatorGreaterThan();
     mOperators[OperatorLessThan::kIdentifier] = new OperatorLessThan();
     mOperators[OperatorNotEquals::kIdentifier] = new OperatorNotEquals();
+    mOperators[OperatorLessThanEquals::kIdentifier] = new OperatorLessThanEquals();
+    mOperators[OperatorGreaterThanEquals::kIdentifier] = new OperatorGreaterThanEquals();
 }
 
 void ServerApplication::cleanupOperators( void ) {

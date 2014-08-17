@@ -52,6 +52,8 @@
 #include <ias/operator/operator_greater_than.h>
 #include <ias/operator/operator_less_than.h>
 #include <ias/operator/operator_not_equals.h>
+#include <ias/operator/operator_less_than_equals.h>
+#include <ias/operator/operator_greater_than_equals.h>
 #include <ias/rule/rule.h>
 
 // END Includes. /////////////////////////////////////////////////////
