@@ -96,6 +96,7 @@ bool PostgresqlConnection::connect( void ) {
 DatabaseStatement * PostgresqlConnection::createStatement( const std::string & sql ) {
     DatabaseStatement * statement;
 
+    mConnection->activate();
     statement = new PostgresqlStatement(this,sql);
 
     return ( statement );
