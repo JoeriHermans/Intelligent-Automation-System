@@ -26,6 +26,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <pqxx/pqxx>
+
 // Application dependencies.
 #include <ias/database/interface/database_connection.h>
 
@@ -36,14 +39,37 @@ class PostgresqlConnection : public DatabaseConnection {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+
+    /**
+     * A set of constants which need to be used to format the database
+     * connection string.
+     */
+    static const char kIdentifierHost[];
+    static const char kIdentifierSchema[];
+    static const char kIdentifierUsername[];
+    static const char kIdentifierPassword[];
+    static const char kIdentifierPort[];
+
     // END Class constants. //////////////////////////////////////////
 
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+
+    /**
+     * An object which handles the connection with the remote PostgreSQL
+     * database.
+     *
+     * @note    By default, this member will be equal to the null reference.
+     */
+    pqxx::connection * mConnection;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    inline void initialize( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:

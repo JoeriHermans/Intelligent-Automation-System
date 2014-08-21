@@ -25,34 +25,63 @@
 
 // System dependencies.
 #include <cassert>
+#include <pqxx/pqxx>
 
 // Application dependencies.
 #include <ias/database/postgresql/postgresql_connection.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
+// BEGIN Constants. //////////////////////////////////////////////////
+
+const char PostgresqlConnection::kIdentifierHost[] = "hostaddr";
+const char PostgresqlConnection::kIdentifierSchema[] = "dbname";
+const char PostgresqlConnection::kIdentifierUsername[] = "user";
+const char PostgresqlConnection::kIdentifierPassword[] = "password";
+const char PostgresqlConnection::kIdentifierPort[] = "port";
+
+// END Constants. ////////////////////////////////////////////////////
+
+inline void PostgresqlConnection::initialize( void ) {
+    mConnection = nullptr;
+}
+
 PostgresqlConnection::PostgresqlConnection( const std::string & username,
                                             const std::string & password,
                                             const std::string & schema,
                                             const std::string & host ) :
     DatabaseConnection(username,password,schema,host) {
-    // TODO Implement.
+    initialize();
 }
 
 PostgresqlConnection::~PostgresqlConnection( void ) {
-    // TODO Implement.
+    // Free the allocated memory.
+    mConnection->disconnect();
+    delete mConnection; mConnection = nullptr;
 }
 
 bool PostgresqlConnection::isConnected( void ) const {
-    // TODO Implement.
-
-    return ( false );
+    return ( mConnection != nullptr && mConnection->is_open() );
 }
 
 bool PostgresqlConnection::connect( void ) {
-    // TODO Implement.
+    const std::string & username = getUsername();
+    const std::string & password = getPassword();
+    const std::string & schema = getSchema();
+    const std::string & host = getHost();
+    std::string dbString;
 
-    return ( false );
+    dbString = kIdentifierHost + "=" + host + " ";
+    dbString += kIdentifierSchema + "=" + schema + " ";
+    dbString += kIdentifierUsername + "=" + username + " ";
+    dbString += kIdentifierPassword + "=" + password;
+    try {
+        mConnection = new pqxx::connection(dbString);
+    } catch( std::exception & e ) {
+        delete mConnection; mConnection = nullptr;
+    }
+
+    return ( isConnected() );
 }
 
 DatabaseStatement * PostgresqlConnection::createStatement( const std::string & sql ) {
@@ -62,13 +91,9 @@ DatabaseStatement * PostgresqlConnection::createStatement( const std::string & s
 }
 
 DatabasePreparedStatement * PostgresqlConnection::prepareStatement( const std::string & sql ) {
-    // TODO Implement.
-
     return ( nullptr );
 }
 
 void * PostgresqlConnection::getLink( void ) {
-    // TODO Implement.
-
-    return ( nullptr );
+    return ( (void *) mConnection );
 }
