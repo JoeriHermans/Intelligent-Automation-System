@@ -2,7 +2,7 @@ CC = clang
 LD = clang
 
 MODULES = ai application building controller d
-LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl
+LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx
 CCFLAGS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L -I"src/" -I/usr/include/eigen3 -I/usr/include/mysql -O3 -emit-llvm -w -Wall -Werror -c -fmessage-length=0 -std=c++11
 
 SOURCEDIR = src/
