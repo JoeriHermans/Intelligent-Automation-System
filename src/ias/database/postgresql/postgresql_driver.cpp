@@ -29,6 +29,7 @@
 
 // Application dependencies.
 #include <ias/database/postgresql/postgresql_driver.h>
+#include <ias/database/postgresql/postgresql_connection.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -40,11 +41,11 @@ const char PostgresqlDriver::kPostgresqlIdentifier[] = "postgresql";
 
 PostgresqlDriver::PostgresqlDriver( void ) :
     DatabaseDriver(kPostgresqlIdentifier) {
-    // TODO Implement.
+    // Nothing to do here.
 }
 
 PostgresqlDriver::~PostgresqlDriver( void ) {
-    // TODO Implement.
+    // Nothing to do here.
 }
 
 DatabaseConnection * PostgresqlDriver::initializeConnection(
@@ -52,7 +53,7 @@ DatabaseConnection * PostgresqlDriver::initializeConnection(
     const std::string & schema, const std::string & host) {
     DatabaseConnection * dbConnection;
 
-    // TODO Implement.
+    dbConnection = new PostgresqlConnection(username,password,schema,host);
 
     return ( dbConnection );
 
