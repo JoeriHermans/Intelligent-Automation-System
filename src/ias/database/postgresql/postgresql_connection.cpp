@@ -29,6 +29,7 @@
 
 // Application dependencies.
 #include <ias/database/postgresql/postgresql_connection.h>
+#include <ias/database/postgresql/postgresql_statement.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -71,10 +72,18 @@ bool PostgresqlConnection::connect( void ) {
     const std::string & host = getHost();
     std::string dbString;
 
-    dbString = kIdentifierHost + "=" + host + " ";
-    dbString += kIdentifierSchema + "=" + schema + " ";
-    dbString += kIdentifierUsername + "=" + username + " ";
-    dbString += kIdentifierPassword + "=" + password;
+    dbString = kIdentifierHost;
+    dbString += "=";
+    dbString += host + " ";
+    dbString += kIdentifierSchema;
+    dbString += "=";
+    dbString += schema + " ";
+    dbString += kIdentifierUsername;
+    dbString += "=";
+    dbString += username + " ";
+    dbString += kIdentifierPassword;
+    dbString += "=";
+    dbString += password;
     try {
         mConnection = new pqxx::connection(dbString);
     } catch( std::exception & e ) {
@@ -85,9 +94,11 @@ bool PostgresqlConnection::connect( void ) {
 }
 
 DatabaseStatement * PostgresqlConnection::createStatement( const std::string & sql ) {
-    // TODO Implement.
+    DatabaseStatement * statement;
 
-    return ( nullptr );
+    statement = new PostgresqlStatement(this,sql);
+
+    return ( statement );
 }
 
 DatabasePreparedStatement * PostgresqlConnection::prepareStatement( const std::string & sql ) {

@@ -26,6 +26,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <pqxx/pqxx>
+
 // Application dependencies.
 #include <ias/database/interface/database_result.h>
 
@@ -41,9 +44,24 @@ class PostgresqlResult : public DatabaseResult {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+
+    /**
+     * Contains the raw PostgreSQL database result.
+     */
+    pqxx::result * mResult;
+
+    /**
+     * Contains the iterator which is responsible for iterating through the
+     * results.
+     */
+    pqxx::result::const_iterator mIterator;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    void setResult( pqxx::result * result );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -55,7 +73,7 @@ class PostgresqlResult : public DatabaseResult {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    PostgresqlResult( void );
+    PostgresqlResult( pqxx::result * result );
 
     // END Constructors. /////////////////////////////////////////////
 

@@ -29,25 +29,34 @@
 
 // Application dependencies.
 #include <ias/database/postgresql/postgresql_result.h>
+#include <ias/database/postgresql/postgresql_result_row.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-PostgresqlResult::PostgresqlResult( void ) {
-    // TODO Implement.
+void PostgresqlResult::setResult( pqxx::result * result ) {
+    // Checking the precondition.
+    assert( result != nullptr );
+
+    mResult = result;
+    mIterator = mResult->begin();
+}
+
+PostgresqlResult::PostgresqlResult( pqxx::result * result ) {
+    setResult(result);
 }
 
 PostgresqlResult::~PostgresqlResult( void ) {
-    // TODO Implement.
+    delete mResult; mResult = nullptr;
 }
 
 bool PostgresqlResult::hasNext( void ) {
-    // TODO Implement.
-
-    return ( false );
+    return ( mIterator != mResult->end() );
 }
 
 DatabaseResultRow * PostgresqlResult::next( void ) {
-    // TODO Implement.
+    DatabaseResultRow * row;
 
-    return ( nullptr );
+    row = new PostgresqlResultRow(mIterator++);
+
+    return ( row );
 }

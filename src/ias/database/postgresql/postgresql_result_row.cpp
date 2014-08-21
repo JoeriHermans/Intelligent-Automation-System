@@ -32,22 +32,18 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-PostgresqlResultRow::PostgresqlResultRow( void ) {
-    // TODO Implement.
+PostgresqlResultRow::PostgresqlResultRow( const pqxx::result::const_iterator & row ) {
+    mRow = row;
 }
 
 PostgresqlResultRow::~PostgresqlResultRow( void ) {
-    // TODO Implement.
+    // Nothing to do here.
 }
 
 std::size_t PostgresqlResultRow::numColumns( void ) const {
-    // TODO Implement.
-
-    return ( 0 );
+    return ( mRow.num() );
 }
 
 const std::string & PostgresqlResultRow::getColumn( const std::size_t columnIndex ) const {
-    // TODO Implement.
-
-    return ( "" );
+    return ( mRow[(int) columnIndex].as<std::string>() );
 }

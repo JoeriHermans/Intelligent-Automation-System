@@ -26,6 +26,7 @@
 // System dependencies.
 #include <cassert>
 #include <cstdio>
+#include <pqxx/pqxx>
 
 // Application dependencies.
 #include <ias/database/postgresql/postgresql_statement.h>
@@ -36,15 +37,26 @@
 PostgresqlStatement::PostgresqlStatement( PostgresqlConnection * connection,
                                           const std::string & statement ) :
     DatabaseStatement(connection,statement) {
-    // TODO Implement.
+    // Nothing to do here.
 }
 
 PostgresqlStatement::~PostgresqlStatement( void ) {
-    // TODO Implement.
+    // Nothing to do here.
 }
 
 DatabaseResult * PostgresqlStatement::execute( void ) {
-    // TODO Implement.
+    pqxx::connection * connection;
+    DatabaseResult * result;
 
-    return ( nullptr );
+    result = nullptr;
+    if( getConnection()->isConnected() ) {
+        connection = (pqxx::connection *) getConnection()->getLink();
+        pqxx::nontransaction n(*connection);
+        pqxx::result * queryResult = new pqxx::result(n.exec(getQuery()));
+        if( queryResult != nullptr ) {
+            result = new PostgresqlResult(queryResult);
+        }
+    }
+
+    return ( result );
 }

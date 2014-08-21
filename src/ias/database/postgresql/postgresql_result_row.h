@@ -26,6 +26,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <pqxx/pqxx>
+
 // Application dependencies.
 #include <ias/database/interface/database_result_row.h>
 
@@ -41,6 +44,13 @@ class PostgresqlResultRow : public DatabaseResultRow {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+
+    /**
+     * Contains the const iterator which holds the results of the
+     * current row.
+     */
+    mutable pqxx::result::const_iterator mRow;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -55,7 +65,7 @@ class PostgresqlResultRow : public DatabaseResultRow {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    PostgresqlResultRow( void );
+    PostgresqlResultRow( const pqxx::result::const_iterator & row );
 
     // END Constructors. /////////////////////////////////////////////
 
