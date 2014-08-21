@@ -1,8 +1,8 @@
 /**
  * A class which describes the properties and actions of a PostgreSQL
- * database driver.
+ * database result row.
  *
- * @date                    Augustus 20,  2014
+ * @date                    August 21, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -28,32 +28,26 @@
 #include <cstdio>
 
 // Application dependencies.
-#include <ias/database/postgresql/postgresql_driver.h>
+#include <ias/database/postgresql/postgresql_result_row.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-// BEGIN Constants. //////////////////////////////////////////////////
-
-const char PostgresqlDriver::kPostgresqlIdentifier[] = "postgresql";
-
-// END Constants. ////////////////////////////////////////////////////
-
-PostgresqlDriver::PostgresqlDriver( void ) :
-    DatabaseDriver(kPostgresqlIdentifier) {
+PostgresqlResultRow::PostgresqlResultRow( void ) {
     // TODO Implement.
 }
 
-PostgresqlDriver::~PostgresqlDriver( void ) {
+PostgresqlResultRow::~PostgresqlResultRow( void ) {
     // TODO Implement.
 }
 
-DatabaseConnection * PostgresqlDriver::initializeConnection(
-    const std::string & username, const std::string & password,
-    const std::string & schema, const std::string & host) {
-    DatabaseConnection * dbConnection;
-
+std::size_t PostgresqlResultRow::numColumns( void ) const {
     // TODO Implement.
 
-    return ( dbConnection );
+    return ( 0 );
+}
 
+const std::string & PostgresqlResultRow::getColumn( const std::size_t columnIndex ) const {
+    // TODO Implement.
+
+    return ( "" );
 }

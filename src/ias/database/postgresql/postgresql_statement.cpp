@@ -1,8 +1,8 @@
 /**
- * A class which describes the properties and actions of a PostgreSQL
- * database driver.
+ * A class which describes the properties and actions of a
+ * PostgreSQL database statement.
  *
- * @date                    Augustus 20,  2014
+ * @date                    August 21, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -28,32 +28,23 @@
 #include <cstdio>
 
 // Application dependencies.
-#include <ias/database/postgresql/postgresql_driver.h>
+#include <ias/database/postgresql/postgresql_statement.h>
+#include <ias/database/postgresql/postgresql_result.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-// BEGIN Constants. //////////////////////////////////////////////////
-
-const char PostgresqlDriver::kPostgresqlIdentifier[] = "postgresql";
-
-// END Constants. ////////////////////////////////////////////////////
-
-PostgresqlDriver::PostgresqlDriver( void ) :
-    DatabaseDriver(kPostgresqlIdentifier) {
+PostgresqlStatement::PostgresqlStatement( PostgresqlConnection * connection,
+                                          const std::string & statement ) :
+    DatabaseStatement(connection,statement) {
     // TODO Implement.
 }
 
-PostgresqlDriver::~PostgresqlDriver( void ) {
+PostgresqlStatement::~PostgresqlStatement( void ) {
     // TODO Implement.
 }
 
-DatabaseConnection * PostgresqlDriver::initializeConnection(
-    const std::string & username, const std::string & password,
-    const std::string & schema, const std::string & host) {
-    DatabaseConnection * dbConnection;
-
+DatabaseResult * PostgresqlStatement::execute( void ) {
     // TODO Implement.
 
-    return ( dbConnection );
-
+    return ( nullptr );
 }

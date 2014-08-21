@@ -34,7 +34,8 @@
 PostgresqlConnection::PostgresqlConnection( const std::string & username,
                                             const std::string & password,
                                             const std::string & schema,
-                                            const std::string & host ) {
+                                            const std::string & host ) :
+    DatabaseConnection(username,password,schema,host) {
     // TODO Implement.
 }
 
