@@ -37,6 +37,7 @@
 #include <ias/database/interface/database_connection.h>
 #include <ias/database/interface/database_driver.h>
 #include <ias/database/mysql/mysql_driver.h>
+#include <ias/database/postgresql/postgresql_driver.h>
 #include <ias/technology/technology.h>
 #include <ias/technology/feature.h>
 #include <ias/technology/member.h>

@@ -135,10 +135,15 @@ void ServerApplication::connectToDatabase( void ) {
         if( dbdriver == MySqlDriver::kMySqlIdentifier ) {
             mDbConnection = MySqlDriver().initializeConnection(dbuser,dbpass,
                                                                dbschema,dbhost);
-            if( !mDbConnection->connect() ) {
-                delete mDbConnection;
-                mDbConnection = nullptr;
-            }
+        } else if( dbdriver == PostgresqlDriver::kPostgresqlIdentifier ) {
+            mDbConnection = PostgresqlDriver().initializeConnection(dbuser,
+                                                                    dbpass,
+                                                                    dbschema,
+                                                                    dbhost);
+        }
+        if( mDbConnection != nullptr && !mDbConnection->connect() ) {
+            delete mDbConnection;
+            mDbConnection = nullptr;
         }
     }
 }
