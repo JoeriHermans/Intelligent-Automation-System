@@ -28,6 +28,11 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <openssl/conf.h>
+#include <openssl/engine.h>
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/application/constants.h>
@@ -40,6 +45,7 @@
 // END Includes. /////////////////////////////////////////////////////
 
 int main( const int argc , const char ** argv ) {
+    initializeSsl();
     if( controllerRequested(argc,argv) )
         startController(argc,argv);
     else
@@ -50,6 +56,7 @@ int main( const int argc , const char ** argv ) {
         startClient(argc,argv);
     else
         usage();
+    cleanupSsl();
     
     return ( 0 );
 }
@@ -93,4 +100,20 @@ void usage( void ) {
     std::cout << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << " --address [hostname]" << std::endl;
+}
+
+void initializeSsl( void ) {
+    SSL_load_error_strings();
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
+}
+
+void cleanupSsl( void ) {
+    CONF_modules_free();
+    ERR_remove_state(0);
+    ENGINE_cleanup();
+    CONF_modules_unload(1);
+    ERR_free_strings();
+    EVP_cleanup();
+    CRYPTO_cleanup_all_ex_data();
 }

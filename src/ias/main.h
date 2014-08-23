@@ -39,6 +39,10 @@ bool serverRequested( const int argc , const char ** argv );
 
 bool clientRequested( const int argc , const char ** argv );
 
+void initializeSsl( void );
+
+void cleanupSsl( void );
+
 void usage( void );
 
 #endif /* MAIN_H_ */
