@@ -1,7 +1,7 @@
 /**
- * A class which describes the properties and actions of an SSL socket.
+ * A class which describes the properties and actions of an SSL reader.
  *
- * @date                    August 21, 2014
+ * @date                    Sep 15, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -20,17 +20,22 @@
  * limitations under the License.
  */
 
-#ifndef SSL_SOCKET_H_
-#define SSL_SOCKET_H_
+#ifndef SSL_READER_H_
+#define SSL_READER_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
 // Application dependencies.
+#include <ias/io/reader/reader.h>
 #include <ias/network/socket.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class SslSocket : public Socket {
+class SslReader : public Reader {
 
     public:
 
@@ -40,9 +45,26 @@ class SslSocket : public Socket {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+
+    /**
+     * Contains the SSL socket from which the reading will be reading the
+     * encrypted bytes.
+     */
+    Socket * mSocket;
+
+    /**
+     * Contains the SSL environment of the specified socket.
+     */
+    SSL * mSsl;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    void setSocket( Socket * socket );
+
+    void setSslEnvironment( SSL * ssl );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -54,28 +76,23 @@ class SslSocket : public Socket {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    SslSocket( void );
+    SslReader( Socket * socket , SSL * ssl );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~SslSocket( void );
+    virtual ~SslReader( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void closeConnection( void );
+    virtual void closeReader( void );
 
-    virtual bool createConnection( const std::string & address,
-                                   const unsigned int port );
+    virtual std::size_t readByte( char * byte );
 
-    virtual bool isConnected( void ) const;
-
-    virtual Reader * getReader( void ) const;
-
-    virtual Writer * getWriter( void ) const;
+    virtual std::size_t readBytes( char * buffer , const std::size_t bufferSize );
 
     // END Public methods. ///////////////////////////////////////////
 
@@ -84,4 +101,4 @@ class SslSocket : public Socket {
 
 };
 
-#endif /* SSL_SOCKET_H_ */
+#endif /* SSL_READER_H_ */

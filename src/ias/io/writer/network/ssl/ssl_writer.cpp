@@ -1,7 +1,7 @@
 /**
- * A class which describes the properties and actions of an SSL server socket.
+ * A class which describes the properties and actions of a SSL writer.
  *
- * @date                    August 22, 2014
+ * @date                    Sep 15, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -24,46 +24,27 @@
 
 // System dependencies.
 #include <cassert>
-#include <cstdio>
 
 // Application dependencies.
-#include <ias/network/ssl/ssl_server_socket.h>
+#include <ias/io/writer/network/ssl/ssl_writer.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-SslServerSocket::SslServerSocket( const unsigned int port ) :
-    ServerSocket(port) {
-    // TODO Nothing to do here.
+void SslWriter::setSocket( Socket * socket ) {
+    // Checking the precondition.
+    assert( socket != nullptr );
+
+    mSocket = socket;
 }
 
-SslServerSocket::~SslServerSocket( void ) {
-    // Nothing to do here.
+void SslWriter::setSslEnvironment( SSL * ssl ) {
+    // Checking the precondition.
+    assert( ssl != nullptr );
+
+    mSsl = ssl;
 }
 
-void SslServerSocket::stopListening( void ) {
-    // TODO Implement.
-}
-
-bool SslServerSocket::bindToPort( void ) {
-    // TODO Implement.
-
-    return ( false );
-}
-
-bool SslServerSocket::isBound( void ) const {
-    // TODO Implement.
-
-    return ( false );
-}
-
-Socket * SslServerSocket::acceptSocket( void ) {
-    // TODO Implement.
-
-    return ( nullptr );
-}
-
-Socket * SslServerSocket::acceptSocket( const std::time_t seconds ) {
-    // TODO Implement.
-
-    return ( nullptr );
+SslWriter::SslWriter( Socket * socket , SSL * ssl ) {
+    setSocket(socket);
+    setSslEnvironment(ssl);
 }

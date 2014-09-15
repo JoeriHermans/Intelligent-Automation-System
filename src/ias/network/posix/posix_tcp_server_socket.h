@@ -49,7 +49,8 @@ class PosixTcpServerSocket : public ServerSocket {
     
     /**
      * A set of read file descriptors. This set will only contain one
-     * file descriptor.
+     * file descriptor. This fd_set is used to time-out the accept()
+     * procedure.
      */
     fd_set mRfds;
         

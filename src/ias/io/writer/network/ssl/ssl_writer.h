@@ -1,7 +1,7 @@
 /**
- * A class which describes the properties and actions of an SSL server socket.
+ * A class which describes the properties and actions of a SSL writer.
  *
- * @date                    August 22, 2014
+ * @date                    Sep 15, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -20,17 +20,22 @@
  * limitations under the License.
  */
 
-#ifndef SSL_SERVER_SOCKET_H_
-#define SSL_SERVER_SOCKET_H_
+#ifndef SSL_WRITER_H_
+#define SSL_WRITER_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
 // Application dependencies.
-#include <ias/network/server_socket.h>
+#include <ias/network/socket.h>
+#include <ias/io/writer/writer.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class SslServerSocket : public ServerSocket {
+class SslWriter : public Writer {
 
     public:
 
@@ -40,9 +45,26 @@ class SslServerSocket : public ServerSocket {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
+
+    /**
+     * Contains a the socket to which we will be writing.
+     */
+    Socket * mSocket;
+
+    /**
+     * Contains the SSL socket to which we will be writing the raw
+     * unencrypted bytes.
+     */
+    SSL * mSsl;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    void setSocket( Socket * socket );
+
+    void setSslEnvironment( SSL * ssl );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -54,27 +76,23 @@ class SslServerSocket : public ServerSocket {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    SslServerSocket( const unsigned int port );
+    SslWriter( Socket * socket , SSL * ssl );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~SslServerSocket( void );
+    virtual ~SslWriter( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void stopListening( void );
+    virtual void closeWriter( void );
 
-    virtual bool bindToPort( void );
+    virtual std::size_t writeByte( const char byte );
 
-    virtual bool isBound( void ) const;
-
-    virtual Socket * acceptSocket( void );
-
-    virtual Socket * acceptSocket( const std::time_t seconds );
+    virtual std::size_t writeBytes( const char * buffer , const std::size_t bufferSize );
 
     // END Public methods. ///////////////////////////////////////////
 
@@ -83,4 +101,4 @@ class SslServerSocket : public ServerSocket {
 
 };
 
-#endif /* SSL_SERVER_SOCKET_H_ */
+#endif /* SSL_WRITER_H_ */

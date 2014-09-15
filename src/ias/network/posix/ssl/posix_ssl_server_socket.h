@@ -1,11 +1,11 @@
 /**
- * A class which describes the properties and actions of an abstract reader.
+ * A class which describes the properties and actions of an SSL server socket.
  *
- * @date                    Jul 6, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    August 22, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
- * Copyright 2013 Joeri HERMANS
+ * Copyright 2014 Joeri HERMANS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,22 @@
  * limitations under the License.
  */
 
-#ifndef READER_H_
-#define READER_H_
+#ifndef SSL_SERVER_SOCKET_H_
+#define SSL_SERVER_SOCKET_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <mutex>
+#include <string>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+// Application dependencies.
+#include <ias/network/server_socket.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class Reader {
+class PosixSslServerSocket : public ServerSocket {
 
     public:
 
@@ -41,11 +46,41 @@ class Reader {
 
     // BEGIN Private members. ////////////////////////////////////////
 
-    std::mutex mLock;
+    /**
+     * Contains the file descriptor which is associated with the listening
+     * socket.
+     */
+    int mFileDescriptor;
+
+    /**
+     * A set of read file descriptors. This set will only contain one
+     * file descriptor. This fd_set is used to time-out the accept()
+     * procedure.
+     */
+    fd_set mRfds;
+
+    /**
+     * Contains the SSL context which is associated with this server.
+     *
+     * @note    By default, this member will be equal to the null reference.
+     */
+    SSL_CTX * mSslContext;
 
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    inline void initialize( void );
+
+    void setFileDescriptor( const int fd );
+
+    void setSslContext( SSL_CTX * sslContext );
+
+    void loadCertificates( const std::string & certificateFile,
+                           const std::string & keyFile );
+
+    Socket * allocateSocket( const int fd ) const;
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -56,33 +91,33 @@ class Reader {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
-    Reader( void ) = default;
-        
+
+    PosixSslServerSocket( const unsigned int port , SSL_CTX * sslContext );
+
+    PosixSslServerSocket( const unsigned int port,
+                     const std::string & certificateFile,
+                     const std::string & keyFile );
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
-    virtual ~Reader( void ) = default;
-    
+
+    virtual ~PosixSslServerSocket( void );
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
-    virtual void closeReader( void ) = 0;
-    
-    virtual std::size_t readByte( char * byte ) = 0;
-    
-    virtual std::size_t readBytes( char * buffer , const std::size_t bufferSize ) = 0;
-    
-    virtual void lock( void ) {
-        mLock.lock();
-    }
-    
-    virtual void unlock( void ) {
-        mLock.unlock();
-    }
-    
+
+    virtual void stopListening( void );
+
+    virtual bool bindToPort( void );
+
+    virtual bool isBound( void ) const;
+
+    virtual Socket * acceptSocket( void );
+
+    virtual Socket * acceptSocket( const std::time_t seconds );
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
@@ -90,4 +125,4 @@ class Reader {
 
 };
 
-#endif /* READER_H_ */
+#endif /* SSL_SERVER_SOCKET_H_ */

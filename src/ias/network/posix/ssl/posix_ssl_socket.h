@@ -1,11 +1,11 @@
 /**
- * A class which describes the properties and actions of an abstract reader.
+ * A class which describes the properties and actions of an SSL socket.
  *
- * @date                    Jul 6, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    August 21, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
- * Copyright 2013 Joeri HERMANS
+ * Copyright 2014 Joeri HERMANS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,23 @@
  * limitations under the License.
  */
 
-#ifndef READER_H_
-#define READER_H_
+#ifndef SSL_SOCKET_H_
+#define SSL_SOCKET_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <mutex>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+// Application dependencies.
+#include <ias/io/reader/reader.h>
+#include <ias/io/writer/writer.h>
+#include <ias/network/socket.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class Reader {
+class PosixSslSocket : public Socket {
 
     public:
 
@@ -41,11 +47,29 @@ class Reader {
 
     // BEGIN Private members. ////////////////////////////////////////
 
-    std::mutex mLock;
+    /**
+     * Contains the SSL object which is associated with this socket.
+     */
+    SSL * mSsl;
+
+    /**
+     * Contains a reference to the writer and reader which are responsible
+     * for reading and writing bytes to the socket.
+     */
+    Reader * mReader;
+    Writer * mWriter;
 
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    inline void initialize( void );
+
+    void setSslEnvironment( SSL * ssl );
+
+    bool initializeConnection( const std::string & address,
+                               const unsigned int port );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -56,33 +80,32 @@ class Reader {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
-    Reader( void ) = default;
-        
+
+    PosixSslSocket( void );
+
+    PosixSslSocket( SSL * ssl );
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
-    virtual ~Reader( void ) = default;
-    
+
+    virtual ~PosixSslSocket( void );
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
-    virtual void closeReader( void ) = 0;
-    
-    virtual std::size_t readByte( char * byte ) = 0;
-    
-    virtual std::size_t readBytes( char * buffer , const std::size_t bufferSize ) = 0;
-    
-    virtual void lock( void ) {
-        mLock.lock();
-    }
-    
-    virtual void unlock( void ) {
-        mLock.unlock();
-    }
-    
+
+    virtual void closeConnection( void );
+
+    virtual bool createConnection( const std::string & address,
+                                   const unsigned int port );
+
+    virtual bool isConnected( void ) const;
+
+    virtual Reader * getReader( void ) const;
+
+    virtual Writer * getWriter( void ) const;
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
@@ -90,4 +113,4 @@ class Reader {
 
 };
 
-#endif /* READER_H_ */
+#endif /* SSL_SOCKET_H_ */
