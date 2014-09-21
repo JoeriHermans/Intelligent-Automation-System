@@ -98,7 +98,7 @@ void PosixTcpSocket::pollSocket( void ) const {
     
     if( mFileDescriptor >= 0 ) {
         pfd.fd = mFileDescriptor;
-        #if defined(__unix__)
+        #if defined(__unix__) and not defined(__APPLE__)
         pfd.events = POLLNVAL | POLLHUP | POLLRDHUP;
         #else
         pfd.events = POLLNVAL | POLLHUP;

@@ -103,7 +103,11 @@ void PosixSslSocket::pollSocket( void ) const {
         fd = SSL_get_fd(mSsl);
         if( fd >= 0 ) {
             pfd.fd = fd;
-            pfd.events = POLLNVAL | POLLRDHUP;
+            #if defined(__unix__) and not defined(__APPLE__)
+            pfd.events = POLLNVAL | POLLHUP | POLLRDHUP;
+            #else
+            pfd.events = POLLNVAL | POLLHUP;
+            #endif
             pfd.revents = 0;
             if( poll(&pfd,1,0) >= 1 ) {
                 close(SSL_get_fd(mSsl));
