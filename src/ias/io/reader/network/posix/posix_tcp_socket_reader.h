@@ -72,7 +72,7 @@ class PosixTcpSocketReader : public Reader {
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~PosixTcpSocketReader( void );
+    virtual ~PosixTcpSocketReader( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

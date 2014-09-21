@@ -48,3 +48,40 @@ SslWriter::SslWriter( Socket * socket , SSL * ssl ) {
     setSocket(socket);
     setSslEnvironment(ssl);
 }
+
+void SslWriter::closeWriter( void ) {
+    mSocket->closeConnection();
+}
+
+std::size_t SslWriter::writeByte( const char byte ) {
+    int nBytes;
+
+    nBytes = 0;
+    if( mSocket->isConnected() ) {
+        nBytes = SSL_write(mSsl,&byte,1);
+        if( nBytes < 0 ) {
+            nBytes = 0;
+            mSocket->closeConnection();
+        }
+    }
+
+    return ( (std::size_t) nBytes );
+}
+
+std::size_t SslWriter::writeBytes( const char * buffer , const std::size_t bufferSize ) {
+    int nBytes;
+
+    // Checking the precondition.
+    assert( buffer != nullptr );
+
+    nBytes = 0;
+    if( mSocket->isConnected() ) {
+        nBytes = SSL_write(mSsl,buffer,bufferSize);
+        if( nBytes < 0 ) {
+            nBytes = 0;
+            mSocket->closeConnection();
+        }
+    }
+
+    return ( (std::size_t) nBytes );
+}

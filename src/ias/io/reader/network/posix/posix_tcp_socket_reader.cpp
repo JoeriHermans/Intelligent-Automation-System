@@ -43,10 +43,6 @@ PosixTcpSocketReader::PosixTcpSocketReader( PosixTcpSocket * socket ) {
     setSocket(socket);
 }
 
-PosixTcpSocketReader::~PosixTcpSocketReader( void ) {
-    // Nothing to do here.
-}
-
 void PosixTcpSocketReader::closeReader( void ) {
     mSocket->closeConnection();
 }

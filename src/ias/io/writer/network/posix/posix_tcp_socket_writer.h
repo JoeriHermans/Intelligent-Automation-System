@@ -72,7 +72,7 @@ class PosixTcpSocketWriter : public Writer {
 
     // BEGIN Destructor. /////////////////////////////////////////////
     
-    virtual ~PosixTcpSocketWriter( void );
+    virtual ~PosixTcpSocketWriter( void ) = default;
     
     // END Destructor. ///////////////////////////////////////////////
 

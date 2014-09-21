@@ -43,10 +43,6 @@ PosixTcpSocketWriter::PosixTcpSocketWriter( PosixTcpSocket * socket ) {
     setSocket(socket);
 }
 
-PosixTcpSocketWriter::~PosixTcpSocketWriter( void ) {
-    // Nothing to do here.
-}
-
 void PosixTcpSocketWriter::closeWriter( void ) {
     mSocket->closeConnection();
 }
