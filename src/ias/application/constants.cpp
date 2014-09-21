@@ -33,6 +33,7 @@ const char kFlagConfig[] = "--config";
 const char kFlagClient[] = "--client";
 const char kFlagAddress[] = "--address";
 const char kFlagPort[] = "--port";
+const char kFlagSsl[] = "--ssl";
 
 const char kTrimCharacters[] = " \t\n\r";
 

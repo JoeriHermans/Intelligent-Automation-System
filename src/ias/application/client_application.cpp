@@ -149,7 +149,6 @@ void ClientApplication::login( void ) {
             mUsername = username;
             writeMessage("Authenticated.");
         } else {
-            std::cout << std::to_string(byte) << std::endl;
             writeMessage("Authentication failed.");
         }
     }

@@ -32,6 +32,7 @@ extern const char kFlagConfig[];
 extern const char kFlagClient[];
 extern const char kFlagAddress[];
 extern const char kFlagPort[];
+extern const char kFlagSsl[];
 
 extern const char kTrimCharacters[];
 
