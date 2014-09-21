@@ -98,7 +98,11 @@ void PosixTcpSocket::pollSocket( void ) const {
     
     if( mFileDescriptor >= 0 ) {
         pfd.fd = mFileDescriptor;
-        pfd.events = POLLNVAL | POLLRDHUP;
+        #if defined(__unix__)
+        pfd.events = POLLNVAL | POLLHUP | POLLRDHUP;
+        #else
+        pfd.events = POLLNVAL | POLLHUP;
+        #endif
         pfd.revents = 0;
         if( poll(&pfd,1,0) >= 1 ) {
             close(mFileDescriptor);
