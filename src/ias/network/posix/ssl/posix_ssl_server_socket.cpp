@@ -48,7 +48,7 @@ void PosixSslServerSocket::setFileDescriptor( const int fd ) {
 }
 
 void PosixSslServerSocket::loadCertificates( const std::string & certificateFile,
-                                        const std::string & keyFile ) {
+                                             const std::string & keyFile ) {
     SSL_CTX * sslContext;
 
     sslContext = SSL_CTX_new(SSLv3_server_method());
@@ -75,13 +75,13 @@ Socket * PosixSslServerSocket::allocateSocket( const int fd ) const {
 
     ssl = SSL_new(mSslContext);
     SSL_set_fd(ssl, fd);
-    //socket = new SslSocket(ssl);
+    socket = new PosixSslSocket(ssl);
 
     return ( socket );
 }
 
 PosixSslServerSocket::PosixSslServerSocket( const unsigned int port,
-                                  SSL_CTX * sslContext ) :
+                                            SSL_CTX * sslContext ) :
     ServerSocket(port) {
     initialize();
     setFileDescriptor(-1);

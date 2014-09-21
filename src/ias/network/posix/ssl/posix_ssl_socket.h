@@ -50,7 +50,7 @@ class PosixSslSocket : public Socket {
     /**
      * Contains the SSL object which is associated with this socket.
      */
-    SSL * mSsl;
+    mutable SSL * mSsl;
 
     /**
      * Contains a reference to the writer and reader which are responsible
@@ -69,6 +69,8 @@ class PosixSslSocket : public Socket {
 
     bool initializeConnection( const std::string & address,
                                const unsigned int port );
+
+    void pollSocket( void ) const;
 
     // END Private methods. //////////////////////////////////////////
 

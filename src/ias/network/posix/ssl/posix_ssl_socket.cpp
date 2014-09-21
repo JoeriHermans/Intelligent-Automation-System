@@ -52,7 +52,13 @@ void PosixSslSocket::setSslEnvironment( SSL * ssl ) {
     // Checking the precondition.
     assert( ssl != nullptr );
 
+    if( mSsl != nullptr )
+        SSL_free(mSsl);
     mSsl = ssl;
+    delete mReader; mReader = nullptr;
+    delete mWriter; mWriter = nullptr;
+    mReader = new SslReader(this,ssl);
+    mWriter = new SslWriter(this,ssl);
 }
 
 bool PosixSslSocket::initializeConnection( const std::string & address,
@@ -61,6 +67,7 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
     struct addrinfo * results;
     std::string portString;
     bool connected;
+    SSL * ssl;
     int fd;
 
     // Checking the precondition.
@@ -77,12 +84,8 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
     if( fd >= 0 ) {
         if( connect(fd,results->ai_addr,results->ai_addrlen) == 0 ) {
             connected = true;
-            // TODO Set SSL socket.
-            // Free old reader and writer.
-            delete mReader; mReader = nullptr;
-            delete mWriter; mWriter = nullptr;
-            // Allocate reader and writer.
-            // TODO Allocate reader and writer.
+            // TODO Allocate SSL from context.
+            // TODO Set SSL.
         } else {
             close(fd);
         }
@@ -90,6 +93,25 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
     freeaddrinfo(results);
 
     return ( connected );
+}
+
+void PosixSslSocket::pollSocket( void ) const {
+    struct pollfd pfd;
+    int fd;
+
+    if( mSsl != nullptr ) {
+        fd = SSL_get_fd(mSsl);
+        if( fd >= 0 ) {
+            pfd.fd = fd;
+            pfd.events = POLLNVAL | POLLRDHUP;
+            pfd.revents = 0;
+            if( poll(&pfd,1,0) >= 1 ) {
+                close(SSL_get_fd(mSsl));
+                SSL_free(mSsl);
+                mSsl = nullptr;
+            }
+        }
+    }
 }
 
 PosixSslSocket::PosixSslSocket( void ) {
@@ -109,20 +131,22 @@ PosixSslSocket::~PosixSslSocket( void ) {
 
 void PosixSslSocket::closeConnection( void ) {
     if( isConnected() ) {
-        SSL_free(mSsl);
         close(SSL_get_fd(mSsl));
+        SSL_free(mSsl);
         mSsl = nullptr;
     }
 }
 
 bool PosixSslSocket::createConnection( const std::string & address,
                                        const unsigned int port ) {
-    // TODO Implement initializeConnection(address,port).
-
+    // return ( initializeConnection(address,port) );
+    // TODO SSL context required.
     return ( false );
 }
 
 bool PosixSslSocket::isConnected( void ) const {
+    pollSocket();
+
     return ( mSsl != nullptr );
 }
 
