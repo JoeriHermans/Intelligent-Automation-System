@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <functional>
 #include <cctype>
+#include <vector>
 #include <locale>
 #include <iomanip>
 #include <iostream>
