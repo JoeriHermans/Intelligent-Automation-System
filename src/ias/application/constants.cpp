@@ -37,7 +37,7 @@ const char kFlagSsl[] = "--ssl";
 
 const char kTrimCharacters[] = " \t\n\r";
 
-const char kVersion[] = "IAS 0.1";
+const char kVersion[] = "IAS 0.1.0";
 const char kOnline[] = "Online";
 const char kOffline[] = "Offline";
 
