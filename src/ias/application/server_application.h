@@ -101,16 +101,18 @@ class ServerApplication : public Application {
     DatabaseConnection * mDbConnection;
     
     /**
-     * Contains the server which is responsible for handling controller
+     * Contains the servers which are responsible for handling controller
      * connections and updates.
      */
     ControllerServer * mServerController;
+    ControllerServer * mServerControllerSsl;
     
     /**
-     * Contains the server which is responsible for handling user
+     * Contains the servers which are responsible for handling user
      * connections and commands.
      */
     UserServer * mServerUser;
+    UserServer * mServerUserSsl;
     
     /**
      * Contains all by-default and key-value relationships which have been
@@ -174,8 +176,12 @@ class ServerApplication : public Application {
     
     void initializeControllerServer( void );
     
+    void initializeControllerSslServer( void );
+
     void initializeUserServer( void );
     
+    void initializeUserSslServer( void );
+
     void initializeDispatcher( void );
     
     void registerOperators( void );

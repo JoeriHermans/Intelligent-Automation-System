@@ -46,20 +46,32 @@ const char kConfigDatabaseUser[] = "database_username";
 const char kConfigDatabasePassword[] = "database_password";
 const char kConfigDatabaseSchema[] = "database_schema";
 const char kConfigDatabaseHost[] = "database_host";
-const char kConfigBindPort[] = "network_bind_port";
 const char kConfigHost[] = "server_address";
 const char kConfigHostPort[] = "server_port";
+const char kConfigHostSslEnabled[] = "server_ssl_enabled";
 const char kConfigControllerIdentifier[] = "controller_identifier";
 const char kConfigControllerSecurityCode[] = "controller_security_code";
 const char kConfigDeviceList[] = "devices";
-const char kConfigBindUserPort[] = "user_port";
 const char kConfigPreSalt[] = "security_presalt";
 const char kConfigPostSalt[] = "security_postsalt";
+
+const char kConfigNetworkControllerPort[] = "network_controller_port";
+const char kConfigNetworkControllerSslPort[] = "network_controller_ssl_port";
+const char kConfigNetworkControllerSslCertificiate[] = "network_controller_ssl_certificate";
+const char kConfigNetworkControllerSslKey[] = "network_controller_ssl_key";
+const char kConfigNetworkUserPort[] = "network_user_port";
+const char kConfigNetworkUserSslPort[] = "network_user_ssl_port";
+const char kConfigNetworkUserSslCertificate[] = "network_user_ssl_certificate";
+const char kConfigNetworkUserSslKey[] = "network_user_ssl_key";
+const char kConfigNetworkDevicePort[] = "network_device_port";
+const char kConfigNetworkDeviceSslPort[] = "network_device_ssl_port";
+const char kConfigNetworkDeviceSslCertificate[] = "network_device_ssl_certificate";
+const char kConfigNetworkDeviceSslKey[] = "network_device_ssl_key";
 
 const char kProtocolAck[] = "ACK";
 const char kProtocolNack[] = "NACK";
 
 const char kDefaultServerAddress[] = "127.0.0.1";
-const unsigned int kDefaultDeviceServerPort = 5001;
+const unsigned int kDefaultDeviceServerPort = 5002;
 const unsigned int kDefaultControllerServerPort = 5000;
-const unsigned int kDefaultUserServerPort = 4999;
+const unsigned int kDefaultUserServerPort = 5001;

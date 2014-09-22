@@ -42,6 +42,7 @@
 #include <ias/technology/factory/technology_database_factory.h>
 #include <ias/controller/factory/controller_database_factory.h>
 #include <ias/network/posix/posix_tcp_server_socket.h>
+#include <ias/network/posix/ssl/posix_ssl_server_socket.h>
 #include <ias/util/util.h>
 #include <ias/user/command/command_stop.h>
 #include <ias/user/command/command_state.h>
@@ -59,7 +60,9 @@
 inline void ServerApplication::initialize( void ) {
     mDbConnection = nullptr;
     mServerController = nullptr;
+    mServerControllerSsl = nullptr;
     mServerUser = nullptr;
+    mServerUserSsl = nullptr;
     mFlagRunning = true;
     mNlp = nullptr;
     mDeviceMonitor = nullptr;
@@ -85,7 +88,9 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
             initializeNlp();
             initializeDispatcher();
             initializeControllerServer();
+            initializeControllerSslServer();
             initializeUserServer();
+            initializeUserSslServer();
         }
     }
 }
@@ -289,8 +294,8 @@ void ServerApplication::initializeControllerServer( void ) {
     std::string stringPort;
     unsigned int port;
     
-    if( mProperties.contains(kConfigBindUserPort) )
-        stringPort = mProperties.get(kConfigBindUserPort);
+    if( mProperties.contains(kConfigNetworkControllerPort) )
+        stringPort = mProperties.get(kConfigNetworkControllerPort);
     if( !stringPort.empty() )
         port = (unsigned int) atol(stringPort.c_str());
     else
@@ -304,13 +309,38 @@ void ServerApplication::initializeControllerServer( void ) {
     }
 }
 
+void ServerApplication::initializeControllerSslServer( void ) {
+    ServerSocket * serverSocket;
+    std::string stringPort;
+    std::string certificateFile;
+    std::string keyFile;
+    unsigned int port;
+
+    if( mProperties.contains(kConfigNetworkControllerSslPort) )
+        stringPort = mProperties.get(kConfigNetworkControllerSslPort);
+    if( mProperties.contains(kConfigNetworkControllerSslCertificiate ) )
+        certificateFile = mProperties.get(kConfigNetworkControllerSslCertificiate);
+    if( mProperties.contains(kConfigNetworkControllerSslKey) )
+        keyFile = mProperties.get(kConfigNetworkControllerSslKey);
+    if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
+        port = (unsigned int) atol(stringPort.c_str());
+        serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
+        if( serverSocket->bindToPort() ) {
+            mServerControllerSsl = new ControllerServer(serverSocket,
+                                                        &mContainerControllers);
+        } else {
+            delete serverSocket;
+        }
+    }
+}
+
 void ServerApplication::initializeUserServer( void ) {
     ServerSocket * serverSocket;
     std::string stringPort;
     unsigned int port;
     
-    if( mProperties.contains(kConfigBindUserPort) )
-        stringPort = mProperties.get(kConfigBindUserPort);
+    if( mProperties.contains(kConfigNetworkUserPort) )
+        stringPort = mProperties.get(kConfigNetworkUserPort);
     if( !stringPort.empty() )
         port = (unsigned int) atol(stringPort.c_str());
     else
@@ -322,6 +352,32 @@ void ServerApplication::initializeUserServer( void ) {
                                      &mDispatcher);
     } else {
         delete serverSocket;
+    }
+}
+
+void ServerApplication::initializeUserSslServer( void ) {
+    ServerSocket * serverSocket;
+    std::string stringPort;
+    std::string certificateFile;
+    std::string keyFile;
+    unsigned int port;
+
+    if( mProperties.contains(kConfigNetworkUserSslPort) )
+        stringPort = mProperties.get(kConfigNetworkUserSslPort);
+    if( mProperties.contains(kConfigNetworkUserSslCertificate) )
+        certificateFile = mProperties.get(kConfigNetworkControllerSslCertificiate);
+    if( mProperties.contains(kConfigNetworkUserSslKey) )
+        keyFile = mProperties.get(kConfigNetworkUserSslKey);
+    if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
+        port = (unsigned int) atol(stringPort.c_str());
+        serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
+        if( serverSocket->bindToPort() ) {
+            mServerUserSsl = new UserServer(serverSocket,
+                                            &mContainerUsers,
+                                            &mDispatcher);
+        } else {
+            delete serverSocket;
+        }
     }
 }
 

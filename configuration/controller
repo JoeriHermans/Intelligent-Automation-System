@@ -1,4 +1,4 @@
-# IAS 0.1 controller configuration.
+# IAS 0.1.0 controller configuration.
 # ---------------------------------
 #
 # This the the IAS controller configuration file.
@@ -13,6 +13,14 @@ controller_security_code = controller_securitycode
 # IAS server settings.
 server_address = 127.0.0.1
 server_port = 5000
+server_ssl_enabled = 0
+
+# Network settings.
+network_device_port = 5002
+
+# Network SSL settings.
+# network_device_ssl_port = 6002
+# network_device_ssl_certificate = /path
 
 # Device list.
 # In this file you specify the processes which need to be initiated

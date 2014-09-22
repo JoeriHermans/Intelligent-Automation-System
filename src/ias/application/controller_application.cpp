@@ -151,8 +151,8 @@ void ControllerApplication::allocateDeviceServer( void ) {
     std::string stringPort;
     unsigned int port;
     
-    if( mProperties.contains(kConfigBindPort) )
-        stringPort = mProperties.get(kConfigBindPort);
+    if( mProperties.contains(kConfigNetworkDevicePort) )
+        stringPort = mProperties.get(kConfigNetworkDevicePort);
     if( !stringPort.empty() )
         port = (unsigned int) atol(stringPort.c_str());
     else

@@ -89,8 +89,8 @@ PosixSslServerSocket::PosixSslServerSocket( const unsigned int port,
 }
 
 PosixSslServerSocket::PosixSslServerSocket( const unsigned int port,
-                                  const std::string & certificatFile,
-                                  const std::string & keyFile ) :
+                                            const std::string & certificatFile,
+                                            const std::string & keyFile ) :
     ServerSocket(port) {
     initialize();
     setFileDescriptor(-1);
