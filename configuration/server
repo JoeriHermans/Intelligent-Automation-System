@@ -24,3 +24,9 @@ network_user_port = 5001
 # Security settings.
 security_presalt = hash_presalt
 security_postsalt = hash_postsalt
+
+# Logger settings
+# Logger types: file, console
+logger_type = console
+# When choosing logger_type = file, add additional path.
+# logger_filepath = /path

@@ -22,6 +22,12 @@ network_device_port = 5002
 # network_device_ssl_port = 6002
 # network_device_ssl_certificate = /path
 
+# Logger settings
+# Logger types: file, console
+logger_type = console
+# When choosing logger_type = file, add additional path.
+# logger_filepath = /path
+
 # Device list.
 # In this file you specify the processes which need to be initiated
 # to start the device processes.
