@@ -184,6 +184,8 @@ class ServerApplication : public Application {
 
     void initializeDispatcher( void );
     
+    void initializeLogger( void );
+
     void registerOperators( void );
     
     void cleanupOperators( void );

@@ -91,6 +91,10 @@ class Logger {
         return ( mLogger );
     }
 
+    static void cleanup( void ) {
+        delete mLogger;
+    }
+
     static void d( const std::string & message ) {
         Logger * logger;
 
@@ -115,5 +119,17 @@ class Logger {
     // END Static methods. ///////////////////////////////////////////
 
 };
+
+void logd( const std::string & message ) {
+    Logger::d(message);
+}
+
+void loge( const std::string & message ) {
+    Logger::e(message);
+}
+
+void logi( const std::string & message ) {
+    Logger::i(message);
+}
 
 #endif /* LOGGER_H_ */

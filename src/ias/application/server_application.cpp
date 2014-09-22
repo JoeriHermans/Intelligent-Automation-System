@@ -54,6 +54,9 @@
 #include <ias/rule/factory/rule_database_factory.h>
 #include <ias/user/command/command_list_rules.h>
 #include <ias/user/command/command_load_rule.h>
+#include <ias/logger/file/file_logger.h>
+#include <ias/logger/console/console_logger.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -78,15 +81,18 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
         
         configurationPath = argv[index + 1];
         readConfiguration(configurationPath);
+        initializeLogger();
         connectToDatabase();
         // Check if a connection with the database is available.
         if( mDbConnection != nullptr ) {
             mDeviceMonitor = new DeviceMonitor(mDbConnection);
+            logi("Initializing data containers.");
             registerOperators();
             initializeSalts();
             fillContainers();
             initializeNlp();
             initializeDispatcher();
+            logi("Initializing servers.");
             initializeControllerServer();
             initializeControllerSslServer();
             initializeUserServer();
@@ -146,10 +152,16 @@ void ServerApplication::connectToDatabase( void ) {
                                                                     dbschema,
                                                                     dbhost);
         }
+        logi("Initiating database connection with " + dbhost);
         if( mDbConnection != nullptr && !mDbConnection->connect() ) {
             delete mDbConnection;
             mDbConnection = nullptr;
+            loge("Could not connect with the database.");
+        } else {
+            logi("Database connection established.");
         }
+    } else {
+        loge("Database credentials have not been specified.");
     }
 }
 
@@ -421,6 +433,22 @@ void ServerApplication::initializeDispatcher( void ) {
     );
 }
 
+void ServerApplication::initializeLogger( void ) {
+    std::string type;
+
+    if( mProperties.contains(kConfigLoggerType) ) {
+        type = mProperties.get(kConfigLoggerType);
+        if( type == std::string(ConsoleLogger::kType) ) {
+            Logger::setLogger(new ConsoleLogger());
+        } else
+        if( type == std::string(FileLogger::kType) &&
+            mProperties.contains(kConfigLoggerLogfilePath) ) {
+            std::string logfile = mProperties.get(kConfigLoggerLogfilePath);
+            Logger::setLogger(new FileLogger(logfile));
+        }
+    }
+}
+
 void ServerApplication::registerOperators( void ) {
     mOperators[OperatorEquals::kIdentifier] = new OperatorEquals();
     mOperators[OperatorGreaterThan::kIdentifier] = new OperatorGreaterThan();
@@ -452,19 +480,54 @@ ServerApplication::~ServerApplication( void ) {
 }
 
 void ServerApplication::run( void ) {
-    if( mServerController != nullptr &&
-        mServerUser != nullptr ) {
+    if( mServerController != nullptr ) {
+        logi("Starting controller server.");
         mServerController->start();
+    }
+    if( mServerControllerSsl != nullptr ) {
+        logi("Starting secure controller server.");
+        mServerControllerSsl->start();
+    }
+    if( mServerUser != nullptr ) {
+        logi("Starting user server.");
         mServerUser->start();
+    }
+    if( mServerUserSsl != nullptr ) {
+        logi("Starting secure user server.");
+        mServerUserSsl->start();
+    }
+    logi("Servers running, waiting for stopping signal...");
+    if( mServerController != nullptr ) {
+        logi("Waiting for controller server to stop.");
         mServerController->join();
+        logi("Controller server stopped.");
+    }
+    if( mServerControllerSsl != nullptr ) {
+        logi("Waiting for secure controller server to stop.");
+        mServerControllerSsl->join();
+        logi("Secure controller server stopped.");
+    }
+    if( mServerUser != nullptr ) {
+        logi("Waiting for user server to stop.");
         mServerUser->join();
+        logi("User server stopped.");
+    }
+    if( mServerUserSsl != nullptr ) {
+        logi("Waiting for secure user server to stop.");
+        mServerUserSsl->join();
+        logi("User server stopped.");
     }
 }
 
 void ServerApplication::stop( void ) {
     mFlagRunning = false;
+    logi("Stopping servers.");
     if( mServerController != nullptr )
         mServerController->stop();
+    if( mServerControllerSsl != nullptr )
+        mServerControllerSsl->stop();
     if( mServerUser != nullptr )
         mServerUser->stop();
+    if( mServerUserSsl != nullptr )
+        mServerUserSsl->stop();
 }
