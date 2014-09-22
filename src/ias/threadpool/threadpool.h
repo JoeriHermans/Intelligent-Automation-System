@@ -145,7 +145,7 @@ class ThreadPool {
     Task * nextTask( void );
     
     bool tasksLeft( void ) const;
-    
+
     void cleanupTasks( void );
     
     // END Private methods. //////////////////////////////////////////
