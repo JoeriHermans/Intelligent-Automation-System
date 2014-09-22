@@ -38,6 +38,7 @@
 const char ConsoleLogger::kDebug[] = "debug";
 const char ConsoleLogger::kError[] = "error";
 const char ConsoleLogger::kInformation[] = "information";
+const char ConsoleLogger::kType[] = "console";
 
 // END Class constants. //////////////////////////////////////////////
 

@@ -39,6 +39,7 @@
 const char FileLogger::kDebug[] = "debug";
 const char FileLogger::kInformation[] = "information";
 const char FileLogger::kError[] = "error";
+const char FileLogger::kType[] = "file";
 
 // END Class constants. //////////////////////////////////////////////
 

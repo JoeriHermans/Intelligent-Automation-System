@@ -53,6 +53,8 @@ extern const char kConfigControllerSecurityCode[];
 extern const char kConfigDeviceList[];
 extern const char kConfigPreSalt[];
 extern const char kConfigPostSalt[];
+extern const char kConfigLoggerType[];
+extern const char kConfigLoggerLogfilePath[];
 
 extern const char kConfigNetworkControllerPort[];
 extern const char kConfigNetworkControllerSslPort[];

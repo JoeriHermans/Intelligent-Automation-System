@@ -54,6 +54,8 @@ const char kConfigControllerSecurityCode[] = "controller_security_code";
 const char kConfigDeviceList[] = "devices";
 const char kConfigPreSalt[] = "security_presalt";
 const char kConfigPostSalt[] = "security_postsalt";
+const char kConfigLoggerType[] = "logger_type";
+const char kConfigLoggerLogfilePath[] = "logger_filepath";
 
 const char kConfigNetworkControllerPort[] = "network_controller_port";
 const char kConfigNetworkControllerSslPort[] = "network_controller_ssl_port";

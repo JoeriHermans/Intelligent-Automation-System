@@ -46,6 +46,11 @@ class ConsoleLogger : public Logger {
     static const char kError[];
     static const char kInformation[];
 
+    /**
+     * Contains the type of this kind of logger.
+     */
+    static const char kType[];
+
     // END Class constants. //////////////////////////////////////////
 
     private:

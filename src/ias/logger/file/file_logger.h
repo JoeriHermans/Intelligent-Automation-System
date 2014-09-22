@@ -50,6 +50,11 @@ class FileLogger : public Logger {
     static const char kInformation[];
     static const char kError[];
 
+    /**
+     * Contains the identifier of this type of logger.
+     */
+    static const char kType[];
+
     // END Class constants. //////////////////////////////////////////
 
     private:
