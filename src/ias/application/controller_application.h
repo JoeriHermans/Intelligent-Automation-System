@@ -105,6 +105,8 @@ class ControllerApplication : public Application {
     void startDeviceProcesses( void );
     
     void cleanupDeviceProcesses( void );
+
+    void initializeLogger( void );
         
     // END Private methods. //////////////////////////////////////////
 

@@ -38,6 +38,9 @@
 #include <ias/server/device_server.h>
 #include <ias/network/posix/posix_tcp_socket.h>
 #include <ias/network/posix/posix_tcp_server_socket.h>
+#include <ias/logger/logger.h>
+#include <ias/logger/file/file_logger.h>
+#include <ias/logger/console/console_logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -56,6 +59,7 @@ void ControllerApplication::setup( const int argc , const char ** argv ) {
         
         configurationPath = argv[index + 1];
         readConfiguration(configurationPath);
+        initializeLogger();
         connectToServer();
         if( mSocket != nullptr ) {
             authenticateWithServer();
@@ -64,11 +68,7 @@ void ControllerApplication::setup( const int argc , const char ** argv ) {
                 allocateDeviceServer();
                 if( mDeviceServer != nullptr )
                     startDeviceProcesses();
-            } else {
-                std::cout << "Could not authenticate with the remote server." << std::endl;
             }
-        } else {
-            std::cout << "Could not connect to the server." << std::endl;
         }
     }
 }
@@ -110,11 +110,16 @@ void ControllerApplication::connectToServer( void ) {
         else
             port = (unsigned int) atol(serverPort.c_str());
         socket = new PosixTcpSocket();
+        logi("Connecting to " + serverAddress + " at port " + std::to_string(port) + ".");
         if( socket->createConnection(serverAddress,port) ) {
             mSocket = socket;
+            logi("Connected to server.");
         } else {
             delete socket;
+            loge("Could not connect to the server.");
         }
+    } else {
+        loge("Server address has not been specified.");
     }
 }
 
@@ -130,6 +135,7 @@ void ControllerApplication::readDevices( void ) {
     std::string deviceIdentifier;
     std::string deviceBash;
     
+    logi("Retrieving devices.");
     while( std::getline(file,line) ) {
         trim(line);
         if( line.empty() || line.at(0) == '#' )
@@ -140,10 +146,12 @@ void ControllerApplication::readDevices( void ) {
         if( line.empty() || line.at(0) == '#' )
             return;
         deviceBash = line;
+        logi("Adding " + deviceIdentifier + ".");
         mDevices.push_back(deviceIdentifier);
         mDeviceCommands.push_back(deviceBash);
     }
     file.close();
+    logi("Devices have been read.");
 }
 
 void ControllerApplication::allocateDeviceServer( void ) {
@@ -157,13 +165,16 @@ void ControllerApplication::allocateDeviceServer( void ) {
         port = (unsigned int) atol(stringPort.c_str());
     else
         port = kDefaultDeviceServerPort;
+    logi("Allocating device server at port " + std::to_string(port) + ".");
     serverSocket = new PosixTcpServerSocket(port);
     if( serverSocket->bindToPort() ) {
         mDeviceServer = new DeviceServer(serverSocket,
                                          mSocket,
                                          mDevices);
+        logi("Device server has been allocated.");
     } else {
         delete serverSocket;
+        loge("Could not bind device server to port " + std::to_string(port) + ".");
     }
 }
 
@@ -182,9 +193,11 @@ void ControllerApplication::authenticateWithServer( void ) {
     if( controllerIdentifier.empty() ||
         securityCode.empty() ) {
         stop();
+        loge("Authentication credentials missing.");
         return;
     }
     
+    logi("Authenticating with server.");
     success = true;
     header[0] = 0x00;
     header[1] = (std::uint8_t) controllerIdentifier.length();
@@ -197,8 +210,12 @@ void ControllerApplication::authenticateWithServer( void ) {
     n = writer->writeBytes((char *) message.c_str(),message.length());
     success &= ( n > 0 );
     writer->unlock();
-    if( !success )
+    if( !success ) {
         mSocket->closeConnection();
+        logi("Authentication failed.");
+    } else {
+        logi("Authenticated.");
+    }
 }
 
 void ControllerApplication::startDeviceProcesses( void ) {
@@ -209,6 +226,7 @@ void ControllerApplication::startDeviceProcesses( void ) {
     char ** environ;
     int status;
     
+    logi("Starting devices processes.");
     for( auto it = mDeviceCommands.begin() ;  it != mDeviceCommands.end() ; ++it ) {
         const std::string & command = (*it);
         std::stringstream ss;
@@ -233,6 +251,7 @@ void ControllerApplication::startDeviceProcesses( void ) {
         for( int i = 0 ; i < nArguments ; ++i )
             delete [] argv[i];
     }
+    logi("Device processes have been started.");
 }
 
 void ControllerApplication::cleanupDeviceProcesses( void ) {
@@ -242,6 +261,24 @@ void ControllerApplication::cleanupDeviceProcesses( void ) {
     n = mPids.size();
     for( int i = 0 ; i < n ; ++i ) {
         waitpid(mPids.at(i),&status,0);
+    }
+}
+
+void ControllerApplication::initializeLogger( void ) {
+    std::string type;
+
+    if( mProperties.contains(kConfigLoggerType) ) {
+        type = mProperties.get(kConfigLoggerType);
+        if( type == std::string(ConsoleLogger::kType) ) {
+            Logger::setLogger(new ConsoleLogger());
+            std::cout.flush();
+        } else
+        if( type == std::string(FileLogger::kType) &&
+            mProperties.contains(kConfigLoggerLogfilePath) ) {
+            std::string logfile = mProperties.get(kConfigLoggerLogfilePath);
+            if( !logfile.empty() )
+                Logger::setLogger(new FileLogger(logfile));
+        }
     }
 }
 
@@ -259,13 +296,17 @@ ControllerApplication::~ControllerApplication( void ) {
 
 void ControllerApplication::run( void ) {
     if( mDeviceServer != nullptr ) {
+        logi("Starting device server.");
         mDeviceServer->start();
+        logi("Device server has been started.");
         mDeviceServer->join();
+        logi("Device server has been stopped.");
     }
 }
 
 void ControllerApplication::stop( void ) {
     if( mDeviceServer != nullptr ) {
+        logi("Stopping the device server.");
         mDeviceServer->stop();
         mSocket->closeConnection();
     }
