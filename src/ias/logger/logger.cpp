@@ -27,6 +27,8 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+Logger * Logger::mLogger;
+
 void Logger::setLogger( Logger * logger ) {
     delete mLogger;
     mLogger = logger;
