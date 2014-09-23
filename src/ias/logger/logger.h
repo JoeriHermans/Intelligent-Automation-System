@@ -82,54 +82,26 @@ class Logger {
 
     // BEGIN Static methods. /////////////////////////////////////////
 
-    static void setLogger( Logger * logger ) {
-        delete mLogger;
-        mLogger = logger;
-    }
+    static void setLogger( Logger * logger );
 
-    static Logger * getLogger( void ) {
-        return ( mLogger );
-    }
+    static Logger * getLogger( void );
 
-    static void cleanup( void ) {
-        delete mLogger;
-    }
+    static void cleanup( void );
 
-    static void d( const std::string & message ) {
-        Logger * logger;
+    static void d( const std::string & message );
 
-        logger = Logger::getLogger();
-        logger->debug(message);
-    }
+    static void e( const std::string & message );
 
-    static void e( const std::string & message ) {
-        Logger * logger;
-
-        logger = Logger::getLogger();
-        logger->error(message);
-    }
-
-    static void i( const std::string & message ) {
-        Logger * logger;
-
-        logger = Logger::getLogger();
-        logger->info(message);
-    }
+    static void i( const std::string & message );
 
     // END Static methods. ///////////////////////////////////////////
 
 };
 
-void logd( const std::string & message ) {
-    Logger::d(message);
-}
+void logd( const std::string & message );
 
-void loge( const std::string & message ) {
-    Logger::e(message);
-}
+void loge( const std::string & message );
 
-void logi( const std::string & message ) {
-    Logger::i(message);
-}
+void logi( const std::string & message );
 
 #endif /* LOGGER_H_ */

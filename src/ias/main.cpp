@@ -41,6 +41,7 @@
 #include <ias/application/server_application.h>
 #include <ias/main.h>
 #include <ias/util/util.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -57,6 +58,7 @@ int main( const int argc , const char ** argv ) {
     else
         usage();
     cleanupSsl();
+    cleanupLogger();
     
     return ( 0 );
 }
@@ -116,4 +118,8 @@ void cleanupSsl( void ) {
     ERR_free_strings();
     EVP_cleanup();
     CRYPTO_cleanup_all_ex_data();
+}
+
+void cleanupLogger( void ) {
+    Logger::cleanup();
 }

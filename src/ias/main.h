@@ -45,4 +45,6 @@ void cleanupSsl( void );
 
 void usage( void );
 
+void cleanupLogger( void );
+
 #endif /* MAIN_H_ */
