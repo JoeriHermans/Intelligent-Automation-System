@@ -29,6 +29,7 @@
 
 // Application dependencies.
 #include <ias/controller/controller.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 

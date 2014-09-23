@@ -46,21 +46,24 @@ void Logger::d( const std::string & message ) {
     Logger * logger;
 
     logger = Logger::getLogger();
-    logger->debug(message);
+    if( logger != nullptr )
+        logger->debug(message);
 }
 
 void Logger::e( const std::string & message ) {
     Logger * logger;
 
     logger = Logger::getLogger();
-    logger->error(message);
+    if( logger != nullptr )
+        logger->error(message);
 }
 
 void Logger::i( const std::string & message ) {
     Logger * logger;
 
     logger = Logger::getLogger();
-    logger->info(message);
+    if( logger != nullptr )
+        logger->info(message);
 }
 
 void logd( const std::string & message ) {
