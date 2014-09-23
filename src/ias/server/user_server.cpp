@@ -31,6 +31,7 @@
 #include <ias/server/user_server.h>
 #include <ias/server/session/user_session.h>
 #include <ias/user/command/command_stop.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -101,6 +102,7 @@ void UserServer::start( void ) {
             while( mFlagRunning ) {
                 socket = serverSocket->acceptSocket(1);
                 if( socket != nullptr ) {
+                    logi("Starting new user session.");
                     session = new UserSession(socket,mUsers,
                                               mDispatcher);
                     session->addObserver(this);
@@ -109,6 +111,7 @@ void UserServer::start( void ) {
                             session->run();
                             session->notifyObservers(session);
                             delete session;
+                            logi("User session terminated.");
                         });
                 } else if( !serverSocket->isBound() ) {
                     stop();

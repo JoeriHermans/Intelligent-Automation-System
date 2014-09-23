@@ -31,6 +31,7 @@
 // Application dependencies.
 #include <ias/server/device_server.h>
 #include <ias/server/session/device_session.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -62,6 +63,7 @@ void DeviceServer::startListenThread( void ) {
         while( mFlagRunning && mSocket->isConnected() ) {
             socket = serverSocket->acceptSocket(1);
             if( socket != nullptr ) {
+                logi("Starting new device session.");
                 session = new DeviceSession(socket,
                                             mSocket,
                                             &mConnectedDevices,
@@ -72,6 +74,7 @@ void DeviceServer::startListenThread( void ) {
                         session->run();
                         session->notifyObservers(session);
                         delete session;
+                        logi("Device session terminated.");
                     });
             } else if( !serverSocket->isBound() ) {
                 stop();

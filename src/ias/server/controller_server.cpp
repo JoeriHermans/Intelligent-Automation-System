@@ -30,6 +30,7 @@
 // Application dependencies.
 #include <ias/server/controller_server.h>
 #include <ias/server/session/controller_session.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -90,6 +91,7 @@ void ControllerServer::start( void ) {
             while( mFlagRunning ) {
                 socket = serverSocket->acceptSocket(1);
                 if( socket != nullptr ) {
+                    logi("Starting new controller session.");
                     session = new ControllerSession(socket,mControllers);
                     session->addObserver(this);
                     mSessions[session] = 
@@ -97,6 +99,7 @@ void ControllerServer::start( void ) {
                             session->run();
                             session->notifyObservers(session);
                             delete session;
+                            logi("Terminating controller session.");
                         });
                 } else if( !serverSocket->isBound() ) {
                     stop();

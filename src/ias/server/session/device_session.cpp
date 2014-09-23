@@ -30,6 +30,7 @@
 // Application dependencies.
 #include <ias/dispatcher/device_channel.h>
 #include <ias/server/session/device_session.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -49,6 +50,7 @@ void DeviceSession::authorize( void ) {
     std::uint8_t type;
     std::uint8_t deviceIdentifier;
 
+    logi("Authorizing device.");
     if( !readBytes((char *) &type,1) ) return;
     if( type == 0x00 && readBytes((char *) &deviceIdentifier,1) ) {
         char identifier[deviceIdentifier + 1];
@@ -59,10 +61,13 @@ void DeviceSession::authorize( void ) {
             mFlagRunning = true;
             mDevice = identifier;
             mDispatcher->addChannel(identifier,new DeviceChannel(getSocket()));
+            logi(mDevice + " has been authorized.");
         } else {
             stop();
         }
     }
+    if( !mFlagRunning )
+        loge("Device authorization failed.");
 }
 
 void DeviceSession::setDevices( const std::vector<std::string> * devices ) {
@@ -188,6 +193,7 @@ void DeviceSession::stop( void ) {
     Socket * socket;
     Writer * writer;
     
+    logi("Closing device session.");
     mFlagRunning = false;
     socket = getSocket();
     if( socket->isConnected() ) {

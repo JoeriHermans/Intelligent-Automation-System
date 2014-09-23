@@ -29,6 +29,7 @@
 
 // Application dependencies.
 #include <ias/server/session/controller_session.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -50,6 +51,7 @@ void ControllerSession::authorize( void ) {
     Controller * controller;
     Reader * reader;
     
+    logi("Authorizing controller.");
     reader = getSocket()->getReader();
     if( readBytes((char *) header,3) && header[0] == 0x00 ) {
         char identifier[header[1] + 1];
@@ -62,12 +64,15 @@ void ControllerSession::authorize( void ) {
             controller = mControllers->get(identifier);
             if( controller != nullptr &&
                 controller->matchesSecurityCode(securityCode) ) {
+                logi("Controller " + controller->getIdentifier() + " authorized.");
                 mController = controller;
                 mController->setConnected(getSocket());
                 mFlagRunning = true;
             }
         }
     }
+    if( !mFlagRunning )
+        loge("Controller authorization failed.");
 }
 
 void ControllerSession::controllerUpdate( void ) {
@@ -104,6 +109,7 @@ void ControllerSession::controllerUpdate( void ) {
 }
 
 void ControllerSession::controllerDisconnect( void ) {
+    logi(mController->getIdentifier() + " disconnecting.");
     getSocket()->closeConnection();
     mFlagRunning = false;
     if( mController != nullptr ) {
@@ -151,6 +157,7 @@ void ControllerSession::run( void ) {
 }
 
 void ControllerSession::stop( void ) {
+    logi("Closing controller session.");
     mFlagRunning = false;
     controllerDisconnect();
 }

@@ -33,6 +33,7 @@
 #include <ias/application/constants.h>
 #include <ias/server/session/user_session.h>
 #include <ias/util/util.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -55,6 +56,7 @@ void UserSession::authorize( void ) {
     std::string hashedPassword;
     Reader * reader;
     
+    logi("Authorizing user.");
     type = 0xff;
     length = 0x00;
     if( readBytes((char *) &type,1) &&
@@ -70,10 +72,13 @@ void UserSession::authorize( void ) {
                     password[length] = 0;
                     hashedPassword = sha256GlobalSalts(password);
                     mUser = authenticateUser(username,hashedPassword.c_str());
+                    logi(mUser->getIdentifier() + " has been authorized.");
                 }
             }
         }
     }
+    if( mUser == nullptr )
+        loge("User authorization failed.");
     if( mUser == nullptr ) {
         getSocket()->closeConnection();
     } else {
@@ -207,6 +212,7 @@ void UserSession::run( void ) {
 }
 
 void UserSession::stop( void ) {
+    logi("Closing user session.");
     mFlagRunning = false;
     getSocket()->closeConnection();
 }
