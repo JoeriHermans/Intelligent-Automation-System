@@ -32,6 +32,7 @@
 #include <ias/controller/controller.h>
 #include <ias/device/device.h>
 #include <ias/device/struct_device_update.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -142,7 +143,7 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
         type = it->second.second;
         result = 2;
         if( type->matches(value) ) {
-            std::cout << "UPDATE: " << mIdentifier << std::endl << "   " << key << ": " << value << std::endl;
+            logi("Updating state of " + mIdentifier + " => " + key + " = " + value);
             mState[key] = std::pair<std::string,const ValueType *>(value,type);
             dUpdate.mDevice = this;
             dUpdate.mStateIdentifier = key;
