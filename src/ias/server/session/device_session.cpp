@@ -193,14 +193,16 @@ void DeviceSession::stop( void ) {
     Socket * socket;
     Writer * writer;
     
-    logi("Closing device session.");
-    mFlagRunning = false;
-    socket = getSocket();
-    if( socket->isConnected() ) {
-        writer = getSocket()->getWriter();
-        writer->lock();
-        writer->writeBytes((char *) &close,1);
-        writer->unlock();
-        socket->closeConnection();
+    if( mFlagRunning ) {
+        logi("Closing device session.");
+        mFlagRunning = false;
+        socket = getSocket();
+        if( socket->isConnected() ) {
+            writer = getSocket()->getWriter();
+            writer->lock();
+            writer->writeBytes((char *) &close,1);
+            writer->unlock();
+            socket->closeConnection();
+        }
     }
 }

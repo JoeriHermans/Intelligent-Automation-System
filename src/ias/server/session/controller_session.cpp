@@ -157,7 +157,9 @@ void ControllerSession::run( void ) {
 }
 
 void ControllerSession::stop( void ) {
-    logi("Closing controller session.");
-    mFlagRunning = false;
-    controllerDisconnect();
+    if( mFlagRunning ) {
+        logi("Closing controller session.");
+        mFlagRunning = false;
+        controllerDisconnect();
+    }
 }
