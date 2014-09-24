@@ -85,7 +85,13 @@ Socket * PosixSslServerSocket::allocateSocket( const int fd ) const {
 
     ssl = SSL_new(mSslContext);
     SSL_set_fd(ssl, fd);
-    socket = new PosixSslSocket(ssl);
+    if( SSL_accept(ssl) <= 0 ) {
+        SSL_free(ssl);
+        close(fd);
+        socket = nullptr;
+    } else {
+        socket = new PosixSslSocket(ssl);
+    }
 
     return ( socket );
 }
