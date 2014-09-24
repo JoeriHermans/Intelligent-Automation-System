@@ -53,6 +53,11 @@ class PosixSslSocket : public Socket {
     mutable SSL * mSsl;
 
     /**
+     * Contains the SSL context of the socket.
+     */
+    SSL_CTX * mSslContext;
+
+    /**
      * Contains a reference to the writer and reader which are responsible
      * for reading and writing bytes to the socket.
      */
@@ -66,6 +71,8 @@ class PosixSslSocket : public Socket {
     inline void initialize( void );
 
     void setSslEnvironment( SSL * ssl );
+
+    void setSslContext( SSL_CTX * sslContext );
 
     bool initializeConnection( const std::string & address,
                                const unsigned int port );
@@ -83,7 +90,7 @@ class PosixSslSocket : public Socket {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    PosixSslSocket( void );
+    PosixSslSocket( SSL_CTX * sslContext );
 
     PosixSslSocket( SSL * ssl );
 

@@ -46,6 +46,7 @@ inline void PosixSslSocket::initialize( void ) {
     mSsl = nullptr;
     mReader = nullptr;
     mWriter = nullptr;
+    mSslContext = nullptr;
 }
 
 void PosixSslSocket::setSslEnvironment( SSL * ssl ) {
@@ -59,6 +60,13 @@ void PosixSslSocket::setSslEnvironment( SSL * ssl ) {
     delete mWriter; mWriter = nullptr;
     mReader = new SslReader(this,ssl);
     mWriter = new SslWriter(this,ssl);
+}
+
+void PosixSslSocket::setSslContext( SSL_CTX * sslContext ) {
+    // Checking the precondition.
+    assert( sslContext != nullptr );
+
+    mSslContext = sslContext;
 }
 
 bool PosixSslSocket::initializeConnection( const std::string & address,
@@ -84,8 +92,13 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
     if( fd >= 0 ) {
         if( connect(fd,results->ai_addr,results->ai_addrlen) == 0 ) {
             connected = true;
-            // TODO Allocate SSL from context.
-            // TODO Set SSL.
+            ssl = SSL_new(mSslContext);
+            SSL_set_fd(ssl,fd);
+            if( SSL_connect(ssl) <= 0 ) {
+                SSL_free(mSsl); mSsl = nullptr;
+                close(fd);
+            }
+            setSslEnvironment(ssl);
         } else {
             close(fd);
         }
@@ -118,8 +131,9 @@ void PosixSslSocket::pollSocket( void ) const {
     }
 }
 
-PosixSslSocket::PosixSslSocket( void ) {
+PosixSslSocket::PosixSslSocket( SSL_CTX * sslContext ) {
     initialize();
+    setSslContext(sslContext);
 }
 
 PosixSslSocket::PosixSslSocket( SSL * ssl ) {
@@ -143,9 +157,10 @@ void PosixSslSocket::closeConnection( void ) {
 
 bool PosixSslSocket::createConnection( const std::string & address,
                                        const unsigned int port ) {
-    // return ( initializeConnection(address,port) );
-    // TODO SSL context required.
-    return ( false );
+    // Checking the precondition.
+    assert( mSslContext != nullptr );
+
+    return ( initializeConnection(address,port) );
 }
 
 bool PosixSslSocket::isConnected( void ) const {

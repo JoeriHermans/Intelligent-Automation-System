@@ -33,11 +33,14 @@
 #include <sstream>
 #include <netinet/in.h>
 #include <limits>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/application/client_application.h>
 #include <ias/application/constants.h>
 #include <ias/network/posix/posix_tcp_socket.h>
+#include <ias/network/posix/ssl/posix_ssl_socket.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -46,6 +49,11 @@ inline void ClientApplication::initialize( void ) {
     writeMessage("Initializing client.");
     mSocket = nullptr;
     mLoggedIn = false;
+    mSslContext = nullptr;
+}
+
+void ClientApplication::initializeSslContext( void ) {
+    mSslContext = SSL_CTX_new(SSLv23_client_method());
 }
 
 void ClientApplication::analyzeArguments( const int argc, 
@@ -58,7 +66,11 @@ void ClientApplication::analyzeArguments( const int argc,
     
     address = fetchAddress(argc,argv);
     port = fetchPort(argc,argv);
-    mSocket = new PosixTcpSocket();
+    if( sslRequested(argc,argv) ) {
+        mSocket = new PosixSslSocket(mSslContext);
+    } else {
+        mSocket = new PosixTcpSocket();
+    }
     if( mSocket != nullptr ) {
         writeMessage("Connecting...");
         if( mSocket->createConnection(address,port) )
@@ -71,7 +83,7 @@ void ClientApplication::analyzeArguments( const int argc,
 }
 
 std::string ClientApplication::fetchAddress( const int argc,
-                                             const char ** argv ) {
+                                             const char ** argv ) const {
     std::string address;
     
     // Checking the precondition.
@@ -90,7 +102,7 @@ std::string ClientApplication::fetchAddress( const int argc,
 }
 
 std::size_t ClientApplication::fetchPort( const int argc,
-                                          const char ** argv ) {
+                                          const char ** argv ) const {
     std::size_t port;
     
     // Checking the precondition.
@@ -107,6 +119,23 @@ std::size_t ClientApplication::fetchPort( const int argc,
         port = kDefaultUserServerPort;
     
     return ( port );
+}
+
+bool ClientApplication::sslRequested( const int argc , const char ** argv ) const {
+    bool sslRequested;
+
+    // Checking the precondition.
+    assert( argc > 0 && argv != nullptr );
+
+    sslRequested = false;
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagSsl) == 0 ) {
+            sslRequested = true;
+            break;
+        }
+    }
+
+    return ( sslRequested );
 }
 
 void ClientApplication::login( void ) {
@@ -243,6 +272,7 @@ ClientApplication::ClientApplication( const int argc , const char ** argv ) {
 
 ClientApplication::~ClientApplication( void ) {
     delete mSocket; mSocket = nullptr;
+    delete mSslContext; mSslContext = nullptr;
 }
 
 void ClientApplication::run( void ) {

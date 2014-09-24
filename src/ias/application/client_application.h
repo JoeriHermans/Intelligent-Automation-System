@@ -31,6 +31,8 @@
 // Application dependencies.
 #include <ias/network/socket.h>
 #include <ias/application/application.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -66,18 +68,27 @@ class ClientApplication : public Application {
      */
     std::string mUsername;
     
+    /**
+     * Contains the SSL context.
+     */
+    SSL_CTX * mSslContext;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
     
     inline void initialize( void );
     
+    void initializeSslContext( void );
+
     void analyzeArguments( const int argc , const char ** argv );
     
-    std::string fetchAddress( const int argc , const char ** argv );
+    std::string fetchAddress( const int argc , const char ** argv ) const;
     
-    std::size_t fetchPort( const int argc , const char ** argv );
+    std::size_t fetchPort( const int argc , const char ** argv ) const;
     
+    bool sslRequested( const int argc , const char ** argv ) const;
+
     void login( void );
     
     void processCommands( void );
