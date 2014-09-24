@@ -36,6 +36,7 @@
 // Application dependencies.
 #include <ias/network/posix/ssl/posix_ssl_server_socket.h>
 #include <ias/network/posix/ssl/posix_ssl_socket.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -50,12 +51,21 @@ void PosixSslServerSocket::setFileDescriptor( const int fd ) {
 void PosixSslServerSocket::loadCertificates( const std::string & certificateFile,
                                              const std::string & keyFile ) {
     SSL_CTX * sslContext;
+    int rc;
 
     sslContext = SSL_CTX_new(SSLv3_server_method());
-    SSL_CTX_load_verify_locations(sslContext,certificateFile.c_str(),keyFile.c_str());
-    SSL_CTX_set_default_verify_paths(sslContext);
-    SSL_CTX_use_certificate_file(sslContext,certificateFile.c_str(),SSL_FILETYPE_PEM);
-    SSL_CTX_use_PrivateKey_file(sslContext,keyFile.c_str(),SSL_FILETYPE_PEM);
+    rc = SSL_CTX_load_verify_locations(sslContext,certificateFile.c_str(),keyFile.c_str());
+    if( rc < 0 )
+        loge("Error verifing certificate locations.");
+    rc = SSL_CTX_set_default_verify_paths(sslContext);
+    if( rc < 0 )
+        loge("Can't set default verification paths.");
+    rc = SSL_CTX_use_certificate_file(sslContext,certificateFile.c_str(),SSL_FILETYPE_PEM);
+    if( rc < 0 )
+        loge("Can't use \"" + certificateFile + "\" as a certificate file.");
+    rc = SSL_CTX_use_PrivateKey_file(sslContext,keyFile.c_str(),SSL_FILETYPE_PEM);
+    if( rc < 0 )
+        loge("Can't use \"" + keyFile + "\" as a keyfile.");
     setSslContext(sslContext);
 }
 
