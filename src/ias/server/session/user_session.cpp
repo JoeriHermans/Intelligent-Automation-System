@@ -60,6 +60,7 @@ void UserSession::authorize( void ) {
     type = 0xff;
     length = 0x00;
     if( readBytes((char *) &type,1) &&
+        type == 0x00 &&
         readBytes((char *) &length,1) ) {
         char username[length + 1];
         reader = getSocket()->getReader();
