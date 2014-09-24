@@ -377,7 +377,7 @@ void ServerApplication::initializeUserSslServer( void ) {
     if( mProperties.contains(kConfigNetworkUserSslPort) )
         stringPort = mProperties.get(kConfigNetworkUserSslPort);
     if( mProperties.contains(kConfigNetworkUserSslCertificate) )
-        certificateFile = mProperties.get(kConfigNetworkControllerSslCertificiate);
+        certificateFile = mProperties.get(kConfigNetworkUserSslCertificate);
     if( mProperties.contains(kConfigNetworkUserSslKey) )
         keyFile = mProperties.get(kConfigNetworkUserSslKey);
     if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
