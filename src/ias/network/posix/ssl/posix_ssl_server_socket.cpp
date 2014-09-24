@@ -55,17 +55,17 @@ void PosixSslServerSocket::loadCertificates( const std::string & certificateFile
 
     sslContext = SSL_CTX_new(SSLv3_server_method());
     rc = SSL_CTX_load_verify_locations(sslContext,certificateFile.c_str(),keyFile.c_str());
-    if( rc < 0 )
-        loge("Error verifing certificate locations.");
+    if( rc <= 0 )
+        ERR_print_errors_fp(stdout);
     rc = SSL_CTX_set_default_verify_paths(sslContext);
-    if( rc < 0 )
-        loge("Can't set default verification paths.");
+    if( rc <= 0 )
+        ERR_print_errors_fp(stdout);
     rc = SSL_CTX_use_certificate_file(sslContext,certificateFile.c_str(),SSL_FILETYPE_PEM);
-    if( rc < 0 )
-        loge("Can't use \"" + certificateFile + "\" as a certificate file.");
+    if( rc <= 0 )
+        ERR_print_errors_fp(stdout);
     rc = SSL_CTX_use_PrivateKey_file(sslContext,keyFile.c_str(),SSL_FILETYPE_PEM);
-    if( rc < 0 )
-        loge("Can't use \"" + keyFile + "\" as a keyfile.");
+    if( rc <= 0 )
+        ERR_print_errors_fp(stdout);
     setSslContext(sslContext);
 }
 
