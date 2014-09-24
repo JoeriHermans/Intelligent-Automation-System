@@ -74,10 +74,12 @@ void ClientApplication::analyzeArguments( const int argc,
     }
     if( mSocket != nullptr ) {
         writeMessage("Connecting...");
-        if( mSocket->createConnection(address,port) )
+        if( mSocket->createConnection(address,port) ) {
             writeMessage("Connected.");
-        else
+        } else {
+            delete mSocket; mSocket = nullptr;
             writeMessage("Connection failed.");
+        }
     } else {
         writeMessage("Couldn't allocate socket.");
     }
@@ -235,6 +237,10 @@ void ClientApplication::processCommands( void ) {
         std::getline(std::cin,command);
         trim(command);
         if( command.length() > 0 ) {
+            if( command == std::string("quit") ) {
+                mSocket->closeConnection();
+                continue;
+            }
             b = 0x01;
             writer->writeBytes((char *) &b,1);
             if( command.length() > 0xff ) {
@@ -273,7 +279,10 @@ ClientApplication::ClientApplication( const int argc , const char ** argv ) {
 
 ClientApplication::~ClientApplication( void ) {
     delete mSocket; mSocket = nullptr;
-    delete mSslContext; mSslContext = nullptr;
+    if( mSslContext != nullptr ) {
+        SSL_CTX_free(mSslContext);
+        mSslContext = nullptr;
+    }
 }
 
 void ClientApplication::run( void ) {

@@ -39,7 +39,8 @@ Logger * Logger::getLogger( void ) {
 }
 
 void Logger::cleanup( void ) {
-    delete mLogger;
+    if( mLogger != nullptr )
+        delete mLogger;
 }
 
 void Logger::d( const std::string & message ) {
