@@ -67,6 +67,7 @@ void ClientApplication::analyzeArguments( const int argc,
     address = fetchAddress(argc,argv);
     port = fetchPort(argc,argv);
     if( sslRequested(argc,argv) ) {
+        initializeSslContext();
         mSocket = new PosixSslSocket(mSslContext);
     } else {
         mSocket = new PosixTcpSocket();
