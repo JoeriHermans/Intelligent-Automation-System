@@ -137,7 +137,7 @@ class Rule : public Observer {
     void enforce( void );
     
     virtual void update( void );
-    
+
     virtual void update( void * argument );
     
     // END Public methods. ///////////////////////////////////////////

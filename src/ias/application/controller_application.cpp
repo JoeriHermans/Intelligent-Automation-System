@@ -223,7 +223,6 @@ void ControllerApplication::startDeviceProcesses( void ) {
     std::string argument;
     std::size_t nArguments;
     pid_t processId;
-    char ** environ;
     int status;
     
     logi("Starting devices processes.");
@@ -238,7 +237,7 @@ void ControllerApplication::startDeviceProcesses( void ) {
         argv[nArguments] = (char *) 0;
         argv[0] = new char[path.length() + 1];
         strcpy(argv[0],path.c_str());
-        for( int i = 1 ; i < nArguments ; ++i ) {
+        for( std::size_t i = 1 ; i < nArguments ; ++i ) {
             ss >> argument;
             argv[i] = new char[argument.length() + 1];
             strcpy(argv[i],argument.c_str());
@@ -248,7 +247,7 @@ void ControllerApplication::startDeviceProcesses( void ) {
         if( status == 0 ) {
             mPids.push_back(processId);
         }
-        for( int i = 0 ; i < nArguments ; ++i )
+        for( std::size_t i = 0 ; i < nArguments ; ++i )
             delete [] argv[i];
     }
     logi("Device processes have been started.");
@@ -259,7 +258,7 @@ void ControllerApplication::cleanupDeviceProcesses( void ) {
     std::size_t n;
     
     n = mPids.size();
-    for( int i = 0 ; i < n ; ++i ) {
+    for( std::size_t i = 0 ; i < n ; ++i ) {
         waitpid(mPids.at(i),&status,0);
     }
 }

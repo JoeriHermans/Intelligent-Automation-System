@@ -70,7 +70,7 @@ class Socket {
     virtual void closeConnection( void ) = 0;
     
     virtual bool createConnection( const std::string & address,
-                                   const unsigned int port ) = 0;
+                                   const std::size_t port ) = 0;
     
     virtual bool isConnected( void ) const = 0;
     

@@ -33,7 +33,12 @@
 // END Includes. /////////////////////////////////////////////////////
 
 PostgresqlResultRow::PostgresqlResultRow( const pqxx::result::const_iterator & row ) {
-    mRow = row;
+    std::size_t n;
+
+    n = row.size();
+    for( std::size_t i = 0 ; i < n ; ++i ) {
+        mRow.push_back(row.at((int) i).as<std::string>());
+    }
 }
 
 PostgresqlResultRow::~PostgresqlResultRow( void ) {
@@ -41,9 +46,9 @@ PostgresqlResultRow::~PostgresqlResultRow( void ) {
 }
 
 std::size_t PostgresqlResultRow::numColumns( void ) const {
-    return ( mRow.num() );
+    return ( mRow.size() );
 }
 
 const std::string & PostgresqlResultRow::getColumn( const std::size_t columnIndex ) const {
-    return ( mRow[(int) columnIndex].as<std::string>() );
+    return ( mRow.at(columnIndex) );
 }

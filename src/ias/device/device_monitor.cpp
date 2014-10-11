@@ -60,8 +60,6 @@ void DeviceMonitor::update( void ) {
 
 void DeviceMonitor::update( void * argument ) {
     struct device_update * dUpdate;
-    DatabaseStatement * statement;
-    DatabaseResult * result;
     std::string query;
     
     // Checking the precondition.

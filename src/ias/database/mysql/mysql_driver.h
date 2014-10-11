@@ -38,8 +38,6 @@ class MySqlDriver : public DatabaseDriver {
 
     /**
      * Contains the identifier of the MySQL database driver.
-     *
-     * @return  The constant static string "mysql".
      */
     static const char kMySqlIdentifier[];
 

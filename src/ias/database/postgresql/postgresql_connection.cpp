@@ -30,6 +30,7 @@
 // Application dependencies.
 #include <ias/database/postgresql/postgresql_connection.h>
 #include <ias/database/postgresql/postgresql_statement.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -87,6 +88,7 @@ bool PostgresqlConnection::connect( void ) {
     try {
         mConnection = new pqxx::connection(dbString);
     } catch( std::exception & e ) {
+        loge(std::string(e.what()));
         delete mConnection; mConnection = nullptr;
     }
 

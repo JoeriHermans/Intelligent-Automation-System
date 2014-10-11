@@ -93,7 +93,7 @@ const std::string & Device::getIdentifier( void ) const {
 
 void Device::setIdentifier( const std::string & identifier ) {
     // Checking the precondition.
-    assert( !identifier.empty() );
+    assert( !identifier.empty() && identifier.length() <= 255 );
     
     mMutexIdentifier.lock();
     mIdentifier = identifier;
@@ -209,9 +209,9 @@ void Device::execute( const Action & action ) {
         const std::string & identifier = action.getIdentifier();
         const std::string & param = action.getParameter();
         header[0] = 0x01;
-        header[1] = mIdentifier.length();
-        header[2] = identifier.length();
-        header[3] = param.length();
+        header[1] = (std::uint8_t) mIdentifier.length();
+        header[2] = (std::uint8_t) identifier.length();
+        header[3] = (std::uint8_t) param.length();
         nBytes = header[1] + header[2] + header[3];
         writer->writeBytes((char *) &header,4);
         char buffer[nBytes];

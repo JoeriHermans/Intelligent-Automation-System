@@ -27,7 +27,6 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // Application dependencies.
-#include <ias/ai/nlp/natural_language_processor.h>
 #include <ias/application/application.h>
 #include <ias/building/area.h>
 #include <ias/building/building.h>
@@ -84,11 +83,6 @@ class ServerApplication : public Application {
     Container<Building *> mContainerBuildings;
     Container<Area *> mContainerAreas;
     Container<Rule *> mContainerRules;
-    
-    /**
-     * Contains the IAS natural language processor.
-     */
-    NaturalLanguageProcessor * mNlp;
     
     /**
      * Contains the set of operators which are available to IAS.
@@ -171,8 +165,6 @@ class ServerApplication : public Application {
     void fillRules( void );
     
     void initializeSalts( void );
-    
-    void initializeNlp( void );
     
     void initializeControllerServer( void );
     

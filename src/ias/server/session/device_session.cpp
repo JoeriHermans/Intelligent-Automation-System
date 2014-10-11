@@ -164,27 +164,27 @@ void DeviceSession::run( void ) {
     Reader * reader;
     
     authorize();
-    if( getSocket()->isConnected() )
+    if( getSocket()->isConnected() ) {
         reader = getSocket()->getReader();
-    while( mFlagRunning && mServerSocket->isConnected() &&
-           getSocket()->isConnected() ) {
-        nBytes = reader->readByte((char *) &type);
-        if( nBytes == 0 ) { 
-            stop();
-        } else {
-            switch(type) {
-            case 0x01:
-                updateDeviceState();
-                break;
-            default:
+        while( mFlagRunning && mServerSocket->isConnected() &&
+               getSocket()->isConnected() ) {
+            nBytes = reader->readByte((char *) &type);
+            if( nBytes == 0 ) {
                 stop();
-                break;
+            } else {
+                switch(type) {
+                case 0x01:
+                    updateDeviceState();
+                    break;
+                default:
+                    stop();
+                    break;
+                }
             }
         }
     }
-    if( !mDevice.empty() ) {
+    if( !mDevice.empty() )
         mDispatcher->removeChannel(mDevice);
-    }
     getSocket()->closeConnection();
 }
 

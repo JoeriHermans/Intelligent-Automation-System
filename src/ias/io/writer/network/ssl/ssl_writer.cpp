@@ -76,7 +76,7 @@ std::size_t SslWriter::writeBytes( const char * buffer , const std::size_t buffe
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
-        nBytes = SSL_write(mSsl,buffer,bufferSize);
+        nBytes = SSL_write(mSsl,buffer,(int) bufferSize);
         if( nBytes < 0 ) {
             nBytes = 0;
             mSocket->closeConnection();

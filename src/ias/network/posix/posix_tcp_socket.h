@@ -77,7 +77,7 @@ class PosixTcpSocket : public Socket {
     void setFileDescriptor( const int fd );
     
     bool initializeConnection( const std::string & address, 
-                               const unsigned int port );
+                               const std::size_t port );
     
     void pollSocket( void ) const;
     
@@ -109,7 +109,7 @@ class PosixTcpSocket : public Socket {
     virtual void closeConnection( void );
     
     virtual bool createConnection( const std::string & address,
-                                   const unsigned int port );
+                                   const std::size_t port );
     
     virtual bool isConnected( void ) const;
     

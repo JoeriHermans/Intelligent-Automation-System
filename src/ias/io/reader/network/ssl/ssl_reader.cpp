@@ -76,7 +76,7 @@ std::size_t SslReader::readBytes( char * buffer , const std::size_t bufferSize )
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
-        nBytes = SSL_read(mSsl,buffer,bufferSize);
+        nBytes = SSL_read(mSsl,buffer,(int) bufferSize);
         if( nBytes < 0 ) {
             mSocket->closeConnection();
             nBytes = 0;

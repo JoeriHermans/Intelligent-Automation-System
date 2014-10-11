@@ -30,7 +30,6 @@
 #include <iostream>
 
 // Application dependencies.
-#include <ias/ai/nlp/natural_language_processor.h>
 #include <ias/application/server_application.h>
 #include <ias/application/constants.h>
 #include <ias/building/factory/area_factory_database.h>
@@ -48,7 +47,6 @@
 #include <ias/user/command/command_state.h>
 #include <ias/user/command/command_list_controllers.h>
 #include <ias/user/command/command_execute_feature.h>
-#include <ias/user/command/command_say.h>
 #include <ias/user/command/command_list_commands.h>
 #include <ias/user/command/command_delete_rule.h>
 #include <ias/rule/factory/rule_database_factory.h>
@@ -67,7 +65,6 @@ inline void ServerApplication::initialize( void ) {
     mServerUser = nullptr;
     mServerUserSsl = nullptr;
     mFlagRunning = true;
-    mNlp = nullptr;
     mDeviceMonitor = nullptr;
 }
 
@@ -90,7 +87,6 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
             registerOperators();
             initializeSalts();
             fillContainers();
-            initializeNlp();
             initializeDispatcher();
             logi("Initializing servers.");
             initializeControllerServer();
@@ -295,12 +291,6 @@ void ServerApplication::initializeSalts( void ) {
     gSaltPost = postSalt;
 }
 
-void ServerApplication::initializeNlp( void ) {
-    mNlp = new NaturalLanguageProcessor(&mContainerAreas,
-                                        &mContainerDevices,
-                                        &mContainerTechnologies);
-}
-
 void ServerApplication::initializeControllerServer( void ) {
     ServerSocket * serverSocket;
     std::string stringPort;
@@ -411,10 +401,6 @@ void ServerApplication::initializeDispatcher( void ) {
         new CommandExecuteFeature(&mContainerDevices)
     );
     mDispatcher.registerCommand(
-        CommandSay::kIdentifier,
-        new CommandSay(mNlp)
-    );
-    mDispatcher.registerCommand(
         CommandListCommands::kIdentifier,
         new CommandListCommands(&mDispatcher)
     );
@@ -474,7 +460,6 @@ ServerApplication::~ServerApplication( void ) {
     delete mDbConnection; mDbConnection = nullptr;
     delete mServerController; mServerController = nullptr;
     delete mServerUser; mServerUser = nullptr;
-    delete mNlp; mNlp = nullptr;
     delete mDeviceMonitor; mDeviceMonitor = nullptr;
     cleanupOperators();
 }

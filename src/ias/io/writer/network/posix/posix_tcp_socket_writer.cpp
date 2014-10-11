@@ -48,7 +48,7 @@ void PosixTcpSocketWriter::closeWriter( void ) {
 }
 
 std::size_t PosixTcpSocketWriter::writeByte( const char byte ) {
-    int nBytes;
+    long nBytes;
     
     nBytes = 0;
     if( mSocket->isConnected() ) {
@@ -64,7 +64,7 @@ std::size_t PosixTcpSocketWriter::writeByte( const char byte ) {
 
 std::size_t PosixTcpSocketWriter::writeBytes( const char * buffer,
                                               const std::size_t bufferSize ) {
-    int nBytes;
+    long nBytes;
     
     // Checking the precondition.
     assert( buffer != nullptr && bufferSize > 0 );

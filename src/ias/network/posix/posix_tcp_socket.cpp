@@ -56,7 +56,7 @@ void PosixTcpSocket::setFileDescriptor( const int fd ) {
 }
 
 bool PosixTcpSocket::initializeConnection( const std::string & address,
-                                           const unsigned int port ) {
+                                           const std::size_t port ) {
     struct addrinfo hints;
     struct addrinfo * results;
     std::string portString;
@@ -136,7 +136,7 @@ void PosixTcpSocket::closeConnection( void ) {
 }
 
 bool PosixTcpSocket::createConnection( const std::string & address,
-                                       const unsigned int port ) {
+                                       const std::size_t port ) {
     closeConnection();
     
     return ( initializeConnection(address,port) );

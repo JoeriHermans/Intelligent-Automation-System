@@ -75,7 +75,7 @@ class PosixSslSocket : public Socket {
     void setSslContext( SSL_CTX * sslContext );
 
     bool initializeConnection( const std::string & address,
-                               const unsigned int port );
+                               const std::size_t port );
 
     void pollSocket( void ) const;
 
@@ -107,7 +107,7 @@ class PosixSslSocket : public Socket {
     virtual void closeConnection( void );
 
     virtual bool createConnection( const std::string & address,
-                                   const unsigned int port );
+                                   const std::size_t port );
 
     virtual bool isConnected( void ) const;
 

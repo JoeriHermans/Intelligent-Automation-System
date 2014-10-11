@@ -52,11 +52,6 @@ class ControllerSession : public Session {
     Container<Controller *> * mControllers;
     
     /**
-     * Contains the container of all controllers which are connected.
-     */
-    std::vector<Controller *> * mConnectedControllers;
-    
-    /**
      * Contains the controller which has been associated with this session.
      * 
      * @note    By default, this member will be equal to the null reference.

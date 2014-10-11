@@ -292,6 +292,7 @@ Rule * RuleDatabaseFactory::fetch( const std::size_t id ) {
             "FROM rules "
             "WHERE id = " + std::to_string(id);
     statement = getDbConnection()->createStatement(query);
+    rule = nullptr;
     if( statement != nullptr ) {
         result = statement->execute();
         if( result != nullptr ) {

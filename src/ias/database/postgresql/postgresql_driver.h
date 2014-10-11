@@ -39,8 +39,6 @@ class PostgresqlDriver : public DatabaseDriver {
 
     /**
      * Contains the unique identifier of the Postgresql database driver.
-     *
-     * @return  The constant static string "postgresql".
      */
     static const char kPostgresqlIdentifier[];
 

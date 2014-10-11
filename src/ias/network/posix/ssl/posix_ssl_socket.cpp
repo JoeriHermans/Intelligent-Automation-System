@@ -70,7 +70,7 @@ void PosixSslSocket::setSslContext( SSL_CTX * sslContext ) {
 }
 
 bool PosixSslSocket::initializeConnection( const std::string & address,
-                                           const unsigned int port ) {
+                                           const std::size_t port ) {
     struct addrinfo hints;
     struct addrinfo * results;
     std::string portString;
@@ -156,7 +156,7 @@ void PosixSslSocket::closeConnection( void ) {
 }
 
 bool PosixSslSocket::createConnection( const std::string & address,
-                                       const unsigned int port ) {
+                                       const std::size_t port ) {
     // Checking the precondition.
     assert( mSslContext != nullptr );
 
