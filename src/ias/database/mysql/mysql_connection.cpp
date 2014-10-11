@@ -2,8 +2,8 @@
  * A class which describes the properties of a MySQL database connection.
  *
  * @date                    Jul 21, 2013
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

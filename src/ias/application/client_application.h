@@ -2,8 +2,8 @@
  * An application which is responsible for handling the client inputs.
  *
  * @date                    Jul 17, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

@@ -3,8 +3,8 @@
  * result row.
  *
  * @date                    Jul 22, 2013
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

@@ -3,8 +3,8 @@
  * a controller.
  *
  * @date                    Jul 3, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

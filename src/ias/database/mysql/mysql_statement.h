@@ -2,8 +2,8 @@
  * A class which describes the actions and properties of a MySQL statement.
  *
  * @date                    Jul 22, 2013
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *

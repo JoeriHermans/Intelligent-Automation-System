@@ -2,8 +2,8 @@
  * A class which is responsible for retrieving controllers from a database.
  *
  * @date                    Jul 5, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
