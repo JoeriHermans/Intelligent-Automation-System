@@ -3,7 +3,13 @@ LD = clang
 
 MODULES = ai application building controller d
 LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx
-CCFLAGS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L -I"src/" -I/usr/include/eigen3 -I/usr/local/include/mysql -I/usr/include/mysql -O3 -emit-llvm -w -Wall -Werror -c -fmessage-length=0 -std=c++11
+CCFLAGS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L -I"src/" \
+ 		 -I/usr/include/eigen3 -I/usr/local/include/mysql \
+		 -I/usr/include/mysql -O3 -Wno-vla-extension -Wno-vla -Wno-sign-conversion \
+		 -Wno-global-constructors -Wno-float-equal -Wno-unused-parameter \
+		 -Wno-padded -Wno-weak-vtables -Wno-c++98-compat -emit-llvm -Werror \
+		 -Wno-exit-time-destructors \
+		 -Weverything -c -fmessage-length=0 -std=c++11
 
 SOURCEDIR = src/
 BUILDDIR = build/
@@ -35,20 +41,20 @@ ias: $(OBJECTS)
 	@rm -f bin/ias
 	@mv ias bin/ias
 	@echo -e "$(BOLD)DONE$(NO_BOLD)"
-	
+
 build/%.bc: src/%.cpp
 	@mkdir -p $(dir $(OBJECTS))
 	@echo -en "$(ARROW) $(BOLD)Compiling:$(NO_BOLD) "$(word 2,$@ $<)
 	@$(CC) $(CCFLAGS) -o $@ $<
 	@echo -e " $(OK_STRING)"
-	
+
 clean:
 	@rm -f -r build
 	@rm -f -r bin
 
 update_binary:
 	@cp bin/ias /usr/bin/ias
-		
+
 configuration:
 	@mkdir -p /etc/ias/configuration
 	@cp -r configuration /etc/ias
