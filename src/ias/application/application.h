@@ -50,23 +50,23 @@ class Application {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     Application( void ) = default;
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~Application( void ) = default;
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void run( void ) = 0;
-    
+
     virtual void stop( void ) = 0;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

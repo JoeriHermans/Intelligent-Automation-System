@@ -59,25 +59,25 @@ int main( const int argc , const char ** argv ) {
         usage();
     cleanupSsl();
     cleanupLogger();
-    
+
     return ( 0 );
 }
 
 void startController( const int argc , const char ** argv ) {
     ControllerApplication application(argc,argv);
-    
+
     application.run();
 }
 
 void startClient( const int argc , const char ** argv ) {
     ClientApplication application(argc,argv);
-    
+
     application.run();
 }
 
 void startServer( const int argc , const char ** argv ) {
     ServerApplication application(argc,argv);
-    
+
     application.run();
 }
 
