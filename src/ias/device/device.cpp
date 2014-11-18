@@ -51,12 +51,12 @@ void Device::setId( const std::size_t id ) {
 void Device::setUpTechnology( void ) {
     std::vector<Member *>::const_iterator it;
     Member * member;
-    
+
     mState.clear();
     const std::vector<Member *> & members = mTechnology->getMembers();
     for( it = members.begin() ; it != members.end() ; ++it ) {
         member = (*it);
-        mState[member->getIdentifier()] = 
+        mState[member->getIdentifier()] =
             std::pair<std::string,const ValueType *>(member->getDefaultValue(),
                                                      member->getValueType());
     }
@@ -94,7 +94,7 @@ const std::string & Device::getIdentifier( void ) const {
 void Device::setIdentifier( const std::string & identifier ) {
     // Checking the precondition.
     assert( !identifier.empty() && identifier.length() <= 255 );
-    
+
     mMutexIdentifier.lock();
     mIdentifier = identifier;
     mMutexIdentifier.unlock();
@@ -107,7 +107,7 @@ const std::string & Device::getName( void ) const {
 void Device::setName( const std::string & name ) {
     // Checking the precondition.
     assert( !name.empty() );
-    
+
     mMutexName.lock();
     mName = name;
     mMutexName.unlock();
@@ -132,10 +132,10 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
     struct device_update dUpdate;
     const ValueType * type;
     std::size_t result;
-    
+
     // Checking the preconditions.
     assert( !key.empty() && !value.empty() );
-    
+
     result = 1;
     mMutexTechnology.lock();
     it = mState.find(key);
@@ -155,26 +155,26 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
     mMutexTechnology.unlock();
     if( result == 0 )
         notifyObservers((void *) &dUpdate);
-    
+
     return ( result );
 }
 
 std::string Device::get( const std::string & key ) const {
     std::string result;
-    
+
     mMutexTechnology.lock();
     auto it = mState.find(key);
     if( it != mState.end() )
         result = it->second.first;
     mMutexTechnology.unlock();
-    
+
     return ( result );
 }
 
 void Device::setTechnology( const Technology * technology ) {
     // Checking the precondition.
     assert( technology != nullptr );
-    
+
     mMutexTechnology.lock();
     mTechnology = technology;
     setUpTechnology();
@@ -188,7 +188,7 @@ const Technology * Device::getTechnology( void ) const {
 void Device::setController( const Controller * controller ) {
     // Checking the precondition.
     assert( controller != nullptr );
-    
+
     mMutexController.lock();
     mController = controller;
     mMutexController.unlock();
@@ -202,7 +202,7 @@ void Device::execute( const Action & action ) {
     std::uint8_t header[4];
     std::size_t nBytes;
     Writer * writer;
-    
+
     if( mTechnology->containsFeature(action.getIdentifier()) &&
         controllerConnected() ) {
         writer = mController->getSocket()->getWriter();
