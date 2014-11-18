@@ -49,17 +49,17 @@ class Dispatcher {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * A map which holds the channels.
      */
     std::map<std::string,Channel<T> *> mChannels;
-    
+
     /**
      * A mutex which synchronizes the channels.
      */
     std::mutex mLock;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -73,35 +73,35 @@ class Dispatcher {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     Dispatcher( void ){}
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~Dispatcher( void ) {
         for( auto it = mChannels.begin() ; it != mChannels.end() ; ++it ) {
             delete it->second;
         }
     }
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     void addChannel( const std::string & identifier, Channel<T> * channel ) {
         // Checking the preconditions.
         assert( !identifier.empty() && channel != nullptr );
-        
+
         mLock.lock();
         mChannels[identifier] = channel;
         mLock.unlock();
     }
-    
+
     void removeChannel( const std::string & identifier ) {
         typename std::map<std::string,Channel<T> *>::iterator it;
-        
+
         mLock.lock();
         it = mChannels.find(identifier);
         if( it != mChannels.end() ) {
@@ -110,25 +110,25 @@ class Dispatcher {
         }
         mLock.unlock();
     }
-    
+
     bool containsChannel( const std::string & identifier ) {
         typename std::map<std::string,Channel<T> *>::iterator it;
         bool contains;
-        
+
         contains = false;
         mLock.lock();
         it = mChannels.find(identifier);
         if( it != mChannels.end() )
             contains = true;
         mLock.unlock();
-        
+
         return ( contains );
     }
-    
+
     void dispatch( const std::string & identifier , T argument ) {
         typename std::map<std::string,Channel<T> *>::const_iterator it;
         Channel<T> * channel;
-        
+
         channel = nullptr;
         mLock.lock();
         it = mChannels.find(identifier);
@@ -140,7 +140,7 @@ class Dispatcher {
             channel->pipe(argument);
         }
     }
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

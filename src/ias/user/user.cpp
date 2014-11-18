@@ -33,7 +33,7 @@
 void User::setId( const std::size_t id ) {
     // Checking the precondition.
     assert( id > 0 );
-    
+
     mId = id;
 }
 
@@ -56,7 +56,7 @@ std::size_t User::getId( void ) const {
 void User::setUsername( const std::string & username ) {
     // Checking the precondition.
     assert( username.length() > 0 );
-    
+
     mUsername = username;
 }
 
@@ -71,7 +71,7 @@ const std::string & User::getIdentifier( void ) const {
 void User::setPassword( const std::string & password ) {
     // Checking the precondition.
     assert( password.length() > 0 );
-    
+
     mPassword = password;
 }
 

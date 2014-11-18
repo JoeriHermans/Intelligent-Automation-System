@@ -40,28 +40,28 @@ class User {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the unique id of the user.
      */
     std::size_t mId;
-    
+
     /**
      * Contains the unique username of the user.
      */
     std::string mUsername;
-    
+
     /**
      * Contains the unique hashed password of the user.
      */
     std::string mPassword;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setId( const std::size_t id );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -72,33 +72,33 @@ class User {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     User( const std::size_t id,
           const std::string & username,
           const std::string & password );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-        
+
     virtual ~User( void );
-        
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     std::size_t getId( void ) const;
-    
+
     void setUsername( const std::string & username );
-    
+
     const std::string & getUsername( void ) const;
-    
+
     const std::string & getIdentifier( void ) const;
-    
+
     void setPassword( const std::string & password );
-    
+
     bool matchesPassword( const std::string & password ) const;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

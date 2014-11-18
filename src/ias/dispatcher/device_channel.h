@@ -44,20 +44,20 @@ class DeviceChannel : public Channel<const std::string &> {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the socket with which this device is communicating.
-     * 
+     *
      * @note    By default, this member will be equal to the null reference.
      */
     Socket * mSocket;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setSocket( Socket * socket );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -68,21 +68,21 @@ class DeviceChannel : public Channel<const std::string &> {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     DeviceChannel( Socket * socket );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~DeviceChannel( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void pipe( const std::string & argument );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
