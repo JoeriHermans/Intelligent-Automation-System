@@ -42,25 +42,25 @@ class Action {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the feature identifier of the action.
      */
     std::string mIdentifier;
-    
+
     /**
      * Contains the parameter of the action.
      */
     std::string mParameter;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setIdentifier( const std::string & identifier );
-    
+
     void setParameter( const std::string & parameter );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -71,28 +71,45 @@ class Action {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     Action( const std::string & identifier );
-    
+
     Action( const std::string & identifier,
             const std::string & parameter );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~Action( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
+    /**
+     * Returns the unique identifier of the device which is associated with
+     * the action.
+     *
+     * @return  The device identifier.
+     */
     const std::string & getIdentifier( void ) const;
-    
+
+    /**
+     * Checks if the action has a parameter.
+     *
+     * @return  True, if the parameter field isn't the empty string. False in
+     *          any other case.
+     */
     bool containsParameter( void ) const;
-    
+
+    /**
+     * Returns the parameter of the action.
+     *
+     * @return  The action parameter.
+     */
     const std::string & getParameter( void ) const;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

@@ -34,7 +34,7 @@
 void TaskDeviceUpdate::setDatabaseConnection( DatabaseConnection * dbConn ) {
     // Checking the precondition.
     assert( dbConn != nullptr && dbConn->isConnected() );
-    
+
     mDbConnection = dbConn;
 }
 
@@ -62,11 +62,11 @@ void TaskDeviceUpdate::execute( void ) {
     DatabaseStatement * statement;
     DatabaseResult * result;
     std::string query;
-    
+
     query =
         "INSERT INTO device_history_states "
         "(device_id,technology_member,timestamp,value) "
-        "VALUES (" + 
+        "VALUES (" +
             std::to_string(mData.mDevice->getId()) + "," +
             "\"" + mData.mStateIdentifier + "\"," +
             std::to_string(mData.mTimestamp) + "," +

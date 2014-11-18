@@ -43,7 +43,7 @@ class TaskDeviceUpdate : public Task {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-    
+
     /**
      * Contains the database connection we will be using.
      */
@@ -53,15 +53,15 @@ class TaskDeviceUpdate : public Task {
      * Contains the data which we need to write to the database.
      */
     struct device_update mData;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setDatabaseConnection( DatabaseConnection * connection );
-    
+
     void setDeviceUpdateData( const struct device_update * data );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -72,22 +72,22 @@ class TaskDeviceUpdate : public Task {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     TaskDeviceUpdate( DatabaseConnection * dbConnection,
                       const struct device_update * data );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~TaskDeviceUpdate( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-        
+
     virtual void execute( void );
-        
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
