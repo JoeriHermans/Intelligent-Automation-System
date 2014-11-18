@@ -40,17 +40,17 @@ struct device_update {
      * Contains a pointer to the device which has been updated.
      */
     Device * mDevice;
-    
+
     /**
      * Contains the identifier of the state member which has been updated.
      */
     std::string mStateIdentifier;
-    
+
     /**
      * Contains the new value of the state member.
      */
     std::string mValue;
-    
+
     /**
      * Contains the unix timestamp of the update.
      */

@@ -40,7 +40,7 @@
 void DeviceMonitor::setDatabaseConnection( DatabaseConnection * dbConnection ) {
     // Checking the precondition.
     assert( dbConnection != nullptr && dbConnection->isConnected() );
-    
+
     mDbConnection = dbConnection;
 }
 
@@ -61,10 +61,10 @@ void DeviceMonitor::update( void ) {
 void DeviceMonitor::update( void * argument ) {
     struct device_update * dUpdate;
     std::string query;
-    
+
     // Checking the precondition.
     assert( argument != nullptr );
-    
+
     dUpdate = (struct device_update *) argument;
     mPool->enqueue(new TaskDeviceUpdate(mDbConnection,dUpdate));
 }
