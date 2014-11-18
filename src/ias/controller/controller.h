@@ -139,73 +139,20 @@ class Controller : public Identifiable {
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    /**
-     * Returns the unique id of the controller.
-     *
-     * @return  The unique id of the controller.
-     */
     virtual std::size_t getId( void ) const;
 
-    /**
-     * Returns the unique human-readable identifier of the controller.
-     *
-     * @return  The human-readable identifier of the controller.
-     */
     virtual const std::string & getIdentifier( void ) const;
 
-    /**
-     * Sets the unique human-readable identifier of the controller.
-     *
-     * @pre     The specified parameter cannot be empty.
-     * @param   identifier
-     *          The new unique human-readable identifier of the controller.
-     * @post    The new human-readable identifier will be equal to the
-     *          contents of the specified parameter if and only if all
-     *          preconditions are met.
-     */
     virtual void setIdentifier( const std::string & identifier );
 
-    /**
-     * Returns the name of the controller.
-     *
-     * @return  The name.
-     */
     virtual const std::string & getName( void ) const;
 
-    /**
-     * Sets the name of the controller.
-     *
-     * @pre     The specified name cannot be empty.
-     * @param   name
-     *          The new name of the controller.
-     * @post    The specified name will be equal to the contents of the
-     *          specified parameter if and only if the preconditions are met.
-     */
     virtual void setName( const std::string & name );
 
-    /**
-     * Returns the description of the controller.
-     *
-     * @return  The description of the controller.
-     */
     virtual const std::string & getDescription( void ) const;
 
-    /**
-     * Checks if the controllers has a description.
-     *
-     * @return  True, if getDescription() doesn't return an empty string. False,
-     *          in any other case.
-     */
     virtual bool hasDescription( void ) const;
 
-    /**
-     * Sets the description of the controller.
-     *
-     * @param   description
-     *          The new description of the controller.
-     * @post    The new description of the controller will be equal to the
-     *          contents of the specified parameter.
-     */
     virtual void setDescription( const std::string & description );
 
     /**
