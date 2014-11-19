@@ -91,14 +91,17 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
     fd = socket(results->ai_family,results->ai_socktype,results->ai_protocol);
     if( fd >= 0 ) {
         if( connect(fd,results->ai_addr,results->ai_addrlen) == 0 ) {
-            connected = true;
             ssl = SSL_new(mSslContext);
             SSL_set_fd(ssl,fd);
             if( SSL_connect(ssl) <= 0 ) {
                 SSL_free(mSsl); mSsl = nullptr;
+                delete mReader; mReader = nullptr;
+                delete mWriter; mWriter = nullptr;
                 close(fd);
+            } else {
+                connected = true;
+                setSslEnvironment(ssl);
             }
-            setSslEnvironment(ssl);
         } else {
             close(fd);
         }

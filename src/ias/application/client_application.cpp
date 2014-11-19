@@ -56,14 +56,14 @@ void ClientApplication::initializeSslContext( void ) {
     mSslContext = SSL_CTX_new(SSLv23_client_method());
 }
 
-void ClientApplication::analyzeArguments( const int argc, 
+void ClientApplication::analyzeArguments( const int argc,
                                           const char ** argv ) {
     std::string address;
     std::size_t port;
-    
+
     // Checking the precondition.
     assert( argc > 0 && argv != nullptr );
-    
+
     address = fetchAddress(argc,argv);
     port = fetchPort(argc,argv);
     if( sslRequested(argc,argv) ) {
@@ -88,10 +88,10 @@ void ClientApplication::analyzeArguments( const int argc,
 std::string ClientApplication::fetchAddress( const int argc,
                                              const char ** argv ) const {
     std::string address;
-    
+
     // Checking the precondition.
     assert( argc > 0 && argv != nullptr );
-    
+
     for( int i = 0 ; i < argc ; ++i ) {
         if( strcmp(argv[i],kFlagAddress) == 0 && ( i + 1 ) < argc ) {
             address = argv[i + 1];
@@ -100,17 +100,17 @@ std::string ClientApplication::fetchAddress( const int argc,
     }
     if( address.empty() )
         address = kDefaultServerAddress;
-    
+
     return ( address );
 }
 
 std::size_t ClientApplication::fetchPort( const int argc,
                                           const char ** argv ) const {
     std::size_t port;
-    
+
     // Checking the precondition.
     assert( argc > 0 && argv != nullptr );
-    
+
     port = 0;
     for( int i = 0 ; i < argc ; ++i ) {
         if( strcmp(argv[i],kFlagPort) == 0 && ( i + 1 ) < argc ) {
@@ -120,7 +120,7 @@ std::size_t ClientApplication::fetchPort( const int argc,
     }
     if( port == 0 )
         port = kDefaultUserServerPort;
-    
+
     return ( port );
 }
 
@@ -149,7 +149,7 @@ void ClientApplication::login( void ) {
     Writer * writer;
     std::uint8_t type;
     std::uint8_t byte;
-    
+
     reader = mSocket->getReader();
     writer = mSocket->getWriter();
     writeMessage("Client initialized.");
@@ -196,12 +196,12 @@ void ClientApplication::readResponse( void ) {
     Reader * reader;
     std::uint16_t messageSize;
     std::uint8_t type;
-    
+
     reader = mSocket->getReader();
     type = 0x00;
     if( mSocket->isConnected() &&
         reader->readBytes((char *) &type,1) == 1 && type == 0x01 &&
-        reader->readBytes((char *) &messageSize,sizeof(messageSize)) == 
+        reader->readBytes((char *) &messageSize,sizeof(messageSize)) ==
             sizeof(messageSize) ) {
         messageSize = ntohs(messageSize);
         bytesRead = 0;
@@ -226,7 +226,7 @@ void ClientApplication::processCommands( void ) {
     std::uint8_t b;
     std::uint8_t bytesWritten;
     std::size_t n;
-    
+
     reader = mSocket->getReader();
     writer = mSocket->getWriter();
     prefix = "[" + mUsername + "@ias]$ ";
@@ -287,6 +287,7 @@ ClientApplication::~ClientApplication( void ) {
 
 void ClientApplication::run( void ) {
     if( mSocket != nullptr && mSocket->isConnected() ) {
+        std::cout << "Logging in." << std::endl;
         login();
         if( mLoggedIn )
             processCommands();
