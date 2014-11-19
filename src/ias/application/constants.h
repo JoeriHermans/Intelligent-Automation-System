@@ -76,5 +76,6 @@ extern const char kDefaultServerAddress[];
 extern const unsigned int kDefaultControllerServerPort;
 extern const unsigned int kDefaultDeviceServerPort;
 extern const unsigned int kDefaultUserServerPort;
+extern const unsigned int kDefaultUserServerPortSsl;
 
 #endif /* CONSTANTS_H_ */

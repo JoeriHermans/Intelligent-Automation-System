@@ -77,3 +77,4 @@ const char kDefaultServerAddress[] = "127.0.0.1";
 const unsigned int kDefaultDeviceServerPort = 5002;
 const unsigned int kDefaultControllerServerPort = 5000;
 const unsigned int kDefaultUserServerPort = 5001;
+const unsigned int kDefaultUserServerPortSsl = 6001;

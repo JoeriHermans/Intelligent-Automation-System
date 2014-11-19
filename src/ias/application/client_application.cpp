@@ -118,8 +118,12 @@ std::size_t ClientApplication::fetchPort( const int argc,
             break;
         }
     }
-    if( port == 0 )
-        port = kDefaultUserServerPort;
+    if( port == 0 ) {
+        if( sslRequested(argc,argv) )
+            port = kDefaultUserServerPortSsl;
+        else
+            port = kDefaultUserServerPort;
+    }
 
     return ( port );
 }
