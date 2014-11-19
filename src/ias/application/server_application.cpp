@@ -75,7 +75,7 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
     index = flagIndex(argc,argv,kFlagConfig);
     if( index >= 0 && (index + 1) <= argc && strlen(argv[index + 1]) > 0 ) {
         std::string configurationPath;
-        
+
         configurationPath = argv[index + 1];
         readConfiguration(configurationPath);
         initializeLogger();
@@ -122,7 +122,7 @@ void ServerApplication::readConfiguration( const std::string & filePath ) {
 }
 
 void ServerApplication::connectToDatabase( void ) {
-    if( !mProperties.contains(kConfigDatabaseUser) || 
+    if( !mProperties.contains(kConfigDatabaseUser) ||
         !mProperties.contains(kConfigDatabasePassword) ||
         !mProperties.contains(kConfigDatabaseHost) ||
         !mProperties.contains(kConfigDatabaseSchema) ||
@@ -178,7 +178,7 @@ void ServerApplication::fillUsers( void ) {
     UserDatabaseFactory factory(mDbConnection);
     std::vector<User *> users;
     User * u;
-    
+
     users = factory.fetchAll();
     for( auto it = users.begin() ; it != users.end() ; ++it ) {
         u = (*it);
@@ -189,7 +189,7 @@ void ServerApplication::fillUsers( void ) {
 void ServerApplication::fillValueTypes( void ) {
     ValueTypeDatabaseFactory factory(mDbConnection);
     std::vector<ValueType *> types;
-    
+
     types = factory.fetchAll();
     for( auto it = types.begin() ; it != types.end() ; ++it ) {
         mContainerValueTypes.add((*it));
@@ -199,7 +199,7 @@ void ServerApplication::fillValueTypes( void ) {
 void ServerApplication::fillMembers( void ) {
     MemberDatabaseFactory factory(mDbConnection,&mContainerValueTypes);
     std::vector<Member *> members;
-    
+
     members = factory.fetchAll();
     for( auto it = members.begin() ; it != members.end() ; ++it ) {
         mContainerMembers.add((*it));
@@ -209,7 +209,7 @@ void ServerApplication::fillMembers( void ) {
 void ServerApplication::fillFeatures( void ) {
     FeatureDatabaseFactory factory(mDbConnection,&mContainerValueTypes);
     std::vector<Feature *> features;
-    
+
     features = factory.fetchAll();
     for( auto it = features.begin() ; it != features.end() ; ++it ) {
         mContainerFeatures.add((*it));
@@ -232,7 +232,7 @@ void ServerApplication::fillDevices( void ) {
    DeviceDatabaseFactory factory(
        mDbConnection,&mContainerTechnologies,mDeviceMonitor);
    std::vector<Device *> devices;
-   
+
    devices = factory.fetchAll();
    for( auto it = devices.begin() ; it != devices.end() ; ++it ) {
        mContainerDevices.add((*it));
@@ -242,7 +242,7 @@ void ServerApplication::fillDevices( void ) {
 void ServerApplication::fillControllers( void ) {
     ControllerDatabaseFactory factory(mDbConnection,&mContainerDevices);
     std::vector<Controller *> controllers;
-    
+
     controllers = factory.fetchAll();
     for( auto it = controllers.begin() ; it != controllers.end() ; ++it ) {
         mContainerControllers.add((*it));
@@ -252,7 +252,7 @@ void ServerApplication::fillControllers( void ) {
 void ServerApplication::fillAreas( void ) {
     AreaDatabaseFactory factory(mDbConnection,&mContainerDevices);
     std::vector<Area *> areas;
-    
+
     areas = factory.fetchAll();
     for( auto it = areas.begin() ; it != areas.end() ; ++it ) {
         mContainerAreas.add((*it));
@@ -262,7 +262,7 @@ void ServerApplication::fillAreas( void ) {
 void ServerApplication::fillRules( void ) {
     RuleDatabaseFactory factory(mDbConnection,&mContainerDevices,&mOperators);
     std::vector<Rule *> rules;
-    
+
     rules = factory.fetchAll();
     for( auto it = rules.begin() ; it != rules.end() ; ++it ) {
         mContainerRules.add((*it));
@@ -272,7 +272,7 @@ void ServerApplication::fillRules( void ) {
 void ServerApplication::fillBuildings( void ) {
     BuildingDatabaseFactory factory(mDbConnection,&mContainerAreas);
     std::vector<Building *> buildings;
-    
+
     buildings = factory.fetchAll();
     for( auto it = buildings.begin() ; it != buildings.end() ; ++it ) {
         mContainerBuildings.add((*it));
@@ -282,7 +282,7 @@ void ServerApplication::fillBuildings( void ) {
 void ServerApplication::initializeSalts( void ) {
     std::string preSalt;
     std::string postSalt;
-    
+
     if( mProperties.contains(kConfigPreSalt) )
         preSalt = mProperties.get(kConfigPreSalt);
     if( mProperties.contains(kConfigPostSalt) )
@@ -295,7 +295,7 @@ void ServerApplication::initializeControllerServer( void ) {
     ServerSocket * serverSocket;
     std::string stringPort;
     unsigned int port;
-    
+
     if( mProperties.contains(kConfigNetworkControllerPort) )
         stringPort = mProperties.get(kConfigNetworkControllerPort);
     if( !stringPort.empty() )
@@ -340,7 +340,7 @@ void ServerApplication::initializeUserServer( void ) {
     ServerSocket * serverSocket;
     std::string stringPort;
     unsigned int port;
-    
+
     if( mProperties.contains(kConfigNetworkUserPort) )
         stringPort = mProperties.get(kConfigNetworkUserPort);
     if( !stringPort.empty() )
@@ -459,7 +459,9 @@ ServerApplication::ServerApplication( const int argc,
 ServerApplication::~ServerApplication( void ) {
     delete mDbConnection; mDbConnection = nullptr;
     delete mServerController; mServerController = nullptr;
+    delete mServerControllerSsl; mServerControllerSsl = nullptr;
     delete mServerUser; mServerUser = nullptr;
+    delete mServerUserSsl; mServerUserSsl = nullptr;
     delete mDeviceMonitor; mDeviceMonitor = nullptr;
     cleanupOperators();
 }

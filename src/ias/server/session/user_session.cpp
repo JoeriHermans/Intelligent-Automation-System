@@ -46,7 +46,7 @@ inline void UserSession::initialize( void ) {
 void UserSession::setUserContainer( Container<User *> * users ) {
     // Checking the precondition.
     assert( users != nullptr );
-    
+
     mUsers = users;
 }
 
@@ -55,7 +55,7 @@ void UserSession::authorize( void ) {
     std::uint8_t length;
     std::string hashedPassword;
     Reader * reader;
-    
+
     logi("Authorizing user.");
     type = 0xff;
     length = 0x00;
@@ -73,7 +73,11 @@ void UserSession::authorize( void ) {
                     password[length] = 0;
                     hashedPassword = sha256GlobalSalts(password);
                     mUser = authenticateUser(username,hashedPassword.c_str());
-                    logi(mUser->getIdentifier() + " has been authorized.");
+                    if( mUser != nullptr )
+                        logi(mUser->getIdentifier() + " has been authorized.");
+                    else
+                        loge(std::string(username) +
+                                " could not be authorized.");
                 }
             }
         }
@@ -96,30 +100,29 @@ void UserSession::authorize( void ) {
 void UserSession::setDispatcher( CommandDispatcher * dispatcher ) {
     //Checking the precondition.
     assert( dispatcher != nullptr );
-    
+
     mDispatcher = dispatcher;
 }
 
 User * UserSession::authenticateUser( const char * username,
                                       const char * password ) const {
     User * user;
-    
+
     // Checking the precondition.
     assert( username != nullptr && password != nullptr );
-    
+
     user = mUsers->get(username);
-    if( user == nullptr ||
-        !user->matchesPassword(password) ) {
+    if( user != nullptr && !user->matchesPassword(password) ) {
         user = nullptr;
     }
-    
+
     return ( user );
 }
 
 void UserSession::processCommand( void ) {
     Reader * reader;
     std::uint8_t size;
-    
+
     reader = getSocket()->getReader();
     size = 0x00;
     reader->readByte((char *) &size);
@@ -138,7 +141,7 @@ void UserSession::analyzeCommand( const char * command ) {
     std::string identifier;
     std::string parameters;
     std::string response;
-    
+
     // Checking the precondition.
     assert( command != nullptr );
 
@@ -160,7 +163,7 @@ void UserSession::sendResponse( const char * buffer , const std::size_t n ) {
     std::uint8_t b;
     std::uint16_t messageSize;
     Writer * writer;
-    
+
     b = 0x01;
     writer = getSocket()->getWriter();
     writer->writeBytes((char *) &b,1);
@@ -170,7 +173,7 @@ void UserSession::sendResponse( const char * buffer , const std::size_t n ) {
     writer->writeBytes(buffer,n);
 }
 
-UserSession::UserSession( Socket * socket, 
+UserSession::UserSession( Socket * socket,
                           Container<User *> * users,
                           CommandDispatcher * dispatcher ) :
     Session(socket) {
@@ -188,7 +191,7 @@ void UserSession::run( void ) {
     std::size_t nBytes;
     Reader * reader;
     Socket * socket;
-    
+
     authorize();
     if( mUser != nullptr ) {
         socket = getSocket();
