@@ -35,7 +35,7 @@
 void PosixTcpSocketReader::setSocket( PosixTcpSocket * socket ) {
     // Checking the precondition.
     assert( socket != nullptr );
-    
+
     mSocket = socket;
 }
 
@@ -49,7 +49,7 @@ void PosixTcpSocketReader::closeReader( void ) {
 
 std::size_t PosixTcpSocketReader::readByte( char * byte ) {
     long nBytes;
-    
+
     nBytes = 0;
     if( mSocket->isConnected() ) {
         nBytes = read(mSocket->getFileDescriptor(),byte,1);
@@ -58,17 +58,17 @@ std::size_t PosixTcpSocketReader::readByte( char * byte ) {
             nBytes = 0;
         }
     }
-    
-    return ( (std::size_t) nBytes );
+
+    return ( static_cast<std::size_t>(nBytes) );
 }
 
 std::size_t PosixTcpSocketReader::readBytes( char * buffer,
                                              const std::size_t bufferSize ) {
     long nBytes;
-    
+
     // Checking the precondition.
     assert( buffer != nullptr && bufferSize > 0 );
-    
+
     nBytes = 0;
     if( mSocket->isConnected() ) {
         nBytes = read(mSocket->getFileDescriptor(),buffer,bufferSize);
@@ -77,6 +77,6 @@ std::size_t PosixTcpSocketReader::readBytes( char * buffer,
             nBytes = 0;
         }
     }
-    
-    return ( (std::size_t) nBytes );
+
+    return ( static_cast<std::size_t>(nBytes) );
 }

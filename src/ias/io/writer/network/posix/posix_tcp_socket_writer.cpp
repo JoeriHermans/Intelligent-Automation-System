@@ -35,7 +35,7 @@
 void PosixTcpSocketWriter::setSocket( PosixTcpSocket * socket ) {
     // Checking the precondition.
     assert( socket != nullptr );
-    
+
     mSocket = socket;
 }
 
@@ -49,7 +49,7 @@ void PosixTcpSocketWriter::closeWriter( void ) {
 
 std::size_t PosixTcpSocketWriter::writeByte( const char byte ) {
     long nBytes;
-    
+
     nBytes = 0;
     if( mSocket->isConnected() ) {
         nBytes = write(mSocket->getFileDescriptor(),&byte,1);
@@ -58,17 +58,17 @@ std::size_t PosixTcpSocketWriter::writeByte( const char byte ) {
             mSocket->closeConnection();
         }
     }
-    
-    return ( (std::size_t) nBytes );
+
+    return ( static_cast<std::size_t>(nBytes) );
 }
 
 std::size_t PosixTcpSocketWriter::writeBytes( const char * buffer,
                                               const std::size_t bufferSize ) {
     long nBytes;
-    
+
     // Checking the precondition.
     assert( buffer != nullptr && bufferSize > 0 );
-    
+
     nBytes = 0;
     if( mSocket->isConnected() ) {
         nBytes = write(mSocket->getFileDescriptor(),buffer,bufferSize);
@@ -77,6 +77,6 @@ std::size_t PosixTcpSocketWriter::writeBytes( const char * buffer,
             mSocket->closeConnection();
         }
     }
-    
-    return ( (std::size_t) nBytes );
+
+    return ( static_cast<std::size_t>(nBytes) );
 }

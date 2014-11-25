@@ -114,7 +114,7 @@ std::size_t ClientApplication::fetchPort( const int argc,
     port = 0;
     for( int i = 0 ; i < argc ; ++i ) {
         if( strcmp(argv[i],kFlagPort) == 0 && ( i + 1 ) < argc ) {
-            port = (std::size_t) atol(argv[i + 1]);
+            port = static_cast<std::size_t>(atol(argv[i + 1]));
             break;
         }
     }
