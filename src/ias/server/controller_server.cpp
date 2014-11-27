@@ -43,7 +43,7 @@ inline void ControllerServer::initialize( void ) {
 void ControllerServer::setControllerContainer( Container<Controller *> * c ) {
     // Checking the precondition.
     assert( c != nullptr );
-    
+
     mControllers = c;
 }
 
@@ -62,7 +62,7 @@ void ControllerServer::cleanupFinishingThreads( void ) {
 
 void ControllerServer::signalSessions( void ) {
     std::map<Session *,std::thread *>::iterator it;
-    
+
     mMutexSessions.lock();
     for( it = mSessions.begin() ; it != mSessions.end() ; ++it )
         it->first->stop();
@@ -94,7 +94,7 @@ void ControllerServer::start( void ) {
                     logi("Starting new controller session.");
                     session = new ControllerSession(socket,mControllers);
                     session->addObserver(this);
-                    mSessions[session] = 
+                    mSessions[session] =
                         new std::thread([session]{
                             session->run();
                             session->notifyObservers(session);
@@ -136,11 +136,11 @@ void ControllerServer::update( void ) {
 void ControllerServer::update( void * argument ) {
     std::map<Session *,std::thread *>::iterator it;
     Session * session;
-    
+
     // Checking the precondition.
     assert( argument != nullptr );
-    
-    session = (Session *) argument;
+
+    session = static_cast<Session *>(argument);
     it = mSessions.find(session);
     if( it != mSessions.end() ) {
         mInactiveThreads.push_back(it->second);

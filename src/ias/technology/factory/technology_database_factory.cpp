@@ -35,12 +35,12 @@ void TechnologyDatabaseFactory::setContainers( Container<Member *> * members,
                                                Container<Feature *> * features ) {
     // Checking the preconditions.
     assert( features != nullptr && members != nullptr );
-    
+
     mFeaturesContainer = features;
     mMembersContainer = members;
 }
 
-std::vector<Feature *> TechnologyDatabaseFactory::fetchFeatures( 
+std::vector<Feature *> TechnologyDatabaseFactory::fetchFeatures(
     const std::size_t id ) const {
     DatabaseStatement * statement;
     DatabaseResult * result;
@@ -48,7 +48,7 @@ std::vector<Feature *> TechnologyDatabaseFactory::fetchFeatures(
     std::vector<Feature *> features;
     std::string query;
     std::size_t featureId;
-    
+
     query = "SELECT id "
             "FROM technology_features "
             "WHERE technology_id = ";
@@ -62,7 +62,8 @@ std::vector<Feature *> TechnologyDatabaseFactory::fetchFeatures(
             while( result->hasNext() )
             {
                 row = result->next();
-                featureId = (std::size_t) atol(row->getColumn(0).c_str());
+                featureId = static_cast<std::size_t>(
+                        atol(row->getColumn(0).c_str()));
                 features.push_back(mFeaturesContainer->get(featureId));
                 delete row;
             }
@@ -70,11 +71,11 @@ std::vector<Feature *> TechnologyDatabaseFactory::fetchFeatures(
         }
         delete statement;
     }
-    
+
     return ( features );
 }
 
-std::vector<Member *> TechnologyDatabaseFactory::fetchMembers( 
+std::vector<Member *> TechnologyDatabaseFactory::fetchMembers(
     const std::size_t id ) const {
     DatabaseStatement * statement;
     DatabaseResult * result;
@@ -82,7 +83,7 @@ std::vector<Member *> TechnologyDatabaseFactory::fetchMembers(
     std::vector<Member *> members;
     std::string query;
     std::size_t memberId;
-    
+
     query = "SELECT id "
             "FROM technology_members "
             "WHERE technology_id = ";
@@ -93,7 +94,8 @@ std::vector<Member *> TechnologyDatabaseFactory::fetchMembers(
         if( result != nullptr ) {
             while( result->hasNext() ) {
                 row = result->next();
-                memberId = (std::size_t) atol(row->getColumn(0).c_str());
+                memberId = static_cast<std::size_t>(
+                        atol(row->getColumn(0).c_str()));
                 members.push_back(mMembersContainer->get(memberId));
                 delete row;
             }
@@ -101,28 +103,28 @@ std::vector<Member *> TechnologyDatabaseFactory::fetchMembers(
         }
         delete statement;
     }
-    
+
     return ( members );
 }
 
-Technology * TechnologyDatabaseFactory::allocateTechnology( 
+Technology * TechnologyDatabaseFactory::allocateTechnology(
     const std::string & id, const std::string & identifier,
     const std::string & name, const std::string & description ) const {
     Technology * technology;
     std::vector<Member *> members;
     std::vector<Feature *> features;
     std::size_t technologyId;
-    
-    technologyId = (std::size_t) atol(id.c_str());
+
+    technologyId = static_cast<std::size_t>(atol(id.c_str()));
     features = fetchFeatures(technologyId);
     members = fetchMembers(technologyId);
     technology = new Technology(technologyId,identifier,name,description,
                                 members,features);
-    
+
     return ( technology );
 }
 
-TechnologyDatabaseFactory::TechnologyDatabaseFactory( 
+TechnologyDatabaseFactory::TechnologyDatabaseFactory(
     DatabaseConnection * conn, Container<Member *> * members,
     Container<Feature *> * features ) : DatabaseFactory<Technology *>(conn) {
     setContainers(members,features);
@@ -141,7 +143,7 @@ std::vector<Technology *> TechnologyDatabaseFactory::fetchAll( void ) {
     std::string identifier;
     std::string name;
     std::string description;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT *"
         "FROM technologies"
@@ -165,6 +167,6 @@ std::vector<Technology *> TechnologyDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( technologies );
 }

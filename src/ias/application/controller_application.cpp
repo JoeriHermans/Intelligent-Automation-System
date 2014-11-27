@@ -51,12 +51,12 @@ void ControllerApplication::initialize( void ) {
 
 void ControllerApplication::setup( const int argc , const char ** argv ) {
     int index;
-    
+
     // Retrieve the configuration file path.
     index = flagIndex(argc,argv,kFlagConfig);
     if( index >= 0 && (index + 1) <= argc && strlen(argv[index + 1]) > 0 ) {
         std::string configurationPath;
-        
+
         configurationPath = argv[index + 1];
         readConfiguration(configurationPath);
         initializeLogger();
@@ -79,10 +79,10 @@ void ControllerApplication::readConfiguration( const std::string & filePath ) {
     std::string key;
     std::string value;
     std::size_t i;
-    
+
     // Checking the precondition.
     assert( !filePath.empty() );
-    
+
     while( std::getline(file,line) ) {
         trim(line);
         if( line.empty() || line.at(0) == '#' )
@@ -100,15 +100,15 @@ void ControllerApplication::readConfiguration( const std::string & filePath ) {
 void ControllerApplication::connectToServer( void ) {
     unsigned int port;
     Socket * socket;
-    
+
     const std::string & serverAddress = mProperties.get(kConfigHost);
     const std::string & serverPort = mProperties.get(kConfigHostPort);
-    
+
     if( !serverAddress.empty() ) {
         if( serverPort.empty() )
             port = kDefaultControllerServerPort;
         else
-            port = (unsigned int) atol(serverPort.c_str());
+            port = static_cast<unsigned int>(atol(serverPort.c_str()));
         socket = new PosixTcpSocket();
         logi("Connecting to " + serverAddress + " at port " + std::to_string(port) + ".");
         if( socket->createConnection(serverAddress,port) ) {
@@ -125,16 +125,16 @@ void ControllerApplication::connectToServer( void ) {
 
 void ControllerApplication::readDevices( void ) {
     std::string filePath;
-    
+
     filePath = mProperties.get(kConfigDeviceList);
     if( filePath.empty() )
         return;
-    
+
     std::ifstream file(filePath);
     std::string line;
     std::string deviceIdentifier;
     std::string deviceBash;
-    
+
     logi("Retrieving devices.");
     while( std::getline(file,line) ) {
         trim(line);
@@ -158,11 +158,11 @@ void ControllerApplication::allocateDeviceServer( void ) {
     ServerSocket * serverSocket;
     std::string stringPort;
     unsigned int port;
-    
+
     if( mProperties.contains(kConfigNetworkDevicePort) )
         stringPort = mProperties.get(kConfigNetworkDevicePort);
     if( !stringPort.empty() )
-        port = (unsigned int) atol(stringPort.c_str());
+        port = static_cast<unsigned int>(atol(stringPort.c_str()));
     else
         port = kDefaultDeviceServerPort;
     logi("Allocating device server at port " + std::to_string(port) + ".");
@@ -184,30 +184,31 @@ void ControllerApplication::authenticateWithServer( void ) {
     std::size_t n;
     Writer * writer;
     bool success;
-    
-    const std::string & controllerIdentifier = 
+
+    const std::string & controllerIdentifier =
         mProperties.get(kConfigControllerIdentifier);
     const std::string & securityCode =
         mProperties.get(kConfigControllerSecurityCode);
-    
+
     if( controllerIdentifier.empty() ||
         securityCode.empty() ) {
         stop();
         loge("Authentication credentials missing.");
         return;
     }
-    
+
     logi("Authenticating with server.");
     success = true;
     header[0] = 0x00;
-    header[1] = (std::uint8_t) controllerIdentifier.length();
-    header[2] = (std::uint8_t) securityCode.length();
+    header[1] = static_cast<std::uint8_t>(controllerIdentifier.length());
+    header[2] = static_cast<std::uint8_t>(securityCode.length());
     message = controllerIdentifier + securityCode;
     writer = mSocket->getWriter();
     writer->lock();
-    n = writer->writeBytes((char *) header,3);
+    n = writer->writeBytes(reinterpret_cast<const char *>(header),3);
     success &= ( n > 0 );
-    n = writer->writeBytes((char *) message.c_str(),message.length());
+    n = writer->writeBytes(reinterpret_cast<const char *>(message.c_str()),
+                           message.length());
     success &= ( n > 0 );
     writer->unlock();
     if( !success ) {
@@ -224,7 +225,7 @@ void ControllerApplication::startDeviceProcesses( void ) {
     std::size_t nArguments;
     pid_t processId;
     int status;
-    
+
     logi("Starting devices processes.");
     for( auto it = mDeviceCommands.begin() ;  it != mDeviceCommands.end() ; ++it ) {
         const std::string & command = (*it);
@@ -234,7 +235,7 @@ void ControllerApplication::startDeviceProcesses( void ) {
         ss >> path;
         nArguments = numWords(command);
         char * argv[nArguments + 1];
-        argv[nArguments] = (char *) 0;
+        argv[nArguments] = static_cast<char *>(0);
         argv[0] = new char[path.length() + 1];
         strcpy(argv[0],path.c_str());
         for( std::size_t i = 1 ; i < nArguments ; ++i ) {
@@ -256,7 +257,7 @@ void ControllerApplication::startDeviceProcesses( void ) {
 void ControllerApplication::cleanupDeviceProcesses( void ) {
     int status;
     std::size_t n;
-    
+
     n = mPids.size();
     for( std::size_t i = 0 ; i < n ; ++i ) {
         waitpid(mPids.at(i),&status,0);

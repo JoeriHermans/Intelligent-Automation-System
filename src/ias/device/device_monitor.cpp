@@ -65,6 +65,6 @@ void DeviceMonitor::update( void * argument ) {
     // Checking the precondition.
     assert( argument != nullptr );
 
-    dUpdate = (struct device_update *) argument;
+    dUpdate = static_cast<struct device_update *>(argument);
     mPool->enqueue(new TaskDeviceUpdate(mDbConnection,dUpdate));
 }

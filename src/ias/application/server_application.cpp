@@ -299,7 +299,7 @@ void ServerApplication::initializeControllerServer( void ) {
     if( mProperties.contains(kConfigNetworkControllerPort) )
         stringPort = mProperties.get(kConfigNetworkControllerPort);
     if( !stringPort.empty() )
-        port = (unsigned int) atol(stringPort.c_str());
+        port = static_cast<unsigned int>(atol(stringPort.c_str()));
     else
         port = kDefaultControllerServerPort;
     serverSocket = new PosixTcpServerSocket(port);
@@ -325,7 +325,7 @@ void ServerApplication::initializeControllerSslServer( void ) {
     if( mProperties.contains(kConfigNetworkControllerSslKey) )
         keyFile = mProperties.get(kConfigNetworkControllerSslKey);
     if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
-        port = (unsigned int) atol(stringPort.c_str());
+        port = static_cast<unsigned int>(atol(stringPort.c_str()));
         serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
         if( serverSocket->bindToPort() ) {
             mServerControllerSsl = new ControllerServer(serverSocket,
@@ -344,7 +344,7 @@ void ServerApplication::initializeUserServer( void ) {
     if( mProperties.contains(kConfigNetworkUserPort) )
         stringPort = mProperties.get(kConfigNetworkUserPort);
     if( !stringPort.empty() )
-        port = (unsigned int) atol(stringPort.c_str());
+        port = static_cast<unsigned int>(atol(stringPort.c_str()));
     else
         port = kDefaultUserServerPort;
     serverSocket = new PosixTcpServerSocket(port);
@@ -371,7 +371,7 @@ void ServerApplication::initializeUserSslServer( void ) {
     if( mProperties.contains(kConfigNetworkUserSslKey) )
         keyFile = mProperties.get(kConfigNetworkUserSslKey);
     if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
-        port = (unsigned int) atol(stringPort.c_str());
+        port = static_cast<unsigned int>(atol(stringPort.c_str()));
         serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
         if( serverSocket->bindToPort() ) {
             mServerUserSsl = new UserServer(serverSocket,

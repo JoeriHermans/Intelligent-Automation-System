@@ -42,7 +42,7 @@ inline void DeviceSession::initialize( void ) {
 void DeviceSession::setDispatcher( Dispatcher<const std::string &> * d ) {
     // Checking the precondition.
     assert( d != nullptr );
-    
+
     mDispatcher = d;
 }
 
@@ -51,8 +51,8 @@ void DeviceSession::authorize( void ) {
     std::uint8_t deviceIdentifier;
 
     logi("Authorizing device.");
-    if( !readBytes((char *) &type,1) ) return;
-    if( type == 0x00 && readBytes((char *) &deviceIdentifier,1) ) {
+    if( !readBytes(reinterpret_cast<char *>(&type),1) ) return;
+    if( type == 0x00 && readBytes(reinterpret_cast<char *>(&deviceIdentifier),1) ) {
         char identifier[deviceIdentifier + 1];
         if( !readBytes(identifier,deviceIdentifier) ) return;
         identifier[deviceIdentifier] = 0;
@@ -73,13 +73,13 @@ void DeviceSession::authorize( void ) {
 void DeviceSession::setDevices( const std::vector<std::string> * devices ) {
     // Checking the precondition.
     assert( devices != nullptr );
-    
+
     mDevices = devices;
 }
 
 bool DeviceSession::containsDevice( const std::string & identifier ) const {
     bool contains;
-    
+
     contains = false;
     for( auto it = mDevices->begin() ; it != mDevices->end() ; ++it ) {
         if( (*it) == identifier ) {
@@ -87,15 +87,15 @@ bool DeviceSession::containsDevice( const std::string & identifier ) const {
             break;
         }
     }
-    
+
     return ( contains );
 }
 
 void DeviceSession::updateDeviceState( void ) {
     std::uint8_t length[2];
-    
+
     memset(&length,0,2);
-    if( !readBytes((char *) length,2) ) return;
+    if( !readBytes(reinterpret_cast<char *>(length),2) ) return;
     char buffer[length[0] + length[1]];
     if( !readBytes(buffer,length[0] + length[1]) ) return;
     char stateIdentifier[length[0] + 1];
@@ -114,21 +114,22 @@ void DeviceSession::sendDeviceState( const std::string & stateIdentifier,
     std::size_t n;
     Writer * writer;
     bool success;
-    
+
     // Checking the precondition.
     assert( !stateIdentifier.empty() && !value.empty() );
-    
+
     header[0] = 0x01;
-    header[1] = (std::uint8_t) mDevice.length();
-    header[2] = (std::uint8_t) stateIdentifier.length();
-    header[3] = (std::uint8_t) value.length();
+    header[1] = static_cast<std::uint8_t>(mDevice.length());
+    header[2] = static_cast<std::uint8_t>(stateIdentifier.length());
+    header[3] = static_cast<std::uint8_t>(value.length());
     message = mDevice + stateIdentifier + value;
     writer = mServerSocket->getWriter();
     success = true;
     writer->lock();
-    n = writer->writeBytes((char *) header,4);
+    n = writer->writeBytes(reinterpret_cast<char *>(header),4);
     success &= ( n > 0 );
-    n = writer->writeBytes((char *) message.c_str(),message.length());
+    n = writer->writeBytes(reinterpret_cast<const char *>(message.c_str()),
+                           message.length());
     success &= ( n > 0 );
     writer->unlock();
     if( !success ) {
@@ -139,7 +140,7 @@ void DeviceSession::sendDeviceState( const std::string & stateIdentifier,
 void DeviceSession::setServerSocket( Socket * serverSocket ) {
     // Checking the precondition.
     assert( serverSocket != nullptr );
-    
+
     mServerSocket = serverSocket;
 }
 
@@ -162,13 +163,13 @@ void DeviceSession::run( void ) {
     std::uint8_t type;
     std::size_t nBytes;
     Reader * reader;
-    
+
     authorize();
     if( getSocket()->isConnected() ) {
         reader = getSocket()->getReader();
         while( mFlagRunning && mServerSocket->isConnected() &&
                getSocket()->isConnected() ) {
-            nBytes = reader->readByte((char *) &type);
+            nBytes = reader->readByte(reinterpret_cast<char *>(&type));
             if( nBytes == 0 ) {
                 stop();
             } else {
@@ -192,7 +193,7 @@ void DeviceSession::stop( void ) {
     const static std::uint8_t close = 0xff;
     Socket * socket;
     Writer * writer;
-    
+
     if( mFlagRunning ) {
         logi("Closing device session.");
         mFlagRunning = false;
@@ -200,7 +201,7 @@ void DeviceSession::stop( void ) {
         if( socket->isConnected() ) {
             writer = getSocket()->getWriter();
             writer->lock();
-            writer->writeBytes((char *) &close,1);
+            writer->writeBytes(reinterpret_cast<const char *>(&close),1);
             writer->unlock();
             socket->closeConnection();
         }

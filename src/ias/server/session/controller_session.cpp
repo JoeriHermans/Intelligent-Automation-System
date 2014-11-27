@@ -42,7 +42,7 @@ inline void ControllerSession::initialize( void ) {
 void ControllerSession::setContainer( Container<Controller *> * controllers ) {
     // Checking the precondition.
     assert( controllers != nullptr );
-    
+
     mControllers = controllers;
 }
 
@@ -50,14 +50,14 @@ void ControllerSession::authorize( void ) {
     std::uint8_t header[3];
     Controller * controller;
     Reader * reader;
-    
+
     logi("Authorizing controller.");
     reader = getSocket()->getReader();
-    if( readBytes((char *) header,3) && header[0] == 0x00 ) {
+    if( readBytes(reinterpret_cast<char *>(header),3) && header[0] == 0x00 ) {
         char identifier[header[1] + 1];
         char securityCode[header[2] + 1];
-        
-        if(readBytes(identifier,header[1]) && 
+
+        if(readBytes(identifier,header[1]) &&
             readBytes(securityCode,header[2]) ) {
             identifier[header[1]] = 0;
             securityCode[header[2]] = 0;
@@ -81,15 +81,15 @@ void ControllerSession::controllerUpdate( void ) {
     Device * device;
     Reader * reader;
     bool success;
-    
+
     success = false;
     reader = getSocket()->getReader();
-    nBytes = reader->readBytes((char *) length,3);
+    nBytes = reader->readBytes(reinterpret_cast<char *>(length),3);
     if( nBytes == 3 ) {
         char deviceIdentifier[length[0] + 1];
         char stateIdentifier[length[1] + 1];
         char stateValue[length[2] + 1];
-        
+
         if( !readBytes(deviceIdentifier,length[0]) ||
             !readBytes(stateIdentifier,length[1]) ||
             !readBytes(stateValue,length[2]) )
@@ -135,12 +135,12 @@ void ControllerSession::run( void ) {
     std::uint8_t messageType;
     std::size_t nBytes;
     Reader * reader;
-    
+
     authorize();
     reader = getSocket()->getReader();
     while( mFlagRunning && getSocket()->isConnected() ) {
-        nBytes = reader->readByte((char *) &messageType);
-        if( nBytes == 0 ) { 
+        nBytes = reader->readByte(reinterpret_cast<char *>(&messageType));
+        if( nBytes == 0 ) {
             stop();
         } else {
             switch(messageType) {

@@ -31,11 +31,11 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-void DeviceDatabaseFactory::setTechnologyContainer( 
+void DeviceDatabaseFactory::setTechnologyContainer(
     Container<Technology *> * technologies ) {
     // Checking the precondition.
     assert( technologies != nullptr );
-    
+
     mTechnologiesContainer = technologies;
 }
 
@@ -43,24 +43,24 @@ Device * DeviceDatabaseFactory::allocateDevice( const std::string & id,
                                                 const std::string & identifier,
                                                 const std::string & name,
                                                 const std::string & description,
-                                                const std::string & techId ) 
+                                                const std::string & techId )
                                                 const {
     Device * d;
     std::size_t deviceId;
     std::size_t technologyId;
-    
-    deviceId = (std::size_t) atol(id.c_str());
-    technologyId = (std::size_t) atol(techId.c_str());
+
+    deviceId = static_cast<std::size_t>(atol(id.c_str()));
+    technologyId = static_cast<std::size_t>(atol(techId.c_str()));
     d = new Device(deviceId,identifier,name,description,
                    mTechnologiesContainer->get(technologyId));
-    
+
     return ( d );
 }
 
 void DeviceDatabaseFactory::setDeviceMonitor( DeviceMonitor * deviceMonitor ) {
     // Checking the precondition.
     assert( deviceMonitor != nullptr );
-    
+
     mDeviceMonitor = deviceMonitor;
 }
 
@@ -83,7 +83,7 @@ std::vector<Device *> DeviceDatabaseFactory::fetchAll( void ) {
     std::string description;
     std::string name;
     std::string technologyId;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT * "
         "FROM devices;"
@@ -113,6 +113,6 @@ std::vector<Device *> DeviceDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( devices );
 }

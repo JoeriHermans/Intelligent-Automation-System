@@ -72,7 +72,7 @@ std::string CommandDeleteRule::execute( const std::string & parameters ) {
 
     success = false;
     if( parameters.length() > 0 ) {
-        std::size_t id = (std::size_t) atol(parameters.c_str());
+        std::size_t id = static_cast<std::size_t>(atol(parameters.c_str()));
         rule = mRules->get(id);
         if( rule != nullptr ) {
             mRules->remove(rule);

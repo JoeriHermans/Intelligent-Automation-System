@@ -45,7 +45,7 @@ inline void DeviceServer::initialize( void ) {
 void DeviceServer::setSocket( Socket * socket ) {
     // Checking the precondition.
     assert( socket != nullptr && socket->isConnected() );
-    
+
     mSocket = socket;
 }
 
@@ -69,7 +69,7 @@ void DeviceServer::startListenThread( void ) {
                                             &mConnectedDevices,
                                             &mDeviceIdentifiers);
                 session->addObserver(this);
-                mSessions[session] = 
+                mSessions[session] =
                     new std::thread([session]{
                         session->run();
                         session->notifyObservers(session);
@@ -95,12 +95,12 @@ bool DeviceServer::readBytes( char * buffer , const unsigned int n ) {
     std::size_t bytesRead;
     std::size_t nBytes;
     Reader * reader;
-    
+
     // Checking the precondition.
     assert( buffer != nullptr && n > 0 );
-    
+
     if( !mSocket->isConnected() ) return ( false );
-    
+
     reader = mSocket->getReader();
     bytesRead = 0;
     while( bytesRead != n ) {
@@ -109,7 +109,7 @@ bool DeviceServer::readBytes( char * buffer , const unsigned int n ) {
             return ( false );
         bytesRead += nBytes;
     }
-    
+
     return ( true );
 }
 
@@ -120,14 +120,14 @@ void DeviceServer::dispatchCommand( void ) {
     std::string message;
     Reader * reader;
     Writer * writer;
-    
+
     if( !mSocket->isConnected() )
         stop();
     reader = mSocket->getReader();
     writer = mSocket->getWriter();
-    if( !readBytes((char *) &deviceLength,1) ) return;
-    if( !readBytes((char *) &identifierLength,1) ) return;
-    if( !readBytes((char *) &parameterLength,1) ) return;
+    if( !readBytes(reinterpret_cast<char *>(&deviceLength),1) ) return;
+    if( !readBytes(reinterpret_cast<char *>(&identifierLength),1) ) return;
+    if( !readBytes(reinterpret_cast<char *>(&parameterLength),1) ) return;
     char deviceIdentifier[deviceLength + 1];
     char identifier[identifierLength + 1];
     char parameter[parameterLength + 1];
@@ -151,11 +151,11 @@ void DeviceServer::startDispatchThread( void ) {
         std::size_t nBytes;
         std::uint8_t type;
         Reader * reader;
-        
+
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
-            nBytes = reader->readByte((char *) &type);
-            if( nBytes == 0 ) { 
+            nBytes = reader->readByte(reinterpret_cast<char *>(&type));
+            if( nBytes == 0 ) {
                 stop();
             } else {
                 switch(type) {
@@ -174,7 +174,7 @@ void DeviceServer::startDispatchThread( void ) {
 
 void DeviceServer::signalSessions( void ) {
     std::map<Session *,std::thread *>::iterator it;
-    
+
     mMutexSessions.lock();
     for( it = mSessions.begin() ; it != mSessions.end() ; ++it )
         it->first->stop();
@@ -240,11 +240,11 @@ void DeviceServer::update( void ) {
 void DeviceServer::update( void * argument ) {
     std::map<Session *,std::thread *>::iterator it;
     Session * session;
-    
+
     // Checking the precondition.
     assert( argument != nullptr );
-    
-    session = (Session *) argument;
+
+    session = static_cast<Session *>(argument);
     it = mSessions.find(session);
     if( it != mSessions.end() ) {
         mInactiveThreads.push_back(it->second);

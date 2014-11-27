@@ -45,14 +45,14 @@ inline void UserServer::initialize( void ) {
 void UserServer::setUserContainer( Container<User *> * users ) {
     // Checking the precondition.
     assert( users != nullptr );
-    
+
     mUsers = users;
 }
 
 void UserServer::setDispatcher( CommandDispatcher * dispatcher ) {
     // Checking the precondition.
     assert( dispatcher != nullptr );
-    
+
     mDispatcher = dispatcher;
 }
 
@@ -71,7 +71,7 @@ void UserServer::cleanupFinishingThreads( void ) {
 
 void UserServer::signalSessions( void ) {
     std::map<Session *,std::thread *>::iterator it;
-    
+
     mMutexSessions.lock();
     for( it = mSessions.begin() ; it != mSessions.end() ; ++it )
         it->first->stop();
@@ -106,7 +106,7 @@ void UserServer::start( void ) {
                     session = new UserSession(socket,mUsers,
                                               mDispatcher);
                     session->addObserver(this);
-                    mSessions[session] = 
+                    mSessions[session] =
                         new std::thread([session]{
                             session->run();
                             session->notifyObservers(session);
@@ -148,11 +148,11 @@ void UserServer::update( void ) {
 void UserServer::update( void * argument ) {
     std::map<Session *,std::thread *>::iterator it;
     Session * session;
-    
+
     // Checking the precondition.
     assert( argument != nullptr );
-    
-    session = (Session *) argument;
+
+    session = static_cast<Session *>(argument);
     it = mSessions.find(session);
     if( it != mSessions.end() ) {
         mInactiveThreads.push_back(it->second);

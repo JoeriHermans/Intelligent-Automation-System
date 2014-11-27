@@ -34,7 +34,7 @@
 void BuildingDatabaseFactory::setAreaContainer( const Container<Area *> * a ) {
     // Checking the precondition.
     assert( a != nullptr );
-    
+
     mAreas = a;
 }
 
@@ -48,7 +48,7 @@ std::vector<Area *> BuildingDatabaseFactory::fetchAreas( const std::size_t id )
     std::string strAreaId;
     std::size_t areaId;
     Area * area;
-    
+
     query =
         "SELECT area_id "
         "FROM building_areas "
@@ -60,7 +60,7 @@ std::vector<Area *> BuildingDatabaseFactory::fetchAreas( const std::size_t id )
             while( result->hasNext() ) {
                 row = result->next();
                 strAreaId = row->getColumn(0);
-                areaId = (std::size_t) atol(strAreaId.c_str());
+                areaId = static_cast<std::size_t>(atol(strAreaId.c_str()));
                 area = mAreas->get(areaId);
                 if( area != nullptr ) {
                     areas.push_back(area);
@@ -71,11 +71,11 @@ std::vector<Area *> BuildingDatabaseFactory::fetchAreas( const std::size_t id )
         }
         delete statement;
     }
-    
+
     return ( areas );
 }
 
-BuildingDatabaseFactory::BuildingDatabaseFactory( 
+BuildingDatabaseFactory::BuildingDatabaseFactory(
     DatabaseConnection * dbConnection,
     Container<Area *> * areas ) :
     DatabaseFactory<Building *>(dbConnection) {
@@ -106,10 +106,10 @@ std::vector<Building *> BuildingDatabaseFactory::fetchAll( void ) {
         if( result != nullptr ) {
             while( result->hasNext() ) {
                 std::vector<Area *> areas;
-                
+
                 row = result->next();
                 strId = row->getColumn(0);
-                id = (std::size_t) atol(strId.c_str());
+                id = static_cast<std::size_t>(atol(strId.c_str()));
                 identifier = row->getColumn(1);
                 name = row->getColumn(2);
                 description = row->getColumn(3);
@@ -123,6 +123,6 @@ std::vector<Building *> BuildingDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( buildings );
 }

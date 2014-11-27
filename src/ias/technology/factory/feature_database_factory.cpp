@@ -34,30 +34,31 @@
 void FeatureDatabaseFactory::setTypesContainer( Container<ValueType *> * types ) {
     // Checking the precondition.
     assert( types != nullptr );
-    
+
     mTypesContainer = types;
 }
 
-Feature * FeatureDatabaseFactory::allocateFeature( 
+Feature * FeatureDatabaseFactory::allocateFeature(
     const std::string & id, const std::string & identifier,
     const std::string & name, const std::string & description,
     const std::string & valueTypeId ) const {
     Feature * f;
     ValueType * type;
     std::size_t featureId;
-    
-    featureId = (std::size_t) atol(id.c_str());
+
+    featureId = static_cast<std::size_t>(atol(id.c_str()));
     // Check if the value type is null.
     if( valueTypeId.empty() )
         type = nullptr;
     else
-        type = mTypesContainer->get((std::size_t) atol(valueTypeId.c_str()));
+        type = mTypesContainer->get(
+                static_cast<std::size_t>(atol(valueTypeId.c_str())));
     f = new Feature(featureId,identifier,name,description,type);
-    
+
     return ( f );
 }
 
-FeatureDatabaseFactory::FeatureDatabaseFactory( 
+FeatureDatabaseFactory::FeatureDatabaseFactory(
     DatabaseConnection * conn, Container<ValueType *> * types ) :
     DatabaseFactory<Feature *>(conn) {
     setTypesContainer(types);
@@ -77,7 +78,7 @@ std::vector<Feature *> FeatureDatabaseFactory::fetchAll( void ) {
     std::string name;
     std::string description;
     std::string valueTypeId;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT * "
         "FROM technology_features;"
@@ -103,6 +104,6 @@ std::vector<Feature *> FeatureDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( features );
 }

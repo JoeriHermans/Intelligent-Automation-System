@@ -42,7 +42,7 @@ inline void MySqlStatement::setConnection( MYSQL * connection ) {
 MySqlStatement::MySqlStatement( MySqlConnection * connection , const std::string & query )
     : DatabaseStatement( connection , query ) {
     // Set the connection member.
-    setConnection((MYSQL *) connection->getLink());
+    setConnection(static_cast<MYSQL *>(connection->getLink()));
 }
 
 MySqlStatement::~MySqlStatement( void ) {

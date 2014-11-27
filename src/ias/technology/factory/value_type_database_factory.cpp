@@ -52,7 +52,7 @@ std::vector<ValueType *> ValueTypeDatabaseFactory::fetchAll( void ) {
     std::string name;
     std::string description;
     std::string regex;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT *"
         "FROM value_types"
@@ -68,7 +68,7 @@ std::vector<ValueType *> ValueTypeDatabaseFactory::fetchAll( void ) {
                 name = row->getColumn(3);
                 description = row->getColumn(4);
                 bufferId = atol(strId.c_str());
-                id = (std::size_t) bufferId;
+                id = static_cast<std::size_t>(bufferId);
                 types.push_back(
                     new ValueType(id,identifier,name,description,regex)
                 );
@@ -78,6 +78,6 @@ std::vector<ValueType *> ValueTypeDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( types );
 }

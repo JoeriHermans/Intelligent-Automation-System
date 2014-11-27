@@ -109,5 +109,5 @@ DatabasePreparedStatement * PostgresqlConnection::prepareStatement( const std::s
 }
 
 void * PostgresqlConnection::getLink( void ) {
-    return ( (void *) mConnection );
+    return ( static_cast<void *>(mConnection) );
 }

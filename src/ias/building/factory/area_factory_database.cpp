@@ -31,11 +31,11 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-void AreaDatabaseFactory::setDeviceContainer( const Container<Device *> * 
+void AreaDatabaseFactory::setDeviceContainer( const Container<Device *> *
                                               devices ) {
     // Checking the precondition.
     assert( devices != nullptr );
-    
+
     mDevices = devices;
 }
 
@@ -48,8 +48,8 @@ std::vector<Device *> AreaDatabaseFactory::fetchDevices( const std::size_t id ) 
     std::string strId;
     std::size_t deviceId;
     Device * d;
-    
-    query = 
+
+    query =
         "SELECT device_id "
         "FROM area_devices "
         "WHERE area_id = " + std::to_string(id);
@@ -60,7 +60,7 @@ std::vector<Device *> AreaDatabaseFactory::fetchDevices( const std::size_t id ) 
             while( result->hasNext() ) {
                 row = result->next();
                 strId = row->getColumn(0);
-                deviceId = (std::size_t) atol(strId.c_str());
+                deviceId = static_cast<std::size_t>(atol(strId.c_str()));
                 d = mDevices->get(deviceId);
                 if( d != nullptr ) {
                     devices.push_back(d);
@@ -71,7 +71,7 @@ std::vector<Device *> AreaDatabaseFactory::fetchDevices( const std::size_t id ) 
         }
         delete statement;
     }
-    
+
     return ( devices );
 }
 
@@ -87,7 +87,7 @@ void AreaDatabaseFactory::linkAreas( std::vector<Area *> & areas ) {
     std::size_t idTo;
     Area * areaFrom;
     Area * areaTo;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT area_from_id, area_to_id "
         "FROM area_links;"
@@ -99,14 +99,14 @@ void AreaDatabaseFactory::linkAreas( std::vector<Area *> & areas ) {
                 row = result->next();
                 fromId = row->getColumn(0);
                 toId = row->getColumn(1);
-                idFrom = (std::size_t) atol(fromId.c_str());
-                idTo = (std::size_t) atol(toId.c_str());
+                idFrom = static_cast<std::size_t>(atol(fromId.c_str()));
+                idTo = static_cast<std::size_t>(atol(toId.c_str()));
                 areaFrom = getArea(areas,idFrom);
                 areaTo = getArea(areas,idTo);
                 if( areaFrom != nullptr && areaTo != nullptr ) {
                     areaFrom->addAdjacentArea(areaTo);
                 }
-                
+
                 delete row;
             }
             delete result;
@@ -118,7 +118,7 @@ void AreaDatabaseFactory::linkAreas( std::vector<Area *> & areas ) {
 Area * AreaDatabaseFactory::getArea( const std::vector<Area *> & areas,
                                      const std::size_t id ) {
     Area * result;
-    
+
     result = nullptr;
     for( Area * area : areas ) {
         if( area->getId() == id ) {
@@ -126,7 +126,7 @@ Area * AreaDatabaseFactory::getArea( const std::vector<Area *> & areas,
             break;
         }
     }
-    
+
     return ( result );
 }
 
@@ -150,7 +150,7 @@ std::vector<Area *> AreaDatabaseFactory::fetchAll( void ) {
     std::string identifier;
     std::string name;
     std::string description;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT * "
         "FROM areas "
@@ -161,13 +161,13 @@ std::vector<Area *> AreaDatabaseFactory::fetchAll( void ) {
         if( result != nullptr ) {
             while( result->hasNext() ) {
                 std::vector<Device *> devices;
-                
+
                 row = result->next();
                 strId = row->getColumn(0);
                 identifier = row->getColumn(1);
                 name = row->getColumn(2);
                 description = row->getColumn(3);
-                id = (std::size_t) atol(strId.c_str());
+                id = static_cast<std::size_t>(atol(strId.c_str()));
                 devices = fetchDevices(id);
                 areas.push_back(
                     new Area(id,name,identifier,description,devices)
@@ -180,6 +180,6 @@ std::vector<Area *> AreaDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( areas );
 }

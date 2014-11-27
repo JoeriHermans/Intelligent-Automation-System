@@ -51,7 +51,7 @@ std::vector<User *> UserDatabaseFactory::fetchAll( void ) {
     std::string username;
     std::string password;
     std::vector<User *> users;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT id, username, password "
         "FROM users;"
@@ -64,7 +64,7 @@ std::vector<User *> UserDatabaseFactory::fetchAll( void ) {
                 strId = row->getColumn(0);
                 username = row->getColumn(1);
                 password = row->getColumn(2);
-                id = (std::size_t) atol(strId.c_str());
+                id = static_cast<std::uint8_t>(atol(strId.c_str()));
                 users.push_back(new User(id,username,password));
                 delete row;
             }
@@ -72,6 +72,6 @@ std::vector<User *> UserDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( users );
 }

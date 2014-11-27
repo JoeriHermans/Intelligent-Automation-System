@@ -50,7 +50,7 @@ DatabaseResult * PostgresqlStatement::execute( void ) {
 
     result = nullptr;
     if( getConnection()->isConnected() ) {
-        connection = (pqxx::connection *) getConnection()->getLink();
+        connection = static_cast<pqxx::connection *>(getConnection()->getLink());
         pqxx::nontransaction n(*connection);
         pqxx::result * queryResult = new pqxx::result(n.exec(getQuery()));
         if( queryResult != nullptr ) {

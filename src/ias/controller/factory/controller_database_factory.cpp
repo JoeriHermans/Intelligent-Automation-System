@@ -34,11 +34,11 @@
 void ControllerDatabaseFactory::setDeviceContainer( Container<Device *> * c ) {
     // Checking the precondition.
     assert( c != nullptr );
-    
+
     mDeviceContainer = c;
 }
 
-std::vector<Device *> ControllerDatabaseFactory::fetchDevices( 
+std::vector<Device *> ControllerDatabaseFactory::fetchDevices(
     const std::size_t id ) const {
     std::vector<Device *> devices;
     DatabaseStatement * statement;
@@ -46,7 +46,7 @@ std::vector<Device *> ControllerDatabaseFactory::fetchDevices(
     DatabaseResultRow * row;
     std::string query;
     std::size_t deviceId;
-    
+
     query =
         "SELECT id "
         "FROM devices "
@@ -58,7 +58,8 @@ std::vector<Device *> ControllerDatabaseFactory::fetchDevices(
         if( result != nullptr ) {
             while( result->hasNext() ) {
                 row = result->next();
-                deviceId = (std::size_t) atol(row->getColumn(0).c_str());
+                deviceId = static_cast<std::size_t>(
+                        atol(row->getColumn(0).c_str()));
                 devices.push_back(mDeviceContainer->get(deviceId));
                 delete row;
             }
@@ -66,23 +67,23 @@ std::vector<Device *> ControllerDatabaseFactory::fetchDevices(
         }
         delete statement;
     }
-    
+
     return ( devices );
 }
 
-Controller * ControllerDatabaseFactory::allocateController( 
+Controller * ControllerDatabaseFactory::allocateController(
     const std::string & id, const std::string & identifier,
     const std::string & name, const std::string & description,
     const std::string & securityCode ) const {
     std::vector<Device *> devices;
     Controller * controller;
     std::size_t controllerId;
-    
-    controllerId = (std::size_t) atol(id.c_str());
+
+    controllerId = static_cast<std::size_t>(atol(id.c_str()));
     devices = fetchDevices(controllerId);
     controller = new Controller(controllerId,identifier,name,description,
                                 securityCode,devices);
-    
+
     return ( controller );
 }
 
@@ -107,7 +108,7 @@ std::vector<Controller *> ControllerDatabaseFactory::fetchAll( void ) {
     std::string description;
     std::string name;
     std::string securityCode;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT * "
         "FROM controllers;"
@@ -131,6 +132,6 @@ std::vector<Controller *> ControllerDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( controllers );
 }

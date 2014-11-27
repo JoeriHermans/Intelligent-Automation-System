@@ -171,16 +171,18 @@ void ClientApplication::login( void ) {
     if( mSocket->isConnected() ) {
         writeMessage("Authenticating...");
         type = 0x00;
-        byte = (std::uint8_t) username.length();
-        writer->writeBytes((char *) &type,1);
-        writer->writeBytes((char *) &byte,1);
+        byte = static_cast<std::uint8_t>(username.length());
+        writer->writeBytes(reinterpret_cast<char *>(&type),1);
+        writer->writeBytes(reinterpret_cast<char *>(&byte),1);
         writer->writeBytes(username.c_str(),byte);
-        byte = (std::uint8_t) password.length();
+        byte = static_cast<std::uint8_t>(password.length());
         writer->writeByte(byte);
         writer->writeBytes(password.c_str(),byte);
         byte = 0xff;
-        if( reader->readByte((char *) &byte) == 1 && byte == 0x00 &&
-            reader->readByte((char *) &byte) == 1 && byte == 0x01 ) {
+        if( reader->readByte(reinterpret_cast<char *>(&byte)) == 1 &&
+            byte == 0x00 &&
+            reader->readByte(reinterpret_cast<char *>(&byte)) == 1 &&
+            byte == 0x01 ) {
             mLoggedIn = true;
             mUsername = username;
             writeMessage("Authenticated.");
@@ -203,10 +205,12 @@ void ClientApplication::readResponse( void ) {
 
     reader = mSocket->getReader();
     type = 0x00;
+    messageSize = 0;
     if( mSocket->isConnected() &&
-        reader->readBytes((char *) &type,1) == 1 && type == 0x01 &&
-        reader->readBytes((char *) &messageSize,sizeof(messageSize)) ==
-            sizeof(messageSize) ) {
+        reader->readBytes(reinterpret_cast<char *>(&type),1) == 1 &&
+        type == 0x01 &&
+        reader->readBytes(reinterpret_cast<char *>(&type),
+                sizeof(messageSize)) == sizeof(messageSize) ) {
         messageSize = ntohs(messageSize);
         bytesRead = 0;
         char buffer[messageSize + 1];
@@ -246,14 +250,14 @@ void ClientApplication::processCommands( void ) {
                 continue;
             }
             b = 0x01;
-            writer->writeBytes((char *) &b,1);
+            writer->writeBytes(reinterpret_cast<char *>(&b),1);
             if( command.length() > 0xff ) {
                 b = 0xff;
                 writeMessage("Command exceeded max size, writing 255 bytes.");
             } else {
-                b = (std::uint8_t) command.length();
+                b = static_cast<std::uint8_t>(command.length());
             }
-            writer->writeBytes((char *) &b,1);
+            writer->writeBytes(reinterpret_cast<char *>(&b),1);
             bytesWritten = 0;
             while( mSocket->isConnected() && bytesWritten < b ) {
                 n = writer->writeBytes(command.c_str() + bytesWritten,

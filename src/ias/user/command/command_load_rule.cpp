@@ -103,7 +103,7 @@ std::string CommandLoadRule::execute( const std::string & parameters ) {
 
     success = false;
     if( parameters.length() > 0 ) {
-       ruleId = (std::size_t) atol(parameters.c_str());
+       ruleId = static_cast<std::size_t>(atol(parameters.c_str()));
        if( ruleId > 0 ) {
            rule = mRules->get(ruleId);
            if( rule == nullptr && (rule = fetchRule(ruleId)) != nullptr ) {

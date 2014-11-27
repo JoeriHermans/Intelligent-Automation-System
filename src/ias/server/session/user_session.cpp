@@ -59,15 +59,15 @@ void UserSession::authorize( void ) {
     logi("Authorizing user.");
     type = 0xff;
     length = 0x00;
-    if( readBytes((char *) &type,1) &&
+    if( readBytes(reinterpret_cast<char *>(&type),1) &&
         type == 0x00 &&
-        readBytes((char *) &length,1) ) {
+        readBytes(reinterpret_cast<char *>(&length),1) ) {
         char username[length + 1];
         reader = getSocket()->getReader();
         if( readBytes(username,length) ) {
             username[length] = 0;
             length = 0x00;
-            if( readBytes((char *) &length,1) ) {
+            if( readBytes(reinterpret_cast<char *>(&length),1) ) {
                 char password[length + 1];
                 if( readBytes(password,length) ) {
                     password[length] = 0;
@@ -93,7 +93,7 @@ void UserSession::authorize( void ) {
         w = getSocket()->getWriter();
         code[0] = 0x00;
         code[1] = 0x01;
-        w->writeBytes((char *) &code,2);
+        w->writeBytes(reinterpret_cast<char *>(&code),2);
     }
 }
 
@@ -125,7 +125,7 @@ void UserSession::processCommand( void ) {
 
     reader = getSocket()->getReader();
     size = 0x00;
-    reader->readByte((char *) &size);
+    reader->readByte(reinterpret_cast<char *>(&size));
     char buffer[size + 1];
     if( readBytes(buffer,size) ) {
         buffer[size] = 0;
@@ -166,10 +166,11 @@ void UserSession::sendResponse( const char * buffer , const std::size_t n ) {
 
     b = 0x01;
     writer = getSocket()->getWriter();
-    writer->writeBytes((char *) &b,1);
-    messageSize = (std::uint16_t) n;
+    writer->writeBytes(reinterpret_cast<const char *>(&b),1);
+    messageSize = static_cast<std::uint16_t>(n);
     messageSize = htons(messageSize);
-    writer->writeBytes((char *) &messageSize,sizeof(messageSize));
+    writer->writeBytes(reinterpret_cast<const char *>(&messageSize),
+                       sizeof(messageSize));
     writer->writeBytes(buffer,n);
 }
 
@@ -198,7 +199,7 @@ void UserSession::run( void ) {
         reader = socket->getReader();
         while( mFlagRunning && socket->isConnected() ) {
             type = 0xff;
-            nBytes = reader->readByte((char *) &type);
+            nBytes = reader->readByte(reinterpret_cast<char *>(&type));
             if( nBytes == 0 ) {
                 stop();
             } else {

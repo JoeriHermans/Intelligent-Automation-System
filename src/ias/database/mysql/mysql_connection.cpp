@@ -70,8 +70,8 @@ bool MySqlConnection::connect( void ) {
     // Try to connect to the MySQL server.
     connected = ( mysql_real_connect(mConnection,
                                      getHost().c_str(),
-                                     getUsername().c_str(), 
-                                     getPassword().c_str(), 
+                                     getUsername().c_str(),
+                                     getPassword().c_str(),
                                      getSchema().c_str(),
                                      3306,nullptr,0) != nullptr );
 
@@ -80,7 +80,7 @@ bool MySqlConnection::connect( void ) {
 
 DatabaseStatement * MySqlConnection::createStatement( const std::string & sql ) {
     DatabaseStatement * statement;
-    
+
     // Checking the precondition.
     assert( sql.length() > 0 );
 
@@ -95,16 +95,16 @@ DatabaseStatement * MySqlConnection::createStatement( const std::string & sql ) 
     return ( statement );
 }
 
-DatabasePreparedStatement * MySqlConnection::prepareStatement( 
+DatabasePreparedStatement * MySqlConnection::prepareStatement(
     const std::string & sql ) {
     // Checking the precondition.
     assert( sql.length() > 0 );
-    
+
     // TODO Implement.
     return ( nullptr );
 }
 
 void * MySqlConnection::getLink( void )
 {
-    return ( (void *) mConnection );
+    return ( static_cast<void *>(mConnection) );
 }

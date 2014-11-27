@@ -37,7 +37,7 @@ PostgresqlResultRow::PostgresqlResultRow( const pqxx::result::const_iterator & r
 
     n = row.size();
     for( std::size_t i = 0 ; i < n ; ++i ) {
-        mRow.push_back(row.at((int) i).as<std::string>());
+        mRow.push_back(row.at(static_cast<int>(i)).as<std::string>());
     }
 }
 

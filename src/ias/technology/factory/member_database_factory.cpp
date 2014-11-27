@@ -34,7 +34,7 @@
 void MemberDatabaseFactory::setTypesContainer( Container<ValueType *> * t ) {
     // Checking the precondition.
     assert( t != nullptr );
-    
+
     mTypesContainer = t;
 }
 
@@ -48,13 +48,13 @@ Member * MemberDatabaseFactory::allocateMember( const std::string & id,
     ValueType * type;
     std::size_t memberId;
     std::size_t valueId;
-    
-    memberId = (std::size_t) atol(id.c_str());
-    valueId = (std::size_t) atol(valueTypeId.c_str());
+
+    memberId = static_cast<std::size_t>(atol(id.c_str()));
+    valueId = static_cast<std::size_t>(atol(valueTypeId.c_str()));
     type = mTypesContainer->get(valueId);
     member = new Member(memberId,identifier,name,description,
                         defaultValue,type);
-    
+
     return ( member );
 }
 
@@ -79,7 +79,7 @@ std::vector<Member *> MemberDatabaseFactory::fetchAll( void ) {
     std::string name;
     std::string description;
     std::string defaultValue;
-    
+
     statement = getDbConnection()->createStatement(
         "SELECT *"
         "FROM technology_members"
@@ -103,6 +103,6 @@ std::vector<Member *> MemberDatabaseFactory::fetchAll( void ) {
         }
         delete statement;
     }
-    
+
     return ( members );
 }
