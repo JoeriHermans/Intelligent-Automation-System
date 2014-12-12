@@ -66,15 +66,11 @@ extern const std::uint8_t kSocksVersionAuthenticateMethod;
 
 // END Constants. ////////////////////////////////////////////////////
 
-bool socksConnect( const std::string & proxyAddress,
-                   const std::size_t proxyPort,
-                   const std::string & clientAddress,
+bool socksConnect( const std::string & clientAddress,
                    const std::size_t clientPort,
                    const int fd );
 
-bool socksConnect( const std::string & proxyAddress,
-                   const std::size_t proxyPort,
-                   const std::string & clientAddress,
+bool socksConnect( const std::string & clientAddress,
                    const std::size_t clientPort,
                    const std::string & username,
                    const std::string & password,
