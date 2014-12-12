@@ -51,7 +51,7 @@ inline void PosixTcpSocket::initialize( void ) {
 void PosixTcpSocket::setFileDescriptor( const int fd ) {
     // Checking the precondition.
     assert( fd >= -1 );
-    
+
     mFileDescriptor = fd;
 }
 
@@ -62,10 +62,10 @@ bool PosixTcpSocket::initializeConnection( const std::string & address,
     std::string portString;
     bool connected;
     int fd;
-    
+
     // Checking the precondition.
     assert( !address.empty() && port > 0 );
-    
+
     connected = false;
     memset(&hints,0,sizeof hints);
     hints.ai_family = AF_UNSPEC;
@@ -89,13 +89,13 @@ bool PosixTcpSocket::initializeConnection( const std::string & address,
         }
     }
     freeaddrinfo(results);
-    
+
     return ( connected );
 }
 
 void PosixTcpSocket::pollSocket( void ) const {
     struct pollfd pfd;
-    
+
     if( mFileDescriptor >= 0 ) {
         pfd.fd = mFileDescriptor;
         #if defined(__linux__)
@@ -129,22 +129,21 @@ PosixTcpSocket::~PosixTcpSocket( void ) {
 }
 
 void PosixTcpSocket::closeConnection( void ) {
-    if( isConnected() ) {
+    if( isConnected() )
         close(mFileDescriptor);
-    }
     setFileDescriptor(-1);
 }
 
 bool PosixTcpSocket::createConnection( const std::string & address,
                                        const std::size_t port ) {
     closeConnection();
-    
+
     return ( initializeConnection(address,port) );
 }
 
 bool PosixTcpSocket::isConnected( void ) const {
     pollSocket();
-    
+
     return ( mFileDescriptor >= 0 );
 }
 

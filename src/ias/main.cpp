@@ -45,20 +45,25 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+#include <ias/network/posix/posix_socks_socket.h>
+
 int main( const int argc , const char ** argv ) {
-    initializeSsl();
-    if( controllerRequested(argc,argv) )
-        startController(argc,argv);
-    else
-    if( serverRequested(argc,argv) )
-        startServer(argc,argv);
-    else
-    if( clientRequested(argc,argv) )
-        startClient(argc,argv);
-    else
-        usage();
-    cleanupSsl();
-    cleanupLogger();
+    PosixSocksSocket s("127.0.0.1",7070);
+
+    s.createConnection("192.168.1.1",80);
+//    initializeSsl();
+//    if( controllerRequested(argc,argv) )
+//        startController(argc,argv);
+//    else
+//    if( serverRequested(argc,argv) )
+//        startServer(argc,argv);
+//    else
+//    if( clientRequested(argc,argv) )
+//        startClient(argc,argv);
+//    else
+//        usage();
+//    cleanupSsl();
+//    cleanupLogger();
 
     return ( 0 );
 }
