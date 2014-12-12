@@ -1,11 +1,15 @@
 /**
- * A class which represents the properties and actions of a POSIX TCP socket.
+ * A class which describes the properties and actions of a POSIX SOCKS
+ * proxy socket. This socket will connect to a remote SOCKS proxy server.
  *
- * @date                    July 6, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * Please note that this class only allows outgoing connections to the proxy
+ * server.
  *
- * Copyright 2013 Joeri HERMANS
+ * @date                    December 12, 2014
+ * @author                  Joeri HERMANS
+ * @version                 0.1
+ *
+ * Copyright 2014 Joeri HERMANS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +24,18 @@
  * limitations under the License.
  */
 
-#ifndef POSIX_TCP_SOCKET_H_
-#define POSIX_TCP_SOCKET_H_
+#ifndef POSIX_SOCKS_SOCKET_H_
+#define POSIX_SOCKS_SOCKET_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <string>
-#include <mutex>
-
 // Application dependencies.
 #include <ias/network/socket.h>
+#include <ias/network/posix/posix_tcp_socket.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class PosixTcpSocket : public Socket {
+class PosixSocksSocket : public Socket {
 
     public:
 
@@ -44,43 +45,9 @@ class PosixTcpSocket : public Socket {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-
-    /**
-     * Contains the file descriptor which is associated with the TCP connection.
-     *
-     * @note    A value of -1 means that the socket is not connected.
-     */
-    mutable int mFileDescriptor;
-
-    /**
-     * Contains the reader which is associated with the socket.
-     *
-     * @note    In the case that the socket is not connected, the value of
-     *          the reader will be equal to the null reference.
-     */
-    Reader * mReader;
-
-    /**
-     * Contains the writer which is associated with the socket.
-     *
-     * @note    In the case that the socket is not connected, the value of
-     *          the writer will be equal to the null reference.
-     */
-    Writer * mWriter;
-
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-
-    inline void initialize( void );
-
-    void setFileDescriptor( const int fd );
-
-    bool initializeConnection( const std::string & address,
-                               const std::size_t port );
-
-    void pollSocket( void ) const;
-
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -91,16 +58,11 @@ class PosixTcpSocket : public Socket {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-
-    PosixTcpSocket( void );
-
-    PosixTcpSocket( const int fd );
-
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~PosixTcpSocket( void );
+    virtual ~PosixSocksSocket( void );
 
     // END Destructor. ///////////////////////////////////////////////
 
@@ -117,8 +79,6 @@ class PosixTcpSocket : public Socket {
 
     virtual Writer * getWriter( void ) const;
 
-    int getFileDescriptor( void ) const;
-
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
@@ -126,4 +86,4 @@ class PosixTcpSocket : public Socket {
 
 };
 
-#endif /* POSIX_TCP_SOCKET_H_ */
+#endif /* POSIX_SOCKS_SOCKET_H_ */

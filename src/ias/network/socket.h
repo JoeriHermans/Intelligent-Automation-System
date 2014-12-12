@@ -54,30 +54,30 @@ class Socket {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     Socket( void ) = default;
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~Socket( void ) = default;
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void closeConnection( void ) = 0;
-    
+
     virtual bool createConnection( const std::string & address,
                                    const std::size_t port ) = 0;
-    
+
     virtual bool isConnected( void ) const = 0;
-    
+
     virtual Reader * getReader( void ) const = 0;
-    
+
     virtual Writer * getWriter( void ) const = 0;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
