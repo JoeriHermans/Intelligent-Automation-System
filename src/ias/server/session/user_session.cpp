@@ -64,12 +64,12 @@ void UserSession::authorize( void ) {
         readBytes(reinterpret_cast<char *>(&length),1) ) {
         char username[length + 1];
         reader = getSocket()->getReader();
-        if( readBytes(username,length) ) {
+        if( readBytes(username,length) && length > 1 ) {
             username[length] = 0;
             length = 0x00;
             if( readBytes(reinterpret_cast<char *>(&length),1) ) {
                 char password[length + 1];
-                if( readBytes(password,length) ) {
+                if( readBytes(password,length) && length > 1 ) {
                     password[length] = 0;
                     hashedPassword = sha256GlobalSalts(password);
                     mUser = authenticateUser(username,hashedPassword.c_str());
