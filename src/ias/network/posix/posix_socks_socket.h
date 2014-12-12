@@ -5,7 +5,8 @@
  * Please note that this class only allows outgoing connections to the proxy
  * server.
  *
- * Implementation according to RFC 1928 (https://www.ietf.org/rfc/rfc1928.txt).
+ * Implementation according to RFC 1928 (https://www.ietf.org/rfc/rfc1928.txt)
+ * and RFC 1929 (http://tools.ietf.org/html/rfc1929).
  *
  * @date                    December 12, 2014
  * @author                  Joeri HERMANS
@@ -61,6 +62,11 @@ class PosixSocksSocket : public Socket {
      */
     static const std::uint8_t kMethodUsernamePassword = 0x02;
 
+    /**
+     * Contains the version identifier of the authentication protocol (RFC 1929).
+     */
+    static const std::uint8_t kVersionAuthenticationMethod = 0x01;
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -68,12 +74,11 @@ class PosixSocksSocket : public Socket {
     // BEGIN Private members. ////////////////////////////////////////
 
     /**
-     * Contains the file descriptor which is associated with the TCP
-     * connection towards the SOCKS proxy.
+     * Contains the socket which will send the raw bytes.
      *
-     * @note    A value of -1 is assigned for a disconnected socket.
+     * @note    By default, this member will be equal to the null reference.
      */
-    mutable int mFileDescriptor;
+    Socket * mSocket;
 
     /**
      * Contains the SOCKS proxy server address.
@@ -93,22 +98,6 @@ class PosixSocksSocket : public Socket {
     std::string mClientAddress;
     std::size_t mClientPort;
 
-    /**
-     * A reader which is responsible for writing bytes to the SOCKS proxy.
-     *
-     * @note    In the case that the socket is not connected, the value of the
-     *          reader will be equal to the null reference.
-     */
-    Reader * mReader;
-
-    /**
-     * A writer which is responsible for writing bytes to the SOCKS proxy.
-     *
-     * @note    In the case that the socket is not connected, the value of
-     *          the reader will be equal to the NULL reference.
-     */
-    Writer * mWriter;
-
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -126,15 +115,13 @@ class PosixSocksSocket : public Socket {
     void setCredentials( const std::string & username,
                          const std::string & password );
 
-    void resetReaderAndWriter( void );
-
-    void pollSocket( void ) const;
-
     bool initializeConnection( void );
 
     bool negotiate( void );
 
     bool authenticate( void );
+
+    bool request( void );
 
     // END Private methods. //////////////////////////////////////////
 

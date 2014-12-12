@@ -5,7 +5,8 @@
  * Please note that this class only allows outgoing connections to the proxy
  * server.
  *
- * Implementation according to RFC 1928 (https://www.ietf.org/rfc/rfc1928.txt).
+ * Implementation according to RFC 1928 (https://www.ietf.org/rfc/rfc1928.txt)
+ * and RFC 1929 (http://tools.ietf.org/html/rfc1929).
  *
  * @date                    December 12, 2014
  * @author                  Joeri HERMANS
@@ -44,17 +45,13 @@
 
 // Application dependencies.
 #include <ias/network/posix/posix_socks_socket.h>
+#include <ias/io/reader/network/posix/posix_tcp_socket_reader.h>
+#include <ias/io/writer/network/posix/posix_tcp_socket_writer.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 inline void PosixSocksSocket::initialize( void ) {
-    mFileDescriptor = -1;
-    mReader = nullptr;
-    mWriter = nullptr;
-}
-
-void PosixSocksSocket::setFileDescriptor( const int fd ) {
-    mFileDescriptor = fd;
+    mSocket = new PosixTcpSocket();
 }
 
 void PosixSocksSocket::setClientAddress( const std::string & clientAddress,
@@ -77,64 +74,15 @@ void PosixSocksSocket::setProxyAddress( const std::string & proxyAddress,
 
 void PosixSocksSocket::setCredentials( const std::string & username,
                                        const std::string & password ) {
+    // Checking the precondition (according to RFC 1929).
+    assert( username.length() <= 255 && password.length() <= 255 );
+
     mUsername = username;
     mPassword = password;
 }
 
-void PosixSocksSocket::pollSocket( void ) const {
-    struct pollfd pfd;
-
-    if( mFileDescriptor >= 0 ) {
-        pfd.fd = mFileDescriptor;
-        #if defined(__linux__)
-        pfd.events = POLLNVAL | POLLHUP | POLLRDHUP;
-        #else
-        pfd.events = POLLNVAL | POLLHUP;
-        #endif
-        pfd.revents = 0;
-        if( poll(&pfd,1,0) >= 1 ) {
-            close(mFileDescriptor);
-            mFileDescriptor = -1;
-        }
-    }
-}
-
-void PosixSocksSocket::resetReaderAndWriter( void ) {
-    delete mReader; mReader = nullptr;
-    delete mWriter; mWriter = nullptr;
-}
-
 bool PosixSocksSocket::initializeConnection( void ) {
-    struct addrinfo hints;
-    struct addrinfo * results;
-    std::string portString;
-    bool connected;
-    int fd;
-
-    // Checking the precondition.
-    assert( !mProxyAddress.empty() && mProxyPort > 0 );
-
-    connected = false;
-    memset(&hints,0,sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;
-    portString = std::to_string(mProxyPort);
-    getaddrinfo(mProxyAddress.c_str(),portString.c_str(),&hints,&results);
-    fd = socket(results->ai_family,results->ai_socktype,results->ai_protocol);
-    if( fd >= 0 ) {
-        if( connect(fd,results->ai_addr,results->ai_addrlen) == 0) {
-            connected = true;
-            setFileDescriptor(fd);
-            //resetReaderAndWriter();
-            // TODO Allocate and set reader and writer.
-        } else {
-            close(fd);
-        }
-    }
-    freeaddrinfo(results);
-
-    return ( connected );
+    return ( mSocket->createConnection(mProxyAddress,mProxyPort) );
 }
 
 bool PosixSocksSocket::negotiate( void ) {
@@ -145,7 +93,7 @@ bool PosixSocksSocket::negotiate( void ) {
     bool connected;
 
     // Checking the precondition.
-    assert( mFileDescriptor >= 0 );
+    assert( mSocket->isConnected() );
 
     connected = false;
     // Prepare the message for the SOCKS proxy.
@@ -153,10 +101,8 @@ bool PosixSocksSocket::negotiate( void ) {
     message[1] = 2; // Number of methods supplied.
     message[2] = kMethodNoAuthentication;
     message[3] = kMethodUsernamePassword;
-    // Send message to server.
-    write(mFileDescriptor,static_cast<unsigned char *>(message),4);
-    // Read the response from the server.
-    read(mFileDescriptor,static_cast<unsigned char *>(response),2);
+    mSocket->getWriter()->writeBytes(reinterpret_cast<char *>(message),4);
+    mSocket->getReader()->readBytes(reinterpret_cast<char *>(response),2);
     version = response[0];
     method = response[1];
     if( version == kProtocolVersion ) {
@@ -168,17 +114,82 @@ bool PosixSocksSocket::negotiate( void ) {
             connected = authenticate();
             break;
         }
+        if( connected )
+            connected = request();
     }
 
     return ( connected );
 }
 
 bool PosixSocksSocket::authenticate( void ) {
+    // Authentication message layout:
+    //  Version: 1 byte
+    //  Username length: 1 byte (n)
+    //  Username: n bytes
+    //  Password length: 1 byte (m)
+    //  Password: m bytes.
+    std::size_t messageLength = 2 + mUsername.length() + 1 + mPassword.length();
+    std::uint8_t message[messageLength];
+    std::uint8_t response[2];
+    std::size_t messageIndex;
+    const char * username;
+    const char * password;
     bool connected;
 
-    // TODO Implement.
-    std::cout << "Authenticating." << std::endl;
     connected = false;
+    message[0] = kVersionAuthenticationMethod;
+    message[1] = static_cast<std::uint8_t>(mUsername.length());
+    username = mUsername.c_str();
+    for( std::size_t i = 0 ; i < mUsername.length() ; ++i )
+        message[2 + i] = username[i];
+    messageIndex = 2 + mUsername.length();
+    message[messageIndex++] = static_cast<std::uint8_t>(mPassword.length());
+    password = mPassword.c_str();
+    for( std::size_t i = 0 ; i < mPassword.length() ; ++i )
+        message[messageIndex + i] = password[i];
+    memset(response,0,2);
+    mSocket->getWriter()->writeBytes(reinterpret_cast<char *>(message),messageLength);
+    mSocket->getReader()->readBytes(reinterpret_cast<char *>(response),2);
+    if( response[0] == kVersionAuthenticationMethod && response[1] == 0 )
+        connected = true;
+
+    return ( connected );
+}
+
+bool PosixSocksSocket::request( void ) {
+    // Request message layout.
+    // Version: 1 byte
+    // Command: 1 byte
+    // Reserved: 1 byte (0x00)
+    // Address type: 1 byte
+    // Destination address: variable length.
+    // Destination port: 2 bytes (network order).
+    std::size_t messageLength = 5 + mClientAddress.length();
+    std::uint8_t message[messageLength];
+    std::uint8_t response[BUFSIZ];
+    std::uint16_t port;
+    Writer * writer;
+    const char * address;
+    bool connected;
+
+    connected = false;
+    message[0] = kProtocolVersion;
+    message[1] = 0x01; // Connect.
+    message[2] = 0x00;
+    message[3] = 0x03; // Domainname.
+    message[4] = static_cast<std::uint8_t>(mClientAddress.length());
+    address = mClientAddress.c_str();
+    for( std::size_t i = 0 ; i < mClientAddress.size() ; ++i )
+        message[5 + i] = address[i];
+    port = htons(static_cast<std::uint16_t>(mClientPort));
+    writer = mSocket->getWriter();
+    writer->writeBytes(reinterpret_cast<char *>(message),messageLength);
+    writer->writeBytes(reinterpret_cast<char *>(&port),2);
+    std::size_t n = mSocket->getReader()->readBytes(
+            reinterpret_cast<char *>(response),BUFSIZ);
+    // TODO Add error logging.
+    if( n >= 2 && response[1] == 0 )
+        connected = true;
 
     return ( connected );
 }
@@ -200,38 +211,36 @@ PosixSocksSocket::PosixSocksSocket( const std::string & proxyAddress,
 
 PosixSocksSocket::~PosixSocksSocket( void ) {
     closeConnection();
-    resetReaderAndWriter();
+    delete mSocket; mSocket = nullptr;
 }
 
 void PosixSocksSocket::closeConnection( void ) {
-    if( isConnected() )
-        closeConnection();
-    setFileDescriptor(-1);
+    mSocket->closeConnection();
 }
 
 bool PosixSocksSocket::createConnection( const std::string & address,
                                          const std::size_t port ) {
     bool connected;
 
+    connected = false;
     setClientAddress(address,port);
-    if( initializeConnection() )
+    if( initializeConnection() ) {
         connected = negotiate();
-    else
-        connected = false;
+    }
+    if( !connected )
+        closeConnection();
 
     return ( connected );
 }
 
 bool PosixSocksSocket::isConnected( void ) const {
-    pollSocket();
-
-    return ( mFileDescriptor );
+    return ( mSocket->isConnected() );
 }
 
 Reader * PosixSocksSocket::getReader( void ) const {
-    return ( mReader );
+    return ( mSocket->getReader() );
 }
 
 Writer * PosixSocksSocket::getWriter( void ) const {
-    return ( mWriter );
+    return ( mSocket->getWriter() );
 }
