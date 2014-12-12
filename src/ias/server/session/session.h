@@ -44,39 +44,39 @@ class Session : public Observable {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the socket which is associated with the session.
      */
     Socket * mSocket;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setSocket( Socket * socket ) {
         // Checking the preconditions.
         assert( socket != nullptr );
-        
+
         mSocket = socket;
     }
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
 
     // BEGIN Protected methods. //////////////////////////////////////
-    
+
     bool readBytes( char * buffer , const std::size_t n ) {
         std::size_t bytesRead;
         std::size_t nBytes;
         Reader * reader;
-        
+
         // Checking the precondition.
-        assert( buffer != nullptr && n > 0 );
-        
+        assert( buffer != nullptr && n >= 0 );
+
         if( !mSocket->isConnected() ) return ( false );
-        
+
         reader = mSocket->getReader();
         bytesRead = 0;
         while( bytesRead != n ) {
@@ -85,40 +85,40 @@ class Session : public Observable {
                 return ( false );
             bytesRead += nBytes;
         }
-        
+
         return ( true );
     }
-    
+
     // END Protected methods. ////////////////////////////////////////
 
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     Session( Socket * socket ) {
         setSocket(socket);
     }
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~Session( void ) {
         delete mSocket; mSocket = nullptr;
     }
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void run( void ) = 0;
-    
+
     virtual void stop( void ) = 0;
-    
+
     Socket * getSocket( void ) const {
         return ( mSocket );
     }
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
