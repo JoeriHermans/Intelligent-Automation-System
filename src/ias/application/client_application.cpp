@@ -295,7 +295,6 @@ ClientApplication::~ClientApplication( void ) {
 
 void ClientApplication::run( void ) {
     if( mSocket != nullptr && mSocket->isConnected() ) {
-        std::cout << "Logging in." << std::endl;
         login();
         if( mLoggedIn )
             processCommands();
