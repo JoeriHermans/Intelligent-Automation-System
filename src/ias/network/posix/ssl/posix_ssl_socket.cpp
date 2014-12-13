@@ -85,6 +85,8 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
         ssl = SSL_new(mSslContext);
         SSL_set_fd(ssl,fd);
         if( SSL_connect(ssl) <= 0 ) {
+            SSL_free(mSsl);
+            mSsl = nullptr;
             SSL_free(ssl);
             close(fd);
         } else {
