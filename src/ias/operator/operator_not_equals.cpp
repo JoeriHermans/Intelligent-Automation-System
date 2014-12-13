@@ -43,10 +43,6 @@ OperatorNotEquals::OperatorNotEquals( void ) :
     // Nothing to do here.
 }
 
-OperatorNotEquals::~OperatorNotEquals( void ) {
-    // Nothing to do here.
-}
-
 bool OperatorNotEquals::evaluate( const std::string & leftExpression,
                                   const std::string & rightExpression ) const {
     return ( leftExpression != rightExpression );

@@ -44,16 +44,12 @@ OperatorLessThan::OperatorLessThan( void ) :
     // Nothing to do here.
 }
 
-OperatorLessThan::~OperatorLessThan( void ) {
-    // Nothing to do here.
-}
-
 bool OperatorLessThan::evaluate( const std::string & leftExpression,
                                  const std::string & rightExpression ) const {
     double left;
     double right;
     bool result;
-    
+
     left = strtod(leftExpression.c_str(),nullptr);
     right = strtod(rightExpression.c_str(),nullptr);
     if( left == 0 && right == 0 ) {
@@ -61,6 +57,6 @@ bool OperatorLessThan::evaluate( const std::string & leftExpression,
     } else {
         result = (left < right);
     }
-    
+
     return ( result );
 }

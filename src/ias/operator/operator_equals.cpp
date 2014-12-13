@@ -38,10 +38,6 @@ OperatorEquals::OperatorEquals( void ) :
     // Nothing to do here.
 }
 
-OperatorEquals::~OperatorEquals( void ) {
-    // Nothing to do here.
-}
-
 bool OperatorEquals::evaluate( const std::string & leftExpression,
                                const std::string & rightExpression ) const {
     return ( leftExpression == rightExpression );

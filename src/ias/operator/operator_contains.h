@@ -1,7 +1,8 @@
 /**
- * A class which describes the properties of the less than or equals operator.
+ * An operator which checks if a specified string is a substring of
+ * an argument.
  *
- * @date                    Aug 17, 2014
+ * @date                    December 13, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -20,8 +21,8 @@
  * limitations under the License.
  */
 
-#ifndef OPERATOR_LESS_THAN_EQUALS_H_
-#define OPERATOR_LESS_THAN_EQUALS_H_
+#ifndef OPERATOR_CONTAINS_H_
+#define OPERATOR_CONTAINS_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
@@ -30,14 +31,14 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-class OperatorLessThanEquals : public Operator {
+class OperatorContains : public Operator {
 
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
 
     /**
-     * Contains the unique identifier of the less than equals operator.
+     * Contains the identifier of the contains operator.
      */
     static const char kIdentifier[];
 
@@ -60,13 +61,13 @@ class OperatorLessThanEquals : public Operator {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    OperatorLessThanEquals( void );
+    OperatorContains( void );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~OperatorLessThanEquals( void ) = default;
+    virtual ~OperatorContains( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 
@@ -82,4 +83,4 @@ class OperatorLessThanEquals : public Operator {
 
 };
 
-#endif /* OPERATOR_LESS_THAN_EQUALS_H_ */
+#endif /* OPERATOR_CONTAINS_H_ */

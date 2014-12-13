@@ -36,12 +36,12 @@ class OperatorNotEquals : public Operator {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-        
+
     /**
      * Contains the unique identifier of the not equals operator.
      */
     static const char kIdentifier[];
-        
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -60,22 +60,22 @@ class OperatorNotEquals : public Operator {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     OperatorNotEquals( void );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
-    virtual ~OperatorNotEquals( void );
-    
+
+    virtual ~OperatorNotEquals( void ) = default;
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual bool evaluate( const std::string & leftExpression,
                            const std::string & rightExpression ) const;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

@@ -44,10 +44,6 @@ OperatorGreaterThanEquals::OperatorGreaterThanEquals( void ) :
     // Nothing to do here.
 }
 
-OperatorGreaterThanEquals::~OperatorGreaterThanEquals( void ) {
-    // Nothing to do here.
-}
-
 bool OperatorGreaterThanEquals::evaluate( const std::string & leftExpression,
                                           const std::string & rightExpression ) const {
     double left;

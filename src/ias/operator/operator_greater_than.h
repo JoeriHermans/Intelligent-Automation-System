@@ -36,12 +36,12 @@ class OperatorGreaterThan : public Operator {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-        
+
     /**
      * Contains the constant unique identifier of the greater than operator.
      */
     static const char kIdentifier[];
-        
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -60,22 +60,22 @@ class OperatorGreaterThan : public Operator {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     OperatorGreaterThan( void );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
-    virtual ~OperatorGreaterThan( void );
-    
+
+    virtual ~OperatorGreaterThan( void ) = default;
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual bool evaluate( const std::string & leftExpression,
                            const std::string & rightExpression ) const;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

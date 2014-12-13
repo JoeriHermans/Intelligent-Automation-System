@@ -67,7 +67,7 @@ class OperatorGreaterThanEquals : public Operator {
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~OperatorGreaterThanEquals( void );
+    virtual ~OperatorGreaterThanEquals( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 

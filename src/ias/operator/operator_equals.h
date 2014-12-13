@@ -35,12 +35,12 @@ class OperatorEquals : public Operator {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-    
+
     /**
      * Contains the identifier of the equals operator.
      */
     static const char kIdentifier[];
-        
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -59,22 +59,22 @@ class OperatorEquals : public Operator {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     OperatorEquals( void );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
-    virtual ~OperatorEquals( void );
-    
+
+    virtual ~OperatorEquals( void ) = default;
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual bool evaluate( const std::string & leftExpression,
                            const std::string & rightExpression ) const;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

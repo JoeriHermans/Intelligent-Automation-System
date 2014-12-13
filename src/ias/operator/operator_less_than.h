@@ -36,12 +36,12 @@ class OperatorLessThan : public Operator {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-        
+
     /**
      * Contains the unique identifier of the less than operator.
      */
     static const char kIdentifier[];
-        
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -60,22 +60,22 @@ class OperatorLessThan : public Operator {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     OperatorLessThan( void );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
-    virtual ~OperatorLessThan( void );
-    
+
+    virtual ~OperatorLessThan( void ) = default;
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual bool evaluate( const std::string & leftExpression,
                            const std::string & rightExpression ) const;
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

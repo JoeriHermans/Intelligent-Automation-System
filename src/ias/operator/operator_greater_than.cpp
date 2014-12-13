@@ -43,16 +43,12 @@ OperatorGreaterThan::OperatorGreaterThan( void ) :
     // Nothing to do here.
 }
 
-OperatorGreaterThan::~OperatorGreaterThan( void ) {
-    // Nothing to do here.
-}
-
 bool OperatorGreaterThan::evaluate( const std::string & leftExpression,
                                     const std::string & rightExpression ) const {
     bool result;
     double left;
     double right;
-    
+
     left = strtod(leftExpression.c_str(),nullptr);
     right = strtod(rightExpression.c_str(),nullptr);
     if( left == 0 && right == 0 ) {
@@ -60,6 +56,6 @@ bool OperatorGreaterThan::evaluate( const std::string & leftExpression,
     } else {
         result = (left > right);
     }
-    
+
     return ( result );
 }

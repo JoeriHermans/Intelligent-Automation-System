@@ -1,7 +1,10 @@
 /**
- * A class which describes the properties of the less than or equals operator.
+ * A class which describes the properties and actions of an operator which
+ * is responsible for checking if the right expression is not in the left
+ * expression. In other words, it checks whether or not if the left expression
+ * is a substring of the right expression.
  *
- * @date                    Aug 17, 2014
+ * @date                    December 12, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -22,39 +25,23 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <cassert>
-#include <string>
-#include <cstdlib>
-
 // Application dependencies.
-#include <ias/operator/operator_less_than_equals.h>
+#include <ias/operator/operator_not_contains.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 // BEGIN Constants. //////////////////////////////////////////////////
 
-const char OperatorLessThanEquals::kIdentifier[] = "<=";
+const char OperatorNotContains::kIdentifier[] = "nin";
 
 // END Constants. ////////////////////////////////////////////////////
 
-OperatorLessThanEquals::OperatorLessThanEquals( void ) :
+OperatorNotContains::OperatorNotContains( void ) :
     Operator(kIdentifier) {
     // Nothing to do here.
 }
 
-bool OperatorLessThanEquals::evaluate( const std::string & leftExpression,
-                                       const std::string & rightExpression ) const {
-    double left;
-    double right;
-    bool result;
-
-    left = strtod(leftExpression.c_str(),nullptr);
-    right = strtod(rightExpression.c_str(),nullptr);
-    if( left == 0 && right == 0 )
-        result = (leftExpression <= rightExpression);
-    else
-        result = (left <= right);
-
-    return ( result );
+bool OperatorNotContains::evaluate( const std::string & leftExpression,
+                                    const std::string & rightExpression ) const {
+    return ( leftExpression.find(rightExpression) == std::string::npos );
 }

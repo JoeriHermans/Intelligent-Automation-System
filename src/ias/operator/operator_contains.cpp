@@ -1,7 +1,8 @@
 /**
- * A class which describes the properties of the less than or equals operator.
+ * An operator which checks if a specified string is a substring of
+ * an argument.
  *
- * @date                    Aug 17, 2014
+ * @date                    December 13, 2014
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -22,39 +23,23 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <cassert>
-#include <string>
-#include <cstdlib>
-
 // Application dependencies.
-#include <ias/operator/operator_less_than_equals.h>
+#include <ias/operator/operator_contains.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 // BEGIN Constants. //////////////////////////////////////////////////
 
-const char OperatorLessThanEquals::kIdentifier[] = "<=";
+const char OperatorContains::kIdentifier[] = "in";
 
 // END Constants. ////////////////////////////////////////////////////
 
-OperatorLessThanEquals::OperatorLessThanEquals( void ) :
+OperatorContains::OperatorContains( void ) :
     Operator(kIdentifier) {
     // Nothing to do here.
 }
 
-bool OperatorLessThanEquals::evaluate( const std::string & leftExpression,
-                                       const std::string & rightExpression ) const {
-    double left;
-    double right;
-    bool result;
-
-    left = strtod(leftExpression.c_str(),nullptr);
-    right = strtod(rightExpression.c_str(),nullptr);
-    if( left == 0 && right == 0 )
-        result = (leftExpression <= rightExpression);
-    else
-        result = (left <= right);
-
-    return ( result );
+bool OperatorContains::evaluate( const std::string & leftExpression,
+                                 const std::string & rightExpression ) const {
+    return ( leftExpression.find(rightExpression) != std::string::npos );
 }
