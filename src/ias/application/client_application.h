@@ -87,9 +87,13 @@ class ClientApplication : public Application {
 
     std::size_t fetchPort( const int argc , const char ** argv ) const;
 
-    bool socksRequested( const int argc , const char ** argv ) const;
+    std::string fetchSocksServer( const int argc , const char ** argv ) const;
 
     bool sslRequested( const int argc , const char ** argv ) const;
+
+    int connectToSocksProxy( const std::string & proxy,
+                             const std::string & clientAddress,
+                             const std::size_t clientPort ) const;
 
     void login( void );
 

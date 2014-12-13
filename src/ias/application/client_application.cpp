@@ -60,6 +60,7 @@ void ClientApplication::initializeSslContext( void ) {
 
 void ClientApplication::analyzeArguments( const int argc,
                                           const char ** argv ) {
+    std::string socksServer;
     std::string address;
     std::size_t port;
     int fd;
@@ -70,8 +71,8 @@ void ClientApplication::analyzeArguments( const int argc,
     address = fetchAddress(argc,argv);
     port = fetchPort(argc,argv);
     fd = -1;
-    if( socksRequested(argc,argv) ) {
-        // TODO Fetch proxy address and client address.
+    if( !(socksServer = fetchSocksServer(argc,argv)).empty() ) {
+        fd = connectToSocksProxy(socksServer,address,port);
     } else {
         fd = connect(address,port);
     }
@@ -86,10 +87,49 @@ void ClientApplication::analyzeArguments( const int argc,
         } else {
             mSocket = new PosixTcpSocket(fd);
         }
-        if( !mSocket->createConnection(address,port) ) {
-            delete mSocket; mSocket = nullptr;
+    }
+}
+
+int ClientApplication::connectToSocksProxy( const std::string & proxy,
+                                            const std::string & clientAddress,
+                                            const std::size_t clientPort ) const {
+    std::istringstream iss(proxy);
+    std::string proxyAddress;
+    std::string strProxyPort;
+    std::size_t proxyPort;
+    int fd;
+
+    // Checking the precondition.
+    assert( !proxy.empty() );
+
+    fd = -1;
+    std::getline(iss,proxyAddress,':');
+    std::getline(iss,strProxyPort);
+    proxyPort = static_cast<std::size_t>(std::stoi(strProxyPort));
+    if( !proxyAddress.empty() && proxyPort > 0 ) {
+        // Connect to the remote proxy server.
+        fd = connect(proxyAddress,proxyPort);
+        if( fd < 0 || !socksConnect(clientAddress,clientPort,fd) ) {
+            close(fd);
+            fd = -1;
         }
     }
+
+    return ( fd );
+}
+
+std::string ClientApplication::fetchSocksServer( const int argc,
+                                                 const char ** argv ) const {
+    std::string server;
+
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(kFlagSocks,argv[i]) == 0 && (i + 1) < argc ) {
+            server = argv[i + 1];
+            break;
+        }
+    }
+
+    return ( server );
 }
 
 std::string ClientApplication::fetchAddress( const int argc,
@@ -100,7 +140,7 @@ std::string ClientApplication::fetchAddress( const int argc,
     assert( argc > 0 && argv != nullptr );
 
     for( int i = 0 ; i < argc ; ++i ) {
-        if( strcmp(argv[i],kFlagAddress) == 0 && ( i + 1 ) < argc ) {
+        if( strcmp(argv[i],kFlagAddress) == 0 && (i + 1) < argc ) {
             address = argv[i + 1];
             break;
         }
@@ -133,20 +173,6 @@ std::size_t ClientApplication::fetchPort( const int argc,
     }
 
     return ( port );
-}
-
-bool ClientApplication::socksRequested( const int argc , const char ** argv ) const {
-    bool requested;
-
-    requested = false;
-    for( int i = 0 ; i < argc ; ++i ) {
-        if( strcmp(argv[i],kFlagSocks) == 0 ) {
-            requested = true;
-            break;
-        }
-    }
-
-    return ( requested );
 }
 
 bool ClientApplication::sslRequested( const int argc , const char ** argv ) const {
