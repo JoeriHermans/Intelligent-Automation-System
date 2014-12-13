@@ -71,42 +71,26 @@ void PosixSslSocket::setSslContext( SSL_CTX * sslContext ) {
 
 bool PosixSslSocket::initializeConnection( const std::string & address,
                                            const std::size_t port ) {
-    struct addrinfo hints;
-    struct addrinfo * results;
-    std::string portString;
     bool connected;
     SSL * ssl;
     int fd;
 
-    // Checking the precondition.
-    assert( !address.empty() && port > 0 );
-
+    delete mReader; mReader = nullptr;
+    delete mWriter; mWriter = nullptr;
     connected = false;
-    memset(&hints,0,sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;
-    portString = std::to_string(port);
-    getaddrinfo(address.c_str(),portString.c_str(),&hints,&results);
-    fd = socket(results->ai_family,results->ai_socktype,results->ai_protocol);
+    fd = connect(address,port);
     if( fd >= 0 ) {
-        if( connect(fd,results->ai_addr,results->ai_addrlen) == 0 ) {
-            ssl = SSL_new(mSslContext);
-            SSL_set_fd(ssl,fd);
-            if( SSL_connect(ssl) <= 0 ) {
-                SSL_free(mSsl); mSsl = nullptr;
-                delete mReader; mReader = nullptr;
-                delete mWriter; mWriter = nullptr;
-                close(fd);
-            } else {
-                connected = true;
-                setSslEnvironment(ssl);
-            }
-        } else {
+        connected = true;
+        ssl = SSL_new(mSslContext);
+        SSL_set_fd(ssl,fd);
+        if( SSL_connect(ssl) <= 0 ) {
+            SSL_free(ssl);
             close(fd);
+        } else {
+            connected = true;
+            setSslEnvironment(ssl);
         }
     }
-    freeaddrinfo(results);
 
     return ( connected );
 }

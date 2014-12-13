@@ -39,6 +39,7 @@
 #include <ias/io/reader/network/posix/posix_tcp_socket_reader.h>
 #include <ias/io/writer/network/posix/posix_tcp_socket_writer.h>
 #include <ias/network/posix/posix_tcp_socket.h>
+#include <ias/network/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -57,38 +58,19 @@ void PosixTcpSocket::setFileDescriptor( const int fd ) {
 
 bool PosixTcpSocket::initializeConnection( const std::string & address,
                                            const std::size_t port ) {
-    struct addrinfo hints;
-    struct addrinfo * results;
-    std::string portString;
     bool connected;
     int fd;
 
-    // Checking the precondition.
-    assert( !address.empty() && port > 0 );
-
-    connected = false;
-    memset(&hints,0,sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;
-    portString = std::to_string(port);
-    getaddrinfo(address.c_str(),portString.c_str(),&hints,&results);
-    fd = socket(results->ai_family,results->ai_socktype,results->ai_protocol);
+    fd = connect(address,port);
     if( fd >= 0 ) {
-        if( connect(fd,results->ai_addr,results->ai_addrlen) == 0 ) {
-            connected = true;
-            setFileDescriptor(fd);
-            // Free old reader and writer.
-            delete mReader; mReader = nullptr;
-            delete mWriter; mWriter = nullptr;
-            // Allocate reader and writer.
-            mReader = new PosixTcpSocketReader(this);
-            mWriter = new PosixTcpSocketWriter(this);
-        } else {
-            close(fd);
-        }
+        connected = true;
+        delete mReader; mReader = nullptr;
+        delete mWriter; mWriter = nullptr;
+        mReader = new PosixTcpSocketReader(this);
+        mWriter = new PosixTcpSocketWriter(this);
+    } else {
+        connected = false;
     }
-    freeaddrinfo(results);
 
     return ( connected );
 }
