@@ -32,3 +32,7 @@ logger_type = console
 # In this file you specify the processes which need to be initiated
 # to start the device processes.
 devices = /etc/ias/configuration/controller_devices
+
+# SOCKS proxy settings.
+# socks_address = 127.0.0.1
+# socks_port = 7070
