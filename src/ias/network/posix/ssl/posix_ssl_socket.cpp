@@ -39,6 +39,7 @@
 #include <ias/io/reader/network/ssl/ssl_reader.h>
 #include <ias/io/writer/network/ssl/ssl_writer.h>
 #include <ias/network/posix/ssl/posix_ssl_socket.h>
+#include <ias/network/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
