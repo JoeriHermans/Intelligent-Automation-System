@@ -167,7 +167,6 @@ void ClientApplication::login( void ) {
     std::cin >> password;
     tty.c_lflag |= ECHO;
     tcsetattr(STDIN_FILENO,TCSANOW,&tty);
-    std::cout << std::endl;
     if( mSocket->isConnected() ) {
         writeMessage("Authenticating...");
         type = 0x00;
@@ -209,8 +208,7 @@ void ClientApplication::readResponse( void ) {
     if( mSocket->isConnected() &&
         reader->readBytes(reinterpret_cast<char *>(&type),1) == 1 &&
         type == 0x01 &&
-        reader->readBytes(reinterpret_cast<char *>(&type),
-                sizeof(messageSize)) == sizeof(messageSize) ) {
+        reader->readBytes(reinterpret_cast<char *>(&messageSize),2) == 2 ) {
         messageSize = ntohs(messageSize);
         bytesRead = 0;
         char buffer[messageSize + 1];
