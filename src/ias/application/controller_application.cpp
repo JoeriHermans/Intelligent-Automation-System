@@ -103,7 +103,10 @@ void ControllerApplication::connectToServer( void ) {
 
     const std::string & serverAddress = mProperties.get(kConfigHost);
     const std::string & serverPort = mProperties.get(kConfigHostPort);
+    const std::string & proxyAddress = mProperties.get(kConfigSocksAddress);
+    const std::string & proxyPort = mProperties.get(kConfigSocksPort);
 
+    // TODO Add connecting to SOCKS proxy.
     if( !serverAddress.empty() ) {
         if( serverPort.empty() )
             port = kDefaultControllerServerPort;
