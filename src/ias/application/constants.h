@@ -70,6 +70,9 @@ extern const char kConfigNetworkDeviceSslPort[];
 extern const char kConfigNetworkDeviceSslCertificate[];
 extern const char kConfigNetworkDeviceSslKey[];
 
+extern const char kConfigSocksAddress[];
+extern const char kConfigSocksPort[];
+
 extern const char kProtocolAck[];
 extern const char kProtocolNack[];
 

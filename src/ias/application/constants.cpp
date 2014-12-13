@@ -71,6 +71,9 @@ const char kConfigNetworkDeviceSslPort[] = "network_device_ssl_port";
 const char kConfigNetworkDeviceSslCertificate[] = "network_device_ssl_certificate";
 const char kConfigNetworkDeviceSslKey[] = "network_device_ssl_key";
 
+const char kConfigSocksAddress[] = "socks_address";
+const char kConfigSocksPort[] = "socks_port";
+
 const char kProtocolAck[] = "ACK";
 const char kProtocolNack[] = "NACK";
 
