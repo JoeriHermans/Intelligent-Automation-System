@@ -63,6 +63,7 @@ bool PosixTcpSocket::initializeConnection( const std::string & address,
 
     fd = connect(address,port);
     if( fd >= 0 ) {
+        mFileDescriptor = fd;
         connected = true;
         delete mReader; mReader = nullptr;
         delete mWriter; mWriter = nullptr;
