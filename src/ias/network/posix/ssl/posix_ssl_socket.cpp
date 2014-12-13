@@ -144,18 +144,6 @@ PosixSslSocket::PosixSslSocket( SSL * ssl ) {
     setSslEnvironment(ssl);
 }
 
-PosixSslSocket::PosixSslSocket( const int fd ) {
-    SSL * ssl;
-
-    initialize();
-    ssl = SSL_new(mSslContext);
-    SSL_set_fd(ssl,fd);
-    if( SSL_connect(ssl) <= 0 )
-        SSL_free(mSsl);
-    else
-        setSslEnvironment(ssl);
-}
-
 PosixSslSocket::~PosixSslSocket( void ) {
     closeConnection();
     delete mReader; mReader = nullptr;

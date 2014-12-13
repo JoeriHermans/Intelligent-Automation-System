@@ -94,8 +94,6 @@ class PosixSslSocket : public Socket {
 
     PosixSslSocket( SSL * ssl );
 
-    PosixSslSocket( const int fd );
-
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
