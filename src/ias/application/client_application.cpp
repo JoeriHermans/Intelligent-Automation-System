@@ -41,6 +41,8 @@
 #include <ias/application/constants.h>
 #include <ias/network/posix/posix_tcp_socket.h>
 #include <ias/network/posix/ssl/posix_ssl_socket.h>
+#include <ias/network/proxy/socks.h>
+#include <ias/network/util.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -60,28 +62,33 @@ void ClientApplication::analyzeArguments( const int argc,
                                           const char ** argv ) {
     std::string address;
     std::size_t port;
+    int fd;
 
     // Checking the precondition.
     assert( argc > 0 && argv != nullptr );
 
     address = fetchAddress(argc,argv);
     port = fetchPort(argc,argv);
-    if( sslRequested(argc,argv) ) {
-        initializeSslContext();
-        mSocket = new PosixSslSocket(mSslContext);
+    fd = -1;
+    if( socksRequested(argc,argv) ) {
+        // TODO Fetch proxy address and client address.
     } else {
-        mSocket = new PosixTcpSocket();
+        fd = connect(address,port);
     }
-    if( mSocket != nullptr ) {
-        writeMessage("Connecting...");
-        if( mSocket->createConnection(address,port) ) {
-            writeMessage("Connected.");
+    if( fd >= 0 ) {
+        if( sslRequested(argc,argv) ) {
+            SSL * ssl;
+
+            initializeSslContext();
+            ssl = SSL_new(mSslContext);
+            SSL_set_fd(ssl,fd);
+            mSocket = new PosixSslSocket(ssl);
         } else {
-            delete mSocket; mSocket = nullptr;
-            writeMessage("Connection failed.");
+            mSocket = new PosixTcpSocket(fd);
         }
-    } else {
-        writeMessage("Couldn't allocate socket.");
+        if( !mSocket->createConnection(address,port) ) {
+            delete mSocket; mSocket = nullptr;
+        }
     }
 }
 
@@ -126,6 +133,20 @@ std::size_t ClientApplication::fetchPort( const int argc,
     }
 
     return ( port );
+}
+
+bool ClientApplication::socksRequested( const int argc , const char ** argv ) const {
+    bool requested;
+
+    requested = false;
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagSocks) == 0 ) {
+            requested = true;
+            break;
+        }
+    }
+
+    return ( requested );
 }
 
 bool ClientApplication::sslRequested( const int argc , const char ** argv ) const {

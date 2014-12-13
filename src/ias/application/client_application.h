@@ -46,28 +46,28 @@ class ClientApplication : public Application {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the socket which is connected with the remote IAS host.
-     * 
+     *
      * @note    By default, this member will be equal to the null reference.
      */
     Socket * mSocket;
-    
+
     /**
      * A flag which indicates if the user is logged in.
-     * 
+     *
      * @note    By default, this member will be equal to false.
      */
     bool mLoggedIn;
-    
+
     /**
      * Contains the username of the authenticated used.
-     * 
+     *
      * @note    By default, this member will be equal to the empty string.
      */
     std::string mUsername;
-    
+
     /**
      * Contains the SSL context.
      */
@@ -76,27 +76,29 @@ class ClientApplication : public Application {
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     inline void initialize( void );
-    
+
     void initializeSslContext( void );
 
     void analyzeArguments( const int argc , const char ** argv );
-    
+
     std::string fetchAddress( const int argc , const char ** argv ) const;
-    
+
     std::size_t fetchPort( const int argc , const char ** argv ) const;
-    
+
+    bool socksRequested( const int argc , const char ** argv ) const;
+
     bool sslRequested( const int argc , const char ** argv ) const;
 
     void login( void );
-    
+
     void processCommands( void );
-    
+
     void writeMessage( const std::string & message ) const;
-    
+
     void readResponse( void );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -107,23 +109,23 @@ class ClientApplication : public Application {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     ClientApplication( const int argc , const char ** argv );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~ClientApplication( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void run( void );
-    
+
     virtual void stop( void );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
