@@ -328,7 +328,9 @@ void ServerApplication::initializeControllerSslServer( void ) {
         keyFile = mProperties.get(kConfigNetworkControllerSslKey);
     if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
         port = static_cast<unsigned int>(atol(stringPort.c_str()));
-        std::cout << "Allocating socket." << std::endl;
+        std::cout << "Port: " << port << std::endl;
+        std::cout << "CF: " << certificateFile << std::endl;
+        std::cout << "KF: " << keyFile << std::endl;
         serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
         if( serverSocket->bindToPort() ) {
             mServerControllerSsl = new ControllerServer(serverSocket,
@@ -336,8 +338,6 @@ void ServerApplication::initializeControllerSslServer( void ) {
         } else {
             delete serverSocket;
         }
-    } else {
-        std::cout << "Some data not present." << std::endl;
     }
 }
 
