@@ -113,11 +113,7 @@ void ControllerSession::controllerDisconnect( void ) {
         logi(mController->getIdentifier() + " disconnecting.");
     else
         logi("Unauthenticated controller disconnecting.");
-    getSocket()->closeConnection();
     mFlagRunning = false;
-    if( mController != nullptr ) {
-        mController->setConnected(nullptr);
-    }
 }
 
 ControllerSession::ControllerSession( Socket * socket,
@@ -156,7 +152,9 @@ void ControllerSession::run( void ) {
             }
         }
     }
-    controllerDisconnect();
+    getSocket()->closeConnection();
+    if( mController != nullptr )
+        mController->setConnected(nullptr);
 }
 
 void ControllerSession::stop( void ) {
