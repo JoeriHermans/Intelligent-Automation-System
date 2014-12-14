@@ -328,14 +328,13 @@ void ServerApplication::initializeControllerSslServer( void ) {
         keyFile = mProperties.get(kConfigNetworkControllerSslKey);
     if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
         port = static_cast<unsigned int>(atol(stringPort.c_str()));
-        std::cout << "Port: " << port << std::endl;
-        std::cout << "CF: " << certificateFile << std::endl;
-        std::cout << "KF: " << keyFile << std::endl;
         serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
         if( serverSocket->bindToPort() ) {
+            std::cout << "Bound to port." << std::endl;
             mServerControllerSsl = new ControllerServer(serverSocket,
                                                         &mContainerControllers);
         } else {
+            std::cout << "Could not bind to port." << std::endl;
             delete serverSocket;
         }
     }
