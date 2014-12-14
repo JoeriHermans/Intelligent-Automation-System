@@ -157,11 +157,7 @@ bool PosixSslServerSocket::bindToPort( void ) {
                     FD_ZERO(&mRfds);
                     FD_SET(fd,&mRfds);
                     setFileDescriptor(fd);
-                } else {
-                    std::cout << "Could not bind to port." << std::endl;
                 }
-            } else {
-                std::cout << "Could not allocate socket." << std::endl;
             }
             freeaddrinfo(serverInfo);
         }
