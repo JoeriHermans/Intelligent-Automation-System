@@ -27,12 +27,12 @@
 
 // System dependencies.
 #include <string>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/network/socket.h>
 #include <ias/application/application.h>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
