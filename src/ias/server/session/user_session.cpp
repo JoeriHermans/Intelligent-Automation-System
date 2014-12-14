@@ -28,6 +28,8 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <sstream>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/application/constants.h>
@@ -185,6 +187,8 @@ UserSession::UserSession( Socket * socket,
 
 UserSession::~UserSession( void ) {
     stop();
+    ERR_clear_error();
+    ERR_remove_state(0);
 }
 
 void UserSession::run( void ) {
