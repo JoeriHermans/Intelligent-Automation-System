@@ -154,13 +154,18 @@ void DeviceServer::startDispatchThread( void ) {
 
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
+            std::cout << "Waiting for next byte." << std::endl;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
+            std::cout << "Byte received: " << std::to_string(type) << std::endl;
             if( nBytes == 0 ) {
                 stop();
             } else {
                 switch(type) {
                 case 0x01:
                     dispatchCommand();
+                    break;
+                case 0xff:
+                    mFlagRunning = false;
                     break;
                 default:
                     stop();

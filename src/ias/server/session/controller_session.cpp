@@ -158,8 +158,16 @@ void ControllerSession::run( void ) {
 }
 
 void ControllerSession::stop( void ) {
+    static const std::uint8_t stop = 0xff;
+    Writer * writer;
+
     if( mFlagRunning ) {
         mFlagRunning = false;
+        if( mController != nullptr && getSocket()->isConnected() ) {
+            writer = getSocket()->getWriter();
+            // Send controller stop message.
+            writer->writeBytes(reinterpret_cast<const char *>(&stop),1);
+        }
         controllerDisconnect();
     }
 }
