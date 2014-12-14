@@ -44,6 +44,8 @@
 #include <ias/network/posix/ssl/posix_ssl_server_socket.h>
 #include <ias/util/util.h>
 #include <ias/user/command/command_stop.h>
+#include <ias/operator/operator_contains.h>
+#include <ias/operator/operator_not_contains.h>
 #include <ias/user/command/command_state.h>
 #include <ias/user/command/command_list_controllers.h>
 #include <ias/user/command/command_execute_feature.h>
@@ -442,6 +444,8 @@ void ServerApplication::registerOperators( void ) {
     mOperators[OperatorNotEquals::kIdentifier] = new OperatorNotEquals();
     mOperators[OperatorLessThanEquals::kIdentifier] = new OperatorLessThanEquals();
     mOperators[OperatorGreaterThanEquals::kIdentifier] = new OperatorGreaterThanEquals();
+    mOperators[OperatorContains::kIdentifier] = new OperatorContains();
+    mOperators[OperatorNotContains::kIdentifier] = new OperatorNotContains();
 }
 
 void ServerApplication::cleanupOperators( void ) {
