@@ -330,11 +330,9 @@ void ServerApplication::initializeControllerSslServer( void ) {
         port = static_cast<unsigned int>(atol(stringPort.c_str()));
         serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
         if( serverSocket->bindToPort() ) {
-            std::cout << "Bound to port." << std::endl;
             mServerControllerSsl = new ControllerServer(serverSocket,
                                                         &mContainerControllers);
         } else {
-            std::cout << "Could not bind to port." << std::endl;
             delete serverSocket;
         }
     }
