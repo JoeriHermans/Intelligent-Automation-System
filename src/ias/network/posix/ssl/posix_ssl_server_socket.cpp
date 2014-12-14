@@ -115,6 +115,8 @@ PosixSslServerSocket::PosixSslServerSocket( const unsigned int port,
 
 PosixSslServerSocket::~PosixSslServerSocket( void ) {
     stopListening();
+    ERR_clear_error();
+    ERR_remove_state(0);
 }
 
 void PosixSslServerSocket::stopListening( void ) {
