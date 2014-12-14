@@ -128,8 +128,6 @@ void PosixSslServerSocket::stopListening( void ) {
     }
 }
 
-#include <iostream>
-
 bool PosixSslServerSocket::bindToPort( void ) {
     struct addrinfo hints;
     struct addrinfo * serverInfo;
