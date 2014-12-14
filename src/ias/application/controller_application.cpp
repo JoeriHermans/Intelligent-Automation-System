@@ -39,6 +39,7 @@
 #include <ias/server/device_server.h>
 #include <ias/network/posix/posix_tcp_socket.h>
 #include <ias/network/posix/posix_tcp_server_socket.h>
+#include <ias/network/posix/ssl/posix_ssl_socket.h>
 #include <ias/network/proxy/socks.h>
 #include <ias/network/util.h>
 #include <ias/logger/logger.h>
@@ -100,36 +101,73 @@ void ControllerApplication::readConfiguration( const std::string & filePath ) {
     file.close();
 }
 
+void ControllerApplication::initializeSslContext( void ) {
+    mSslContext = SSL_CTX_new(SSLv23_client_method());
+}
+
+bool ControllerApplication::sslRequested( void ) const {
+    return ( !mProperties.get(kConfigHostSslEnabled).empty() );
+}
+
+int ControllerApplication::connectToProxy( const std::string & proxyAddress,
+                                           const std::string & proxyPort,
+                                           const std::string & serverAddress,
+                                           const std::string & serverPort ) const {
+    std::size_t pPort;
+    std::size_t sPort;
+    int fd;
+
+    // Checking the precondition.
+    assert( !proxyAddress.empty() && !proxyPort.empty() &&
+            !serverAddress.empty() && !serverPort.empty() );
+
+    fd = -1;
+    // Parse the specified ports.
+    pPort = static_cast<std::size_t>(std::stoi(proxyPort));
+    sPort = static_cast<std::size_t>(std::stoi(serverPort));
+    if( sPort > 0 && pPort > 0 ) {
+        fd = connect(proxyAddress,pPort);
+        if( fd >= 0 && !socksConnect(serverAddress,sPort,fd) ) {
+            close(fd);
+            fd = -1;
+        }
+    }
+
+    return ( fd );
+}
+
 void ControllerApplication::connectToServer( void ) {
     const std::string & serverAddress = mProperties.get(kConfigHost);
+    const std::string & serverPort = mProperties.get(kConfigHostPort);
     const std::string & proxyAddress = mProperties.get(kConfigSocksAddress);
     const std::string & proxyPort = mProperties.get(kConfigSocksPort);
     std::size_t port;
     int fd;
 
-    logi("Connecting to remote server.");
-    // TODO Add SSL connection procedure.
-    if( !serverAddress.empty() ) {
-        if( !proxyAddress.empty() && !proxyPort.empty() &&
-            (port = static_cast<std::size_t>(std::stoi(proxyPort))) > 0 ) {
-            logi("Connecting to SOCKS proxy.");
-            fd = connect(proxyAddress,port);
-            port = getServerPort();
-            if( fd >= 0 && !socksConnect(serverAddress,port,fd) ) {
-                loge("Could not connect to SOCKS proxy.");
+    fd = -1;
+    if( !proxyAddress.empty() && !proxyPort.empty() ) {
+        fd = connectToProxy(proxyAddress,proxyPort,
+                            serverAddress,serverPort);
+    } else {
+        port = static_cast<std::size_t>(std::stoi(serverPort));
+        fd = connect(serverAddress,port);
+    }
+    // Check if a successful connection could be made.
+    if( fd >= 0 ) {
+        if( sslRequested() ) {
+            SSL * ssl;
+
+            initializeSslContext();
+            ssl = SSL_new(mSslContext);
+            SSL_set_fd(ssl,fd);
+            if( SSL_connect(ssl) <= 0 ) {
+                SSL_free(ssl);
                 close(fd);
-                fd = -1;
+            } else {
+                mSocket = new PosixSslSocket(ssl);
             }
-            logi("Connected to SOCKS proxy.");
         } else {
-            port = getServerPort();
-            fd = connect(serverAddress,port);
-        }
-        if( fd >= 0 ) {
             mSocket = new PosixTcpSocket(fd);
-            logi("Connected to server.");
-        } else {
-            loge("Could not connect to server.");
         }
     }
 }

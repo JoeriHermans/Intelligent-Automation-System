@@ -30,6 +30,8 @@
 #include <vector>
 #include <string>
 #include <spawn.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/application/application.h>
@@ -84,6 +86,11 @@ class ControllerApplication : public Application {
      */
     DeviceServer * mDeviceServer;
 
+    /**
+     * Contains the SSL context of the console application.
+     */
+    SSL_CTX * mSslContext;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -101,6 +108,15 @@ class ControllerApplication : public Application {
     std::size_t getServerPort( void ) const;
 
     bool isProxyServerSpecified( void ) const;
+
+    bool sslRequested( void ) const;
+
+    void initializeSslContext( void );
+
+    int connectToProxy( const std::string & proxyAddress,
+                        const std::string & proxyPort,
+                        const std::string & serverAddress,
+                        const std::string & serverPort ) const;
 
     void connectToServer( void );
 

@@ -83,7 +83,12 @@ void ClientApplication::analyzeArguments( const int argc,
             initializeSslContext();
             ssl = SSL_new(mSslContext);
             SSL_set_fd(ssl,fd);
-            mSocket = new PosixSslSocket(ssl);
+            if( SSL_connect(ssl) <= 0 ) {
+                SSL_free(ssl);
+                close(fd);
+            } else {
+                mSocket = new PosixSslSocket(ssl);
+            }
         } else {
             mSocket = new PosixTcpSocket(fd);
         }
