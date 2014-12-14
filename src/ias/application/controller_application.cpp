@@ -106,7 +106,17 @@ void ControllerApplication::initializeSslContext( void ) {
 }
 
 bool ControllerApplication::sslRequested( void ) const {
-    return ( !mProperties.get(kConfigHostSslEnabled).empty() );
+    bool requested;
+
+    requested = false;
+    if( mProperties.contains(kConfigHostSslEnabled) ) {
+        const std::string & config = mProperties.get(kConfigHostSslEnabled);
+
+        if( config == "1" )
+            requested = true;
+    }
+
+    return ( requested );
 }
 
 int ControllerApplication::connectToProxy( const std::string & proxyAddress,
