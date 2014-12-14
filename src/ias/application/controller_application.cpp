@@ -29,6 +29,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -38,6 +39,8 @@
 #include <ias/server/device_server.h>
 #include <ias/network/posix/posix_tcp_socket.h>
 #include <ias/network/posix/posix_tcp_server_socket.h>
+#include <ias/network/proxy/socks.h>
+#include <ias/network/util.h>
 #include <ias/logger/logger.h>
 #include <ias/logger/file/file_logger.h>
 #include <ias/logger/console/console_logger.h>
@@ -98,32 +101,47 @@ void ControllerApplication::readConfiguration( const std::string & filePath ) {
 }
 
 void ControllerApplication::connectToServer( void ) {
-    unsigned int port;
-    Socket * socket;
-
     const std::string & serverAddress = mProperties.get(kConfigHost);
-    const std::string & serverPort = mProperties.get(kConfigHostPort);
-    //const std::string & proxyAddress = mProperties.get(kConfigSocksAddress);
-    //const std::string & proxyPort = mProperties.get(kConfigSocksPort);
+    const std::string & proxyAddress = mProperties.get(kConfigSocksAddress);
+    const std::string & proxyPort = mProperties.get(kConfigSocksPort);
+    std::size_t port;
+    int fd;
 
-    // TODO Add connecting to SOCKS proxy.
+    logi("Connecting to remote server.");
     if( !serverAddress.empty() ) {
-        if( serverPort.empty() )
-            port = kDefaultControllerServerPort;
-        else
-            port = static_cast<unsigned int>(atol(serverPort.c_str()));
-        socket = new PosixTcpSocket();
-        logi("Connecting to " + serverAddress + " at port " + std::to_string(port) + ".");
-        if( socket->createConnection(serverAddress,port) ) {
-            mSocket = socket;
+        if( !proxyAddress.empty() && !proxyPort.empty() &&
+            (port = static_cast<std::size_t>(std::stoi(proxyPort))) > 0 ) {
+            logi("Connecting to SOCKS proxy.");
+            fd = connect(proxyAddress,port);
+            port = getServerPort();
+            if( fd >= 0 && !socksConnect(serverAddress,port,fd) ) {
+                loge("Could not connect to SOCKS proxy.");
+                close(fd);
+                fd = -1;
+            }
+            logi("Connected to SOCKS proxy.");
+        } else {
+            port = getServerPort();
+            fd = connect(serverAddress,port);
+        }
+        if( fd >= 0 ) {
+            mSocket = new PosixTcpSocket(fd);
             logi("Connected to server.");
         } else {
-            delete socket;
-            loge("Could not connect to the server.");
+            loge("Could not connect to server.");
         }
-    } else {
-        loge("Server address has not been specified.");
     }
+}
+
+std::size_t ControllerApplication::getServerPort( void ) const {
+    const std::string & serverPort = mProperties.get(kConfigHostPort);
+    std::size_t port;
+
+    if( serverPort.empty() ||
+        (port = static_cast<std::size_t>(std::stoi(serverPort))) == 0 )
+        port = kDefaultControllerServerPort;
+
+    return ( port );
 }
 
 void ControllerApplication::readDevices( void ) {

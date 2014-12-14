@@ -52,62 +52,66 @@ class ControllerApplication : public Application {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the socket which is connected to the IAS server.
-     * 
+     *
      * @note    By default, this member will be equal to the null reference.
      */
     Socket * mSocket;
-    
+
     /**
      * Contains all by-default and key-value relationships which have been
      * read from the configuration file.
      */
     Properties mProperties;
-    
+
     /**
      * A vector which contains all device identifiers and corresponding bash
      * commands.
      */
     std::vector<std::string> mDevices;
     std::vector<std::string> mDeviceCommands;
-    
+
     /**
      * Contains a vector of all PID's which have been initiated.
      */
     std::vector<pid_t> mPids;
-    
+
     /**
      * Contains the device server which is responsible for handling
      * device updates and commands.
      */
     DeviceServer * mDeviceServer;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-        
+
     inline void initialize( void );
-    
+
     void setup( const int argc , const char ** argv );
-    
+
     void readConfiguration( const std::string & filePath );
-    
+
     void readDevices( void );
-    
+
     void allocateDeviceServer( void );
-    
+
+    std::size_t getServerPort( void ) const;
+
+    bool isProxyServerSpecified( void ) const;
+
     void connectToServer( void );
-    
+
     void authenticateWithServer( void );
-    
+
     void startDeviceProcesses( void );
-    
+
     void cleanupDeviceProcesses( void );
 
     void initializeLogger( void );
-        
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -118,23 +122,23 @@ class ControllerApplication : public Application {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     ControllerApplication( const int argc , const char ** argv );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~ControllerApplication( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void run( void );
-    
+
     virtual void stop( void );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
