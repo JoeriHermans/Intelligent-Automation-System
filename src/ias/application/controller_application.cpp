@@ -149,13 +149,14 @@ int ControllerApplication::connectToProxy( const std::string & proxyAddress,
 void ControllerApplication::connectToServer( void ) {
     const std::string & serverAddress = mProperties.get(kConfigHost);
     const std::string & serverPort = mProperties.get(kConfigHostPort);
-    const std::string & proxyAddress = mProperties.get(kConfigSocksAddress);
-    const std::string & proxyPort = mProperties.get(kConfigSocksPort);
     std::size_t port;
     int fd;
 
     fd = -1;
-    if( !proxyAddress.empty() && !proxyPort.empty() ) {
+    if( mProperties.contains(kConfigSocksAddress) &&
+        mProperties.contains(kConfigSocksPort) ) {
+        const std::string & proxyAddress = mProperties.get(kConfigSocksAddress);
+        const std::string & proxyPort = mProperties.get(kConfigSocksPort);
         fd = connectToProxy(proxyAddress,proxyPort,
                             serverAddress,serverPort);
     } else {
