@@ -41,7 +41,7 @@ inline void Controller::initialize( void ) {
 void Controller::setId( const std::size_t id ) {
     // Checking the precondition.
     assert( id > 0 );
-    
+
     mId = id;
 }
 
@@ -82,7 +82,7 @@ const std::string & Controller::getIdentifier( void ) const {
 void Controller::setIdentifier( const std::string & identifier ) {
     // Checking the precondition.
     assert( !identifier.empty() );
-    
+
     mMutexIdentifier.lock();
     mIdentifier = identifier;
     mMutexIdentifier.unlock();
@@ -95,7 +95,7 @@ const std::string & Controller::getName( void ) const {
 void Controller::setName( const std::string & name ) {
     // Checking the precondition.
     assert( !name.empty() );
-    
+
     mMutexName.lock();
     mName = name;
     mMutexName.unlock();
@@ -139,18 +139,18 @@ Socket * Controller::getSocket( void ) const {
 
 std::size_t Controller::numDevices( void ) const {
     std::size_t n;
-    
+
     mMutexDevices.lock();
     n = mDevices.size();
     mMutexDevices.unlock();
-    
+
     return ( n );
 }
 
 void Controller::addDevice( Device * device ) {
     // Checking the precondition.
     assert( device != nullptr );
-    
+
     if( !containsDevice(device) ) {
         mMutexDevices.lock();
         mDevices.push_back(device);
@@ -159,18 +159,36 @@ void Controller::addDevice( Device * device ) {
     }
 }
 
+void Controller::removeDevice( Device * device ) {
+    std::vector<Device *>::const_iterator it;
+
+    // Checking the precondition.
+    assert( device != nullptr );
+
+    mMutexDevices.lock();
+    it = std::find(mDevices.begin(),mDevices.end(),device);
+    if( it != mDevices.end() ) {
+        mDevices.erase(it);
+        device->setController(nullptr);
+    }
+    mMutexDevices.unlock();
+}
+
 bool Controller::containsDevice( const Device * device ) const {
     bool contains;
-    
-    contains = ( std::find(mDevices.begin(),mDevices.end(),device) != 
+
+    mMutexDevices.lock();
+    contains = ( std::find(mDevices.begin(),mDevices.end(),device) !=
                  mDevices.end() );
-    
+    mMutexDevices.unlock();
+
     return ( contains );
 }
 
 Device * Controller::getDevice( const std::size_t id ) const {
     Device * device;
-    
+
+    mMutexDevices.lock();
     device = nullptr;
     for( auto it = mDevices.begin() ; it != mDevices.end() ; ++it ) {
         if( (*it)->getId() == id ) {
@@ -178,13 +196,15 @@ Device * Controller::getDevice( const std::size_t id ) const {
             break;
         }
     }
-    
+    mMutexDevices.unlock();
+
     return ( device );
 }
 
 Device * Controller::getDevice( const std::string & identifier ) const {
     Device * device;
-    
+
+    mMutexDevices.lock();
     device = nullptr;
     for( auto it = mDevices.begin() ; it != mDevices.end() ; ++it ) {
         if( (*it)->getIdentifier() == identifier ) {
@@ -192,6 +212,7 @@ Device * Controller::getDevice( const std::string & identifier ) const {
             break;
         }
     }
-    
+    mMutexDevices.unlock();
+
     return ( device );
 }

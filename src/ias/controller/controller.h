@@ -221,9 +221,18 @@ class Controller : public Identifiable {
     void addDevice( Device * device );
 
     /**
-     * TODO Write documentation and implement.
+     * Removes the specified device from the set of devices in the controller.
+     * The controller of the specified device will be unset after applying this
+     * method to the specified parameter.
+     *
+     * @pre     The specified parameter cannot be equal to the null reference.
+     * @param   device
+     *          The device which needs does not needs to be associated with the
+     *          controller anymore.
+     * @post    The specified device won't occur as a device in the controller,
+     *          and the controller of the device will be unset.
      */
-    void removeDevice( const Device * device );
+    void removeDevice( Device * device );
 
     /**
      * Checks if the specified device is associated with the controller.
