@@ -26,8 +26,6 @@
 #include <cassert>
 #include <cstring>
 #include <iostream>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/dispatcher/device_channel.h>
@@ -159,8 +157,6 @@ DeviceSession::DeviceSession( Socket * socket,
 
 DeviceSession::~DeviceSession( void ) {
     stop();
-    ERR_clear_error();
-    ERR_remove_state(0);
 }
 
 void DeviceSession::run( void ) {

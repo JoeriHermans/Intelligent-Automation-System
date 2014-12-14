@@ -26,8 +26,6 @@
 #include <cassert>
 #include <cstring>
 #include <iostream>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/server/session/controller_session.h>
@@ -127,8 +125,6 @@ ControllerSession::ControllerSession( Socket * socket,
 
 ControllerSession::~ControllerSession( void ) {
     stop();
-    ERR_clear_error();
-    ERR_remove_state(0);
 }
 
 void ControllerSession::run( void ) {
