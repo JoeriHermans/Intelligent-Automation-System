@@ -109,7 +109,7 @@ int ClientApplication::connectToSocksProxy( const std::string & proxy,
     if( !proxyAddress.empty() && proxyPort > 0 ) {
         // Connect to the remote proxy server.
         fd = connect(proxyAddress,proxyPort);
-        if( fd < 0 || !socksConnect(clientAddress,clientPort,fd) ) {
+        if( fd >= 0 && !socksConnect(clientAddress,clientPort,fd) ) {
             close(fd);
             fd = -1;
         }
