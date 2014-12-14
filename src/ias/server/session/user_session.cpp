@@ -213,6 +213,7 @@ void UserSession::run( void ) {
                 }
             }
         }
+        getSocket()->closeConnection();
     }
 }
 
@@ -220,6 +221,5 @@ void UserSession::stop( void ) {
     if( mFlagRunning ) {
         logi("Closing user session.");
         mFlagRunning = false;
-        getSocket()->closeConnection();
     }
 }
