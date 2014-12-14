@@ -108,6 +108,7 @@ void ControllerApplication::connectToServer( void ) {
     int fd;
 
     logi("Connecting to remote server.");
+    // TODO Add SSL connection procedure.
     if( !serverAddress.empty() ) {
         if( !proxyAddress.empty() && !proxyPort.empty() &&
             (port = static_cast<std::size_t>(std::stoi(proxyPort))) > 0 ) {
