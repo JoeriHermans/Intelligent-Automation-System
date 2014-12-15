@@ -56,8 +56,6 @@ void PosixTcpSocket::setFileDescriptor( const int fd ) {
     mFileDescriptor = fd;
 }
 
-#include <iostream>
-
 void PosixTcpSocket::setKeepAlive( void ) {
     static const int optval = 1;
 
