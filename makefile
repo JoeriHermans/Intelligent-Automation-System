@@ -1,15 +1,15 @@
-CC = clang
-LD = clang
+CC = g++
+LD = g++
 
 MODULES = ai application building controller d
-LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx
+LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx -o ias
 CCFLAGS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L -I"src/" \
  		 -I/usr/include/eigen3 -I/usr/local/include/mysql \
 		 -I/usr/include/mysql -O3 -Wno-vla-extension -Wno-vla -Wno-sign-conversion \
 		 -Wno-global-constructors -Wno-float-equal -Wno-unused-parameter \
 		 -Wno-padded -Wno-weak-vtables -Wno-c++98-compat -emit-llvm -Werror \
 		 -Wno-exit-time-destructors \
-		 -Weverything -c -fmessage-length=0 -std=c++11
+		 -Wall -c -fmessage-length=0 -std=c++11
 
 SOURCEDIR = src/
 BUILDDIR = build/
