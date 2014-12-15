@@ -43,18 +43,22 @@ class PosixTcpSocketReader : public Reader {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the socket from which we will be reading.
      */
     PosixTcpSocket * mSocket;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setSocket( PosixTcpSocket * socket );
-    
+
+    void setReceiveTimeout( const struct timeval * tv ) const;
+
+    void setSendTimeout( const struct timeval * tv ) const;
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -65,25 +69,29 @@ class PosixTcpSocketReader : public Reader {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     PosixTcpSocketReader( PosixTcpSocket * socket );
-    
+
+    PosixTcpSocketReader( PosixTcpSocket * socket,
+                          const struct timeval * receiveTimeout,
+                          const struct timeval * sendTimeout );
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~PosixTcpSocketReader( void ) = default;
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void closeReader( void );
-    
+
     virtual std::size_t readByte( char * byte );
-    
+
     virtual std::size_t readBytes( char * buffer , const std::size_t bufferSize );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
