@@ -43,6 +43,12 @@ void PosixTcpServerSocket::setFileDescriptor( const int fd ) {
     mFileDescriptor = fd;
 }
 
+void PosixTcpServerSocket::setKeepAlive( void ) {
+    static const int optval = 1;
+
+    setsockopt(mFileDescriptor,SOL_SOCKET,SO_KEEPALIVE,&optval,sizeof optval);
+}
+
 PosixTcpServerSocket::PosixTcpServerSocket( const unsigned int port ) :
     ServerSocket(port) {
     setFileDescriptor(-1);
@@ -65,7 +71,7 @@ bool PosixTcpServerSocket::bindToPort( void ) {
     std::string portString;
     bool bound;
     int fd;
-    
+
     if( isBound() ) {
         bound = true;
     } else {
@@ -80,7 +86,7 @@ bool PosixTcpServerSocket::bindToPort( void ) {
                         serverInfo->ai_protocol);
             if( fd >= 0 ) {
                 int yes = 1;
-                
+
                 setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof yes);
                 if( bind(fd,serverInfo->ai_addr,serverInfo->ai_addrlen) == 0 &&
                     listen(fd,20) == 0 ) {
@@ -88,12 +94,13 @@ bool PosixTcpServerSocket::bindToPort( void ) {
                     FD_ZERO(&mRfds);
                     FD_SET(fd,&mRfds);
                     setFileDescriptor(fd);
+                    setKeepAlive();
                 }
             }
             freeaddrinfo(serverInfo);
         }
     }
-    
+
     return ( bound );
 }
 
@@ -106,7 +113,7 @@ Socket * PosixTcpServerSocket::acceptSocket( void ) {
     socklen_t addrLength;
     Socket * socket;
     int fd;
-    
+
     socket = nullptr;
     if( isBound() ) {
         memset(&addr,0,sizeof addr);
@@ -116,7 +123,7 @@ Socket * PosixTcpServerSocket::acceptSocket( void ) {
             socket = new PosixTcpSocket(fd);
         }
     }
-    
+
     return ( socket );
 }
 
@@ -126,13 +133,13 @@ Socket * PosixTcpServerSocket::acceptSocket( const std::time_t seconds ) {
     timeval tv;
     Socket * socket;
     int fd;
-    
+
     socket = nullptr;
     tv.tv_sec = seconds;
     tv.tv_usec = 0;
     FD_ZERO(&mRfds);
     FD_SET(mFileDescriptor,&mRfds);
-    if( isBound() && 
+    if( isBound() &&
         select(mFileDescriptor + 1,&mRfds,nullptr,nullptr,&tv) > 0 ) {
         memset(&addr,0,sizeof addr);
         memset(&addrLength,0,sizeof addrLength);
@@ -141,6 +148,6 @@ Socket * PosixTcpServerSocket::acceptSocket( const std::time_t seconds ) {
             socket = new PosixTcpSocket(fd);
         }
     }
-    
+
     return ( socket );
 }

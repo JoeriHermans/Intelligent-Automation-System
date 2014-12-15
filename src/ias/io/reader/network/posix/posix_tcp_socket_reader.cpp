@@ -40,36 +40,8 @@ void PosixTcpSocketReader::setSocket( PosixTcpSocket * socket ) {
     mSocket = socket;
 }
 
-void PosixTcpSocketReader::setReceiveTimeout( const struct timeval * tv ) const {
-    int fd;
-
-    // Checking the precondition.
-    assert( tv != nullptr && mSocket != nullptr );
-
-    fd = mSocket->getFileDescriptor();
-    setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,tv,sizeof (*tv));
-}
-
-void PosixTcpSocketReader::setSendTimeout( const struct timeval * tv ) const {
-    int fd;
-
-    // Checking the precondition.
-    assert( tv != nullptr && mSocket != nullptr );
-
-    fd = mSocket->getFileDescriptor();
-    setsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,tv,sizeof (*tv));
-}
-
 PosixTcpSocketReader::PosixTcpSocketReader( PosixTcpSocket * socket ) {
     setSocket(socket);
-}
-
-PosixTcpSocketReader::PosixTcpSocketReader( PosixTcpSocket * socket,
-                                            const struct timeval * receiveTv,
-                                            const struct timeval * sendTv ) {
-    setSocket(socket);
-    setReceiveTimeout(receiveTv);
-    setSendTimeout(sendTv);
 }
 
 void PosixTcpSocketReader::closeReader( void ) {

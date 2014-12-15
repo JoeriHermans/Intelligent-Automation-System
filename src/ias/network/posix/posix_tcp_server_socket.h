@@ -40,26 +40,28 @@ class PosixTcpServerSocket : public ServerSocket {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the file descriptor which is associated with the listening
      * socket.
      */
     int mFileDescriptor;
-    
+
     /**
      * A set of read file descriptors. This set will only contain one
      * file descriptor. This fd_set is used to time-out the accept()
      * procedure.
      */
     fd_set mRfds;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setFileDescriptor( const int fd );
-    
+
+    void setKeepAlive( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -70,29 +72,29 @@ class PosixTcpServerSocket : public ServerSocket {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     PosixTcpServerSocket( const unsigned int port );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~PosixTcpServerSocket( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void stopListening( void );
-    
+
     virtual bool bindToPort( void );
-    
+
     virtual bool isBound( void ) const;
-    
+
     virtual Socket * acceptSocket( void );
-    
+
     virtual Socket * acceptSocket( const std::time_t seconds );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

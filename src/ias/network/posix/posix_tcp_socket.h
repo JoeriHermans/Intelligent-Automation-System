@@ -81,6 +81,8 @@ class PosixTcpSocket : public Socket {
 
     void pollSocket( void ) const;
 
+    void setKeepAlive( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
