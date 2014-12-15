@@ -55,10 +55,6 @@ class PosixTcpSocketReader : public Reader {
 
     void setSocket( PosixTcpSocket * socket );
 
-    void setReceiveTimeout( const struct timeval * tv ) const;
-
-    void setSendTimeout( const struct timeval * tv ) const;
-
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -71,10 +67,6 @@ class PosixTcpSocketReader : public Reader {
     // BEGIN Constructors. ///////////////////////////////////////////
 
     PosixTcpSocketReader( PosixTcpSocket * socket );
-
-    PosixTcpSocketReader( PosixTcpSocket * socket,
-                          const struct timeval * receiveTimeout,
-                          const struct timeval * sendTimeout );
 
     // END Constructors. /////////////////////////////////////////////
 
