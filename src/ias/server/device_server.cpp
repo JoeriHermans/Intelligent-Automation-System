@@ -118,13 +118,9 @@ void DeviceServer::dispatchCommand( void ) {
     std::uint8_t identifierLength;
     std::uint8_t parameterLength;
     std::string message;
-    Reader * reader;
-    Writer * writer;
 
     if( !mSocket->isConnected() )
         stop();
-    reader = mSocket->getReader();
-    writer = mSocket->getWriter();
     if( !readBytes(reinterpret_cast<char *>(&deviceLength),1) ) return;
     if( !readBytes(reinterpret_cast<char *>(&identifierLength),1) ) return;
     if( !readBytes(reinterpret_cast<char *>(&parameterLength),1) ) return;

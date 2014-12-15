@@ -49,10 +49,8 @@ void ControllerSession::setContainer( Container<Controller *> * controllers ) {
 void ControllerSession::authorize( void ) {
     std::uint8_t header[3];
     Controller * controller;
-    Reader * reader;
 
     logi("Authorizing controller.");
-    reader = getSocket()->getReader();
     if( readBytes(reinterpret_cast<char *>(header),3) && header[0] == 0x00 ) {
         char identifier[header[1] + 1];
         char securityCode[header[2] + 1];

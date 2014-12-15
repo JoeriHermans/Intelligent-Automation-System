@@ -179,13 +179,10 @@ void ServerApplication::fillContainers( void ) {
 void ServerApplication::fillUsers( void ) {
     UserDatabaseFactory factory(mDbConnection);
     std::vector<User *> users;
-    User * u;
 
     users = factory.fetchAll();
-    for( auto it = users.begin() ; it != users.end() ; ++it ) {
-        u = (*it);
+    for( auto it = users.begin() ; it != users.end() ; ++it )
         mContainerUsers.add((*it));
-    }
 }
 
 void ServerApplication::fillValueTypes( void ) {

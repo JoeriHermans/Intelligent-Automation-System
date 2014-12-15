@@ -54,7 +54,6 @@ void UserSession::authorize( void ) {
     std::uint8_t type;
     std::uint8_t length;
     std::string hashedPassword;
-    Reader * reader;
 
     logi("Authorizing user.");
     type = 0xff;
@@ -63,7 +62,6 @@ void UserSession::authorize( void ) {
         type == 0x00 &&
         readBytes(reinterpret_cast<char *>(&length),1) ) {
         char username[length + 1];
-        reader = getSocket()->getReader();
         if( readBytes(username,length) && length > 1 ) {
             username[length] = 0;
             length = 0x00;

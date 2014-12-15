@@ -279,13 +279,11 @@ void ClientApplication::processCommands( void ) {
     std::string prefix;
     std::string command;
     std::string identifier;
-    Reader * reader;
     Writer * writer;
     std::uint8_t b;
     std::uint8_t bytesWritten;
     std::size_t n;
 
-    reader = mSocket->getReader();
     writer = mSocket->getWriter();
     prefix = "[" + mUsername + "@ias]$ ";
     std::cin.clear();
