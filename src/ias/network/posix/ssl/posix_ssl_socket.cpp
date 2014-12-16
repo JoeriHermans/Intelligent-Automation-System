@@ -92,6 +92,7 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
         } else {
             connected = true;
             enableKeepAlive(fd);
+            disableNagle(fd);
             setSslEnvironment(ssl);
         }
     }

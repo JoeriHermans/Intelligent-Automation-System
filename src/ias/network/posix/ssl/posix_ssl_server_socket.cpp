@@ -92,6 +92,7 @@ Socket * PosixSslServerSocket::allocateSocket( const int fd ) const {
         socket = nullptr;
     } else {
         enableKeepAlive(fd);
+        disableNagle(fd);
         socket = new PosixSslSocket(ssl);
     }
 
@@ -160,6 +161,7 @@ bool PosixSslServerSocket::bindToPort( void ) {
                     FD_SET(fd,&mRfds);
                     setFileDescriptor(fd);
                     enableKeepAlive(fd);
+                    disableNagle(fd);
                 }
             }
             freeaddrinfo(serverInfo);

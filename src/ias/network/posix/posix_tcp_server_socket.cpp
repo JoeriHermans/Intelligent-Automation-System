@@ -90,6 +90,7 @@ bool PosixTcpServerSocket::bindToPort( void ) {
                     FD_SET(fd,&mRfds);
                     setFileDescriptor(fd);
                     enableKeepAlive(fd);
+                    disableNagle(fd);
                 }
             }
             freeaddrinfo(serverInfo);
@@ -116,6 +117,7 @@ Socket * PosixTcpServerSocket::acceptSocket( void ) {
         fd = accept(mFileDescriptor,&addr,&addrLength);
         if( fd >= 0 ) {
             enableKeepAlive(fd);
+            disableNagle(fd);
             socket = new PosixTcpSocket(fd);
         }
     }
@@ -142,6 +144,7 @@ Socket * PosixTcpServerSocket::acceptSocket( const std::time_t seconds ) {
         fd = accept(mFileDescriptor,&addr,&addrLength);
         if( fd >= 0 ) {
             enableKeepAlive(fd);
+            disableNagle(fd);
             socket = new PosixTcpSocket(fd);
         }
     }
