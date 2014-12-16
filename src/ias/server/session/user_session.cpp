@@ -172,6 +172,28 @@ void UserSession::sendResponse( const char * buffer , const std::size_t n ) {
     writer->writeBytes(buffer,n);
 }
 
+void UserSession::setTimeouts( void ) {
+    Socket * socket;
+    struct timeval tv;
+
+    tv.tv_sec = 10;
+    tv.tv_usec = 0;
+    socket = getSocket();
+    socket->setReceiveTimeout(tv);
+    socket->setSendTimeout(tv);
+}
+
+bool UserSession::heartbeat( void ) {
+    static const char beat = 0x00;
+    Writer * writer;
+    bool ok;
+
+    writer = getSocket()->getWriter();
+    ok = (writer->writeByte(beat) == 1);
+
+    return ( ok );
+}
+
 UserSession::UserSession( Socket * socket,
                           Container<User *> * users,
                           CommandDispatcher * dispatcher ) :
@@ -186,6 +208,7 @@ UserSession::~UserSession( void ) {
 }
 
 void UserSession::run( void ) {
+    bool heartbeatSend = false;
     std::uint8_t type;
     std::size_t nBytes;
     Reader * reader;
@@ -195,24 +218,31 @@ void UserSession::run( void ) {
     if( mUser != nullptr ) {
         socket = getSocket();
         reader = socket->getReader();
+        setTimeouts();
         while( mFlagRunning && socket->isConnected() ) {
             type = 0xff;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
             if( nBytes == 0 ) {
-                stop();
-            } else {
-                switch(type) {
-                case 0x01:
-                    processCommand();
-                    break;
-                default:
+                if( !heartbeat() || heartbeatSend )
                     stop();
-                    break;
-                }
+                else
+                    heartbeatSend = true;
+                continue;
             }
+            switch(type) {
+            case 0x00:
+                std::cout << "Heartbeat received." << std::endl;
+                break; // Heartbeat received.
+            case 0x01:
+                processCommand();
+            default:
+                stop();
+                break;
+            }
+            heartbeatSend = false;
         }
-        getSocket()->closeConnection();
     }
+    getSocket()->closeConnection();
 }
 
 void UserSession::stop( void ) {

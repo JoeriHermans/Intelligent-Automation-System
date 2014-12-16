@@ -46,49 +46,53 @@ class UserSession : public Session {
 
     /**
      * A container which contains all users.
-     * 
+     *
      * @note    By default, this member will be equal to the null reference.
      */
     Container<User *> * mUsers;
-    
+
     /**
      * Contains the user which is associated with this session.
-     * 
+     *
      * @note    By default, this member will be equal to the null reference.
      */
     User * mUser;
-    
+
     /**
      * Contains the user command dispatcher.
      */
     CommandDispatcher * mDispatcher;
-        
+
     /**
      * A flag tells the session to keep running.
      */
     bool mFlagRunning;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     inline void initialize( void );
-    
+
     void setUserContainer( Container<User *> * users );
-    
+
     void setDispatcher( CommandDispatcher * dispatcher );
-    
+
     void authorize( void );
-    
-    User * authenticateUser( const char * username, 
+
+    User * authenticateUser( const char * username,
                              const char * password ) const;
-    
+
     void processCommand( void );
-    
+
     void analyzeCommand( const char * command );
-    
+
     void sendResponse( const char * buffer , const std::size_t n );
-    
+
+    void setTimeouts( void );
+
+    bool heartbeat( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -99,25 +103,25 @@ class UserSession : public Session {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
-    UserSession( Socket * socket, 
+
+    UserSession( Socket * socket,
                  Container<User *> * users,
                  CommandDispatcher * dispatcher );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~UserSession( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void run( void );
-    
+
     virtual void stop( void );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

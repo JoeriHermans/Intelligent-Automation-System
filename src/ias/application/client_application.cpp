@@ -247,31 +247,53 @@ void ClientApplication::writeMessage( const std::string & message ) const {
     std::cout << "> " << message << std::endl;
 }
 
-void ClientApplication::readResponse( void ) {
+void ClientApplication::responseHeartbeat( void ) {
+    static const char beat = 0x00;
+    Writer * writer;
+
+    writer = mSocket->getWriter();
+    writer->writeByte(beat);
+}
+
+void ClientApplication::responseMessage( void ) {
+    Reader * reader;
     std::size_t nBytes;
     std::size_t bytesRead;
-    Reader * reader;
     std::uint16_t messageSize;
+
+    reader = mSocket->getReader();
+    messageSize = 0;
+    reader->readBytes(reinterpret_cast<char *>(&messageSize),2);
+    messageSize = ntohs(messageSize);
+    bytesRead = 0;
+    char buffer[messageSize + 1];
+    while( mSocket->isConnected() && bytesRead < messageSize ) {
+        nBytes = reader->readBytes(buffer+bytesRead,messageSize-bytesRead);
+        if( nBytes == 0 )
+            break;
+        bytesRead += nBytes;
+    }
+    buffer[messageSize] = 0;
+    puts(buffer);
+}
+
+void ClientApplication::readResponse( void ) {
+    Reader * reader;
     std::uint8_t type;
 
     reader = mSocket->getReader();
-    type = 0x00;
-    messageSize = 0;
-    if( mSocket->isConnected() &&
-        reader->readBytes(reinterpret_cast<char *>(&type),1) == 1 &&
-        type == 0x01 &&
-        reader->readBytes(reinterpret_cast<char *>(&messageSize),2) == 2 ) {
-        messageSize = ntohs(messageSize);
-        bytesRead = 0;
-        char buffer[messageSize + 1];
-        while( mSocket->isConnected() && bytesRead < messageSize ) {
-            nBytes = reader->readBytes(buffer+bytesRead,messageSize-bytesRead);
-            if( nBytes == 0 )
-                break;
-            bytesRead += nBytes;
+    type = 0xff;
+    while( mSocket->isConnected() &&
+           reader->readBytes(reinterpret_cast<char *>(&type),1) == 1 ) {
+        switch(type) {
+        case 0x00:
+            std::cout << "Respond to heartbeat" << std::endl;
+            responseHeartbeat();
+            break;
+        case 0x01:
+            responseMessage();
+            break;
         }
-        buffer[messageSize] = 0;
-        puts(buffer);
     }
 }
 

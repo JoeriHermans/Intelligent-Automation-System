@@ -103,6 +103,10 @@ class ClientApplication : public Application {
 
     void readResponse( void );
 
+    void responseHeartbeat( void );
+
+    void responseMessage( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
