@@ -115,6 +115,28 @@ void ControllerSession::controllerDisconnect( void ) {
     mFlagRunning = false;
 }
 
+void ControllerSession::setTimeouts( void ) {
+    struct timeval tv;
+    Socket * socket;
+
+    tv.tv_sec = 10;
+    tv.tv_usec = 0;
+    socket = getSocket();
+    socket->setReceiveTimeout(tv);
+    socket->setSendTimeout(tv);
+}
+
+bool ControllerSession::heartbeat( void ) {
+    static const char beat = 0x00;
+    Writer * writer;
+    bool ok;
+;
+    writer = getSocket()->getWriter();
+    ok = (writer->writeByte(beat) == 1);
+
+    return ( ok );
+}
+
 ControllerSession::ControllerSession( Socket * socket,
                                       Container<Controller *> * controllers ) :
     Session(socket) {
@@ -131,20 +153,20 @@ void ControllerSession::run( void ) {
     std::size_t nBytes;
     Reader * reader;
 
+    setTimeouts();
     authorize();
     reader = getSocket()->getReader();
     while( mFlagRunning && getSocket()->isConnected() ) {
         nBytes = reader->readByte(reinterpret_cast<char *>(&messageType));
-        if( nBytes == 0 ) {
+        if( nBytes == 0 && !heartbeat() ) {
             stop();
         } else {
             switch(messageType) {
+            case 0x00: break; // Heartbeat received.
             case 0x01:
                 controllerUpdate();
                 break;
             case 0x02:
-                controllerDisconnect();
-                break;
             default:
                 controllerDisconnect();
                 break;

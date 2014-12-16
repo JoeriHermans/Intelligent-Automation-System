@@ -148,13 +148,17 @@ void DeviceServer::startDispatchThread( void ) {
         std::uint8_t type;
         Reader * reader;
 
+        setServerTimeouts();
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
-            if( nBytes == 0 ) {
+            if( nBytes == 0 && !serverHeartbeat() ) {
                 stop();
             } else {
                 switch(type) {
+                case 0x00:
+                    serverHeartbeat();
+                    break;
                 case 0x01:
                     dispatchCommand();
                     break;
@@ -188,6 +192,26 @@ void DeviceServer::cleanupFinishingThreads( void ) {
         }
         mInactiveThreads.erase(mInactiveThreads.begin());
     }
+}
+
+bool DeviceServer::serverHeartbeat( void ) {
+    static const char beat = 0x00;
+    Writer * writer;
+    bool ok;
+
+    writer = mSocket->getWriter();
+    ok = (writer->writeByte(beat) == 1);
+
+    return ( ok );
+}
+
+void DeviceServer::setServerTimeouts( void ) {
+    struct timeval tv;
+
+    tv.tv_sec = 10;
+    tv.tv_usec = 0;
+    mSocket->setSendTimeout(tv);
+    mSocket->setReceiveTimeout(tv);
 }
 
 DeviceServer::DeviceServer( ServerSocket * serverSocket,

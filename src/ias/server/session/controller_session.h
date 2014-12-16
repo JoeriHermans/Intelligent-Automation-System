@@ -45,38 +45,42 @@ class ControllerSession : public Session {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the container which holds all controllers in IAS.
      */
     Container<Controller *> * mControllers;
-    
+
     /**
      * Contains the controller which has been associated with this session.
-     * 
+     *
      * @note    By default, this member will be equal to the null reference.
      */
     Controller * mController;
-    
+
     /**
      * A flag which indicates if the controller session is running.
      */
     bool mFlagRunning;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     inline void initialize( void );
-    
+
     void setContainer( Container<Controller *> * controllers );
-    
+
     void authorize( void );
-    
+
     void controllerUpdate( void );
-    
+
     void controllerDisconnect( void );
-    
+
+    void setTimeouts( void );
+
+    bool heartbeat( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -87,24 +91,24 @@ class ControllerSession : public Session {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     ControllerSession( Socket * socket,
                        Container<Controller *> * controllers );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~ControllerSession( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void run( void );
-    
+
     virtual void stop( void );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
