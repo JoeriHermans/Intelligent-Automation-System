@@ -152,13 +152,11 @@ void DeviceServer::startDispatchThread( void ) {
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
-            if( nBytes == 0 && mSocket->isConnected() && !serverHeartbeat() ) {
+            if( nBytes == 0 && !serverHeartbeat() ) {
                 stop();
             } else {
                 switch(type) {
-                case 0x00:
-                    serverHeartbeat();
-                    break;
+                case 0x00: break; // Heartbeat received.
                 case 0x01:
                     dispatchCommand();
                     break;
