@@ -123,6 +123,7 @@ void ControllerSession::setTimeouts( void ) {
     tv.tv_usec = 0;
     socket = getSocket();
     socket->setReceiveTimeout(tv);
+    socket->setSendTimeout(tv);
 }
 
 bool ControllerSession::heartbeat( void ) {
