@@ -159,10 +159,12 @@ void ControllerSession::run( void ) {
     reader = getSocket()->getReader();
     while( mFlagRunning && getSocket()->isConnected() ) {
         nBytes = reader->readByte(reinterpret_cast<char *>(&messageType));
-        if( nBytes == 0 && !heartbeat() && !getSocket()->isConnected() ) {
+        if( nBytes == 0 && getSocket()->isConnected() && !heartbeat() ) {
             std::cout << "Could not send heartbeat." << std::endl;
             stop();
         } else {
+            std::cout << "Received message." << std::endl;
+            std::cout << "Message type: " << std::to_string(messageType) << std::endl;
             switch(messageType) {
             case 0x00:
                 std::cout << "Heartbeat received." << std::endl;
