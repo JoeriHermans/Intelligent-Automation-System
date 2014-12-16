@@ -61,7 +61,8 @@ void ControllerSession::authorize( void ) {
             securityCode[header[2]] = 0;
             controller = mControllers->get(identifier);
             if( controller != nullptr &&
-                controller->matchesSecurityCode(securityCode) ) {
+                controller->matchesSecurityCode(securityCode) &&
+                !controller->isConnected() ) {
                 logi("Controller " + controller->getIdentifier() + " authorized.");
                 mController = controller;
                 mController->setConnected(getSocket());
