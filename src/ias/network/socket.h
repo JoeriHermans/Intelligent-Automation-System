@@ -25,6 +25,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <sys/time.h>
+
 // Application dependencies.
 #include <ias/io/reader/reader.h>
 #include <ias/io/writer/writer.h>
@@ -77,6 +80,10 @@ class Socket {
     virtual Reader * getReader( void ) const = 0;
 
     virtual Writer * getWriter( void ) const = 0;
+
+    virtual void setReceiveTimeout( const struct timeval & tv ) = 0;
+
+    virtual void setSendTimeout( const struct timeval & tv ) = 0;
 
     // END Public methods. ///////////////////////////////////////////
 

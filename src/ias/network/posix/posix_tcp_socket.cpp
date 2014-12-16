@@ -64,8 +64,6 @@ bool PosixTcpSocket::initializeConnection( const std::string & address,
     fd = connect(address,port);
     if( fd >= 0 ) {
         mFileDescriptor = fd;
-        enableKeepAlive(fd);
-        disableNagle(fd);
         connected = true;
         delete mReader; mReader = nullptr;
         delete mWriter; mWriter = nullptr;
@@ -138,6 +136,16 @@ Reader * PosixTcpSocket::getReader( void ) const {
 
 Writer * PosixTcpSocket::getWriter( void ) const {
     return ( mWriter );
+}
+
+void PosixTcpSocket::setSendTimeout( const struct timeval & tv ) {
+    if( mFileDescriptor >= 0 )
+        setsockopt(mFileDescriptor,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof tv);
+}
+
+void PosixTcpSocket::setReceiveTimeout( const struct timeval & tv ) {
+    if( mFileDescriptor >= 0 )
+        setsockopt(mFileDescriptor,SOL_SOCKET,SO_SNDTIMEO,&tv,sizeof tv);
 }
 
 int PosixTcpSocket::getFileDescriptor( void ) const {

@@ -115,6 +115,10 @@ class PosixSslSocket : public Socket {
 
     virtual Writer * getWriter( void ) const;
 
+    virtual void setReceiveTimeout( const struct timeval & tv );
+
+    virtual void setSendTimeout( const struct timeval & tv );
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

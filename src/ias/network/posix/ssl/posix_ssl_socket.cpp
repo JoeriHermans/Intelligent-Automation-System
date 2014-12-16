@@ -91,8 +91,6 @@ bool PosixSslSocket::initializeConnection( const std::string & address,
             close(fd);
         } else {
             connected = true;
-            enableKeepAlive(fd);
-            disableNagle(fd);
             setSslEnvironment(ssl);
         }
     }
@@ -167,4 +165,22 @@ Reader * PosixSslSocket::getReader( void ) const {
 
 Writer * PosixSslSocket::getWriter( void ) const {
     return ( mWriter );
+}
+
+void PosixSslSocket::setSendTimeout( const struct timeval & tv ) {
+    if( mSsl != nullptr ) {
+        int fd;
+
+        fd = SSL_get_fd(mSsl);
+        setsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,&tv,sizeof tv);
+    }
+}
+
+void PosixSslSocket::setReceiveTimeout( const struct timeval & tv ) {
+    if( mSsl != nullptr ) {
+        int fd;
+
+        fd = SSL_get_fd(mSsl);
+        setsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,&tv,sizeof tv);
+    }
 }

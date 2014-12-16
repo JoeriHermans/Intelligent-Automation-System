@@ -117,6 +117,10 @@ class PosixTcpSocket : public Socket {
 
     virtual Writer * getWriter( void ) const;
 
+    virtual void setReceiveTimeout( const struct timeval & tv );
+
+    virtual void setSendTimeout( const struct timeval & tv );
+
     int getFileDescriptor( void ) const;
 
     // END Public methods. ///////////////////////////////////////////
