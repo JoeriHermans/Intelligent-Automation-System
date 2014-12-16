@@ -130,12 +130,8 @@ bool ControllerSession::heartbeat( void ) {
     Writer * writer;
     bool ok;
 
-    if( getSocket()->isConnected() )
-        std::cout << "Connected." << std::endl;
     writer = getSocket()->getWriter();
     ok = (writer->writeByte(beat) == 1);
-    if( !getSocket()->isConnected() )
-        std::cout << "Not connected." << std::endl;
 
     return ( ok );
 }

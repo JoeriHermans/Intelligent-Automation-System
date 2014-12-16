@@ -26,6 +26,7 @@
 #include <cassert>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <cerrno>
 
 // Application dependencies.
 #include <ias/network/posix/posix_tcp_socket.h>
@@ -56,7 +57,6 @@ std::size_t PosixTcpSocketReader::readByte( char * byte ) {
         mMutex.lock();
         nBytes = read(mSocket->getFileDescriptor(),byte,1);
         if( nBytes < 0 ) {
-            mSocket->closeConnection();
             nBytes = 0;
         }
         mMutex.unlock();
@@ -77,7 +77,6 @@ std::size_t PosixTcpSocketReader::readBytes( char * buffer,
         mMutex.lock();
         nBytes = read(mSocket->getFileDescriptor(),buffer,bufferSize);
         if( nBytes < 0 ) {
-            mSocket->closeConnection();
             nBytes = 0;
         }
         mMutex.unlock();
