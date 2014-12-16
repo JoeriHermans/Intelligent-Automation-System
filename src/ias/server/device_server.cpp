@@ -211,11 +211,11 @@ bool DeviceServer::serverHeartbeat( void ) {
 }
 
 void DeviceServer::setServerTimeouts( void ) {
-    struct timeval tv;
-
-    tv.tv_sec = 10;
-    tv.tv_usec = 0;
-    mSocket->setReceiveTimeout(tv);
+//    struct timeval tv;
+//
+//    tv.tv_sec = 10;
+//    tv.tv_usec = 0;
+//    mSocket->setReceiveTimeout(tv);
 }
 
 DeviceServer::DeviceServer( ServerSocket * serverSocket,
