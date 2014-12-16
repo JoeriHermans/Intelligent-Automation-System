@@ -169,7 +169,6 @@ void ControllerSession::run( void ) {
         }
         switch(type) {
         case 0x00:
-            std::cout << "Client heartbeat received." << std::endl;
             if( !heartbeatSend )
                 heartbeat();
             break;
