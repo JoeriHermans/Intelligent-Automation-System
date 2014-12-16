@@ -147,10 +147,8 @@ ControllerSession::~ControllerSession( void ) {
     stop();
 }
 
-#include <iostream>
-
 void ControllerSession::run( void ) {
-    std::uint8_t messageType;
+    std::uint8_t type;
     std::size_t nBytes;
     Reader * reader;
 
@@ -158,20 +156,24 @@ void ControllerSession::run( void ) {
     authorize();
     reader = getSocket()->getReader();
     while( mFlagRunning && getSocket()->isConnected() ) {
-        nBytes = reader->readByte(reinterpret_cast<char *>(&messageType));
-        if( nBytes == 0 && !heartbeat() ) {
-            stop();
-        } else {
-            switch(messageType) {
-            case 0x00: break; // Heartbeat received.
-            case 0x01:
-                controllerUpdate();
-                break;
-            case 0x02:
-            default:
-                controllerDisconnect();
-                break;
-            }
+        type = 0xff;
+        nBytes = reader->readByte(reinterpret_cast<char *>(&type));
+        if( nBytes == 0 ) {
+            if( !heartbeat() )
+                stop();
+            continue;
+        }
+        switch(type) {
+        case 0x00:
+            std::cout << "Heartbeat received." << std::endl;
+            break;
+        case 0x01:
+            controllerUpdate();
+            break;
+        case 0x02:
+        default:
+            controllerDisconnect();
+            break;
         }
     }
     getSocket()->closeConnection();

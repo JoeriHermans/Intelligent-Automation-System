@@ -151,19 +151,24 @@ void DeviceServer::startDispatchThread( void ) {
         setServerTimeouts();
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
+            type = 0xff;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
-            if( nBytes == 0 && !serverHeartbeat() ) {
-                stop();
-            } else {
-                switch(type) {
-                case 0x00: break; // Heartbeat received.
-                case 0x01:
-                    dispatchCommand();
-                    break;
-                default:
+            if( nBytes == 0 ) {
+                if( !serverHeartbeat() )
                     stop();
-                    break;
-                }
+                continue;
+            }
+            switch(type) {
+            case 0x00:
+                std::cout << "Heartbeat from server received." << std::endl;
+                serverHeartbeat();
+                break;
+            case 0x01:
+                dispatchCommand();
+                break;
+            default:
+                stop();
+                break;
             }
         }
         stop();
@@ -204,11 +209,7 @@ bool DeviceServer::serverHeartbeat( void ) {
 }
 
 void DeviceServer::setServerTimeouts( void ) {
-//    struct timeval tv;
-//
-//    tv.tv_sec = 10;
-//    tv.tv_usec = 0;
-//    mSocket->setReceiveTimeout(tv);
+    // TODO Implement.
 }
 
 DeviceServer::DeviceServer( ServerSocket * serverSocket,
