@@ -142,8 +142,6 @@ void DeviceServer::dispatchCommand( void ) {
     mConnectedDevices.dispatch(deviceIdentifier,message);
 }
 
-#include <iostream>
-
 void DeviceServer::startDispatchThread( void ) {
     mDispatchThread = new std::thread([this](){
         std::size_t nBytes;
@@ -154,13 +152,11 @@ void DeviceServer::startDispatchThread( void ) {
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
-            if( nBytes == 0 && !serverHeartbeat() && !mSocket->isConnected() ) {
-                std::cout << "Could not send heartbeat." << std::endl;
+            if( nBytes == 0 && mSocket->isConnected() && !serverHeartbeat() ) {
                 stop();
             } else {
                 switch(type) {
                 case 0x00:
-                    std::cout << "Sending heartbeat." << std::endl;
                     serverHeartbeat();
                     break;
                 case 0x01:
