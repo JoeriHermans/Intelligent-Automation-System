@@ -133,6 +133,7 @@ bool ControllerSession::heartbeat( void ) {
 ;
     writer = getSocket()->getWriter();
     ok = (writer->writeByte(beat) == 1);
+    std::cout << "Heartbeat: " << ok << std::endl;
 
     return ( ok );
 }

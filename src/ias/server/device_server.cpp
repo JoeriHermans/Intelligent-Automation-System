@@ -205,6 +205,7 @@ bool DeviceServer::serverHeartbeat( void ) {
 
     writer = mSocket->getWriter();
     ok = (writer->writeByte(beat) == 1);
+    std::cout << "Hearbeat: " << ok << std::endl;
 
     return ( ok );
 }
