@@ -203,9 +203,12 @@ bool DeviceServer::serverHeartbeat( void ) {
     Writer * writer;
     bool ok;
 
+    if( mSocket->isConnected() )
+        std::cout << "Connected." << std::endl;
     writer = mSocket->getWriter();
     ok = (writer->writeByte(beat) == 1);
-    std::cout << "Hearbeat: " << ok << std::endl;
+    if( !mSocket->isConnected() )
+        std::cout << "Not connected." << std::endl;
 
     return ( ok );
 }
