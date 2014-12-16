@@ -28,6 +28,7 @@
 // System dependencies.
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/network/socket.h>
@@ -56,6 +57,11 @@ class SslWriter : public Writer {
      * unencrypted bytes.
      */
     SSL * mSsl;
+
+    /**
+     * Mutex which is responsible for synchronous I/O.
+     */
+    std::mutex mMutex;
 
     // END Private members. //////////////////////////////////////////
 

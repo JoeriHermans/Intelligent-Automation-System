@@ -25,6 +25,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <mutex>
+
 // Application dependencies.
 #include <ias/io/reader/reader.h>
 
@@ -48,6 +51,11 @@ class PosixTcpSocketReader : public Reader {
      * Contains the socket from which we will be reading.
      */
     PosixTcpSocket * mSocket;
+
+    /**
+     * Contains the mutex which is responsible for synchronous I/O.
+     */
+    std::mutex mMutex;
 
     // END Private members. //////////////////////////////////////////
 

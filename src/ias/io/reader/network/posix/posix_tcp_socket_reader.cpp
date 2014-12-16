@@ -53,11 +53,13 @@ std::size_t PosixTcpSocketReader::readByte( char * byte ) {
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = read(mSocket->getFileDescriptor(),byte,1);
         if( nBytes < 0 ) {
             mSocket->closeConnection();
             nBytes = 0;
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );
@@ -72,11 +74,13 @@ std::size_t PosixTcpSocketReader::readBytes( char * buffer,
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = read(mSocket->getFileDescriptor(),buffer,bufferSize);
         if( nBytes < 0 ) {
             mSocket->closeConnection();
             nBytes = 0;
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );

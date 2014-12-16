@@ -58,11 +58,13 @@ std::size_t SslWriter::writeByte( const char byte ) {
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = SSL_write(mSsl,&byte,1);
         if( nBytes < 0 ) {
             nBytes = 0;
             mSocket->closeConnection();
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );
@@ -76,11 +78,13 @@ std::size_t SslWriter::writeBytes( const char * buffer , const std::size_t buffe
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = SSL_write(mSsl,buffer,static_cast<int>(bufferSize));
         if( nBytes < 0 ) {
             nBytes = 0;
             mSocket->closeConnection();
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );

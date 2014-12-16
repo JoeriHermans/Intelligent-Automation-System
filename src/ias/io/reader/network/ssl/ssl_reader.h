@@ -28,6 +28,7 @@
 // System dependencies.
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/io/reader/reader.h>
@@ -56,6 +57,11 @@ class SslReader : public Reader {
      * Contains the SSL environment of the specified socket.
      */
     SSL * mSsl;
+
+    /**
+     * Mutex which is responsible for synchronous I/O.
+     */
+    std::mutex mMutex;
 
     // END Private members. //////////////////////////////////////////
 

@@ -52,11 +52,13 @@ std::size_t PosixTcpSocketWriter::writeByte( const char byte ) {
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = write(mSocket->getFileDescriptor(),&byte,1);
         if( nBytes < 0 ) {
             nBytes = 0;
             mSocket->closeConnection();
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );
@@ -71,11 +73,13 @@ std::size_t PosixTcpSocketWriter::writeBytes( const char * buffer,
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = write(mSocket->getFileDescriptor(),buffer,bufferSize);
         if( nBytes < 0 ) {
             nBytes = 0;
             mSocket->closeConnection();
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );

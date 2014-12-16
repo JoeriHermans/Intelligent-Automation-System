@@ -61,11 +61,13 @@ std::size_t SslReader::readByte( char * byte ) {
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = SSL_read(mSsl,byte,1);
         if( nBytes < 0 ) {
             mSocket->closeConnection();
             nBytes = 0;
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );
@@ -76,11 +78,13 @@ std::size_t SslReader::readBytes( char * buffer , const std::size_t bufferSize )
 
     nBytes = 0;
     if( mSocket->isConnected() ) {
+        mMutex.lock();
         nBytes = SSL_read(mSsl,buffer,static_cast<int>(bufferSize));
         if( nBytes < 0 ) {
             mSocket->closeConnection();
             nBytes = 0;
         }
+        mMutex.unlock();
     }
 
     return ( static_cast<std::size_t>(nBytes) );

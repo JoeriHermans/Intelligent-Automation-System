@@ -25,6 +25,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <mutex>
+
 // Application dependencies.
 #include <ias/io/writer/writer.h>
 
@@ -43,18 +46,23 @@ class PosixTcpSocketWriter : public Writer {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the socket to which this writer will write to.
      */
     PosixTcpSocket * mSocket;
-        
+
+    /**
+     * Contains the mutex which is responsible for synchronous I/O.
+     */
+    std::mutex mMutex;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setSocket( PosixTcpSocket * socket );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -65,26 +73,26 @@ class PosixTcpSocketWriter : public Writer {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     PosixTcpSocketWriter( PosixTcpSocket * socket );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~PosixTcpSocketWriter( void ) = default;
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void closeWriter( void );
-    
+
     virtual std::size_t writeByte( const char byte );
-    
+
     virtual std::size_t writeBytes( const char * buffer,
                                     const std::size_t bufferSize );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
