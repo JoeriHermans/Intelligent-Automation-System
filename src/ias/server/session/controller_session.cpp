@@ -55,7 +55,7 @@ void ControllerSession::authorize( void ) {
         char identifier[header[1] + 1];
         char securityCode[header[2] + 1];
 
-        if(readBytes(identifier,header[1]) &&
+        if( readBytes(identifier,header[1]) &&
             readBytes(securityCode,header[2]) ) {
             identifier[header[1]] = 0;
             securityCode[header[2]] = 0;

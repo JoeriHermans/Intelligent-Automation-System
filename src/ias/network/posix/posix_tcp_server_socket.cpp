@@ -36,17 +36,12 @@
 // Application dependencies.
 #include <ias/network/posix/posix_tcp_server_socket.h>
 #include <ias/network/posix/posix_tcp_socket.h>
+#include <ias/network/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 void PosixTcpServerSocket::setFileDescriptor( const int fd ) {
     mFileDescriptor = fd;
-}
-
-void PosixTcpServerSocket::setKeepAlive( void ) {
-    static const int optval = 1;
-
-    setsockopt(mFileDescriptor,SOL_SOCKET,SO_KEEPALIVE,&optval,sizeof optval);
 }
 
 PosixTcpServerSocket::PosixTcpServerSocket( const unsigned int port ) :
@@ -94,7 +89,7 @@ bool PosixTcpServerSocket::bindToPort( void ) {
                     FD_ZERO(&mRfds);
                     FD_SET(fd,&mRfds);
                     setFileDescriptor(fd);
-                    setKeepAlive();
+                    enableKeepAlive(fd);
                 }
             }
             freeaddrinfo(serverInfo);
@@ -120,6 +115,7 @@ Socket * PosixTcpServerSocket::acceptSocket( void ) {
         memset(&addrLength,0,sizeof addrLength);
         fd = accept(mFileDescriptor,&addr,&addrLength);
         if( fd >= 0 ) {
+            enableKeepAlive(fd);
             socket = new PosixTcpSocket(fd);
         }
     }
@@ -145,6 +141,7 @@ Socket * PosixTcpServerSocket::acceptSocket( const std::time_t seconds ) {
         memset(&addrLength,0,sizeof addrLength);
         fd = accept(mFileDescriptor,&addr,&addrLength);
         if( fd >= 0 ) {
+            enableKeepAlive(fd);
             socket = new PosixTcpSocket(fd);
         }
     }

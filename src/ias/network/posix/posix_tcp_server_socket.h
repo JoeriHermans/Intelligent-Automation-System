@@ -60,8 +60,6 @@ class PosixTcpServerSocket : public ServerSocket {
 
     void setFileDescriptor( const int fd );
 
-    void setKeepAlive( void );
-
     // END Private methods. //////////////////////////////////////////
 
     protected:

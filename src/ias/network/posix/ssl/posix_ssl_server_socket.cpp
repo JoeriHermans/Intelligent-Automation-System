@@ -36,6 +36,7 @@
 // Application dependencies.
 #include <ias/network/posix/ssl/posix_ssl_server_socket.h>
 #include <ias/network/posix/ssl/posix_ssl_socket.h>
+#include <ias/network/util.h>
 #include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -90,6 +91,7 @@ Socket * PosixSslServerSocket::allocateSocket( const int fd ) const {
         close(fd);
         socket = nullptr;
     } else {
+        enableKeepAlive(fd);
         socket = new PosixSslSocket(ssl);
     }
 
@@ -157,6 +159,7 @@ bool PosixSslServerSocket::bindToPort( void ) {
                     FD_ZERO(&mRfds);
                     FD_SET(fd,&mRfds);
                     setFileDescriptor(fd);
+                    enableKeepAlive(fd);
                 }
             }
             freeaddrinfo(serverInfo);

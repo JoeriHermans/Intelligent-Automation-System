@@ -56,12 +56,6 @@ void PosixTcpSocket::setFileDescriptor( const int fd ) {
     mFileDescriptor = fd;
 }
 
-void PosixTcpSocket::setKeepAlive( void ) {
-    static const int optval = 1;
-
-    setsockopt(mFileDescriptor,SOL_SOCKET,SO_KEEPALIVE,&optval,sizeof optval);
-}
-
 bool PosixTcpSocket::initializeConnection( const std::string & address,
                                            const std::size_t port ) {
     bool connected;
@@ -70,7 +64,7 @@ bool PosixTcpSocket::initializeConnection( const std::string & address,
     fd = connect(address,port);
     if( fd >= 0 ) {
         mFileDescriptor = fd;
-        setKeepAlive();
+        enableKeepAlive(fd);
         connected = true;
         delete mReader; mReader = nullptr;
         delete mWriter; mWriter = nullptr;

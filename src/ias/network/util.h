@@ -44,4 +44,9 @@
  */
 int connect( const std::string & address, const std::size_t port );
 
+/**
+ *
+ */
+bool enableKeepAlive( const int fd );
+
 #endif /* NETWORK_UTIL_H_ */

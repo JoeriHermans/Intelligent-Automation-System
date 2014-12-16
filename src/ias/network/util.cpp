@@ -70,3 +70,12 @@ int connect( const std::string & address, const std::size_t port ) {
 
     return ( result );
 }
+
+bool enableKeepAlive( const int fd ) {
+    static const int optval = 1;
+    bool s;
+
+    s = (setsockopt(fd,SOL_SOCKET,SO_KEEPALIVE,&optval,sizeof optval) >= 0);
+
+    return ( s );
+}
