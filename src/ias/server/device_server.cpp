@@ -147,6 +147,7 @@ void DeviceServer::startDispatchThread( void ) {
         std::size_t nBytes;
         std::uint8_t type;
         Reader * reader;
+        bool heartbeatSend = false;
 
         setServerTimeouts();
         reader = mSocket->getReader();
@@ -154,14 +155,17 @@ void DeviceServer::startDispatchThread( void ) {
             type = 0xff;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
             if( nBytes == 0 ) {
-                if( !serverHeartbeat() )
+                if( !serverHeartbeat() || heartbeatSend )
                     stop();
                 continue;
             }
             switch(type) {
             case 0x00:
+                if( !heartbeatSend )
+                    serverHeartbeat();
+                else
+                    heartbeatSend = false;
                 std::cout << "Heartbeat from server received." << std::endl;
-                serverHeartbeat();
                 break;
             case 0x01:
                 dispatchCommand();

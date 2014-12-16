@@ -148,6 +148,7 @@ ControllerSession::~ControllerSession( void ) {
 }
 
 void ControllerSession::run( void ) {
+    bool heartbeatSend = false;
     std::uint8_t type;
     std::size_t nBytes;
     Reader * reader;
@@ -159,12 +160,17 @@ void ControllerSession::run( void ) {
         type = 0xff;
         nBytes = reader->readByte(reinterpret_cast<char *>(&type));
         if( nBytes == 0 ) {
-            if( !heartbeat() )
+            if( !heartbeat() || heartbeatSend )
                 stop();
+            heartbeatSend = true;
             continue;
         }
         switch(type) {
         case 0x00:
+            if( !heartbeatSend )
+                stop();
+            else
+                heartbeatSend = false;
             std::cout << "Heartbeat received." << std::endl;
             break;
         case 0x01:
