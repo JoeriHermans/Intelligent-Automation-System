@@ -47,12 +47,23 @@ int connect( const std::string & address, const std::size_t port );
 /**
  * Enables the SO_KEEPALIVE methodology of the specified socket.
  *
- * @pre     The specified parameter has to be larger or equal to zero.
+ * @pre     The specified parameter needs to be larger or equal to zero.
  * @param   fd
  *          The file descriptor we will be manipulating.
  * @return  True, if the KEEPALIVE probes for the specified file descriptor is
  *          enabled. False in any other case.
  */
 bool enableKeepAlive( const int fd );
+
+/**
+ * Disables Nagle's algorithm (enabled TCP_NODELAY).
+ *
+ * @pre     The specified parameter needs to be larger or equal to zero.
+ * @param   fd
+ *          The file descriptor we will be manipulating.
+ * @return  True, if the TCP_NODELAY option could be set. False in any other
+ *          case.
+ */
+bool disableNagle( const int fd );
 
 #endif /* NETWORK_UTIL_H_ */
