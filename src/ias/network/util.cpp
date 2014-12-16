@@ -76,6 +76,9 @@ bool enableKeepAlive( const int fd ) {
     static const int optval = 1;
     bool s;
 
+    // Checking the precondition.
+    assert( fd >= 0 );
+
     s = (setsockopt(fd,SOL_SOCKET,SO_KEEPALIVE,&optval,sizeof optval) >= 0);
 
     return ( s );
@@ -84,6 +87,9 @@ bool enableKeepAlive( const int fd ) {
 bool disableNagle( const int fd ) {
     static const int optval = 1;
     bool s;
+
+    // Checking the precondition.
+    assert( fd >= 0 );
 
     s = (setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,&optval,sizeof optval) >= 0);
 
