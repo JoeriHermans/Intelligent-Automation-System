@@ -157,6 +157,8 @@ void DeviceServer::startDispatchThread( void ) {
             if( nBytes == 0 ) {
                 if( !serverHeartbeat() || heartbeatSend )
                     stop();
+                else
+                    heartbeatSend = true;
                 continue;
             }
             switch(type) {

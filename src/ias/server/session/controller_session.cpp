@@ -163,7 +163,8 @@ void ControllerSession::run( void ) {
         if( nBytes == 0 ) {
             if( !heartbeat() || heartbeatSend )
                 stop();
-            heartbeatSend = true;
+            else
+                heartbeatSend = true;
             continue;
         }
         switch(type) {
