@@ -169,18 +169,15 @@ void ControllerSession::run( void ) {
         case 0x00:
             if( !heartbeatSend )
                 stop();
-            else
-                heartbeatSend = false;
-            std::cout << "Heartbeat received." << std::endl;
             break;
         case 0x01:
             controllerUpdate();
             break;
-        case 0x02:
         default:
             controllerDisconnect();
             break;
         }
+        heartbeatSend = false;
     }
     getSocket()->closeConnection();
     if( mController != nullptr )

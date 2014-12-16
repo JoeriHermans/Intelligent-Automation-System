@@ -163,9 +163,6 @@ void DeviceServer::startDispatchThread( void ) {
             case 0x00:
                 if( !heartbeatSend )
                     serverHeartbeat();
-                else
-                    heartbeatSend = false;
-                std::cout << "Heartbeat from server received." << std::endl;
                 break;
             case 0x01:
                 dispatchCommand();
@@ -174,6 +171,7 @@ void DeviceServer::startDispatchThread( void ) {
                 stop();
                 break;
             }
+            heartbeatSend = false;
         }
         stop();
     });
