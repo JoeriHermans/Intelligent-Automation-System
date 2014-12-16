@@ -181,6 +181,6 @@ void PosixSslSocket::setReceiveTimeout( const struct timeval & tv ) {
         int fd;
 
         fd = SSL_get_fd(mSsl);
-        setsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,&tv,sizeof tv);
+        setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof tv);
     }
 }

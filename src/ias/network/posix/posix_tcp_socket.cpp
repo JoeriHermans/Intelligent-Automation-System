@@ -140,12 +140,12 @@ Writer * PosixTcpSocket::getWriter( void ) const {
 
 void PosixTcpSocket::setSendTimeout( const struct timeval & tv ) {
     if( mFileDescriptor >= 0 )
-        setsockopt(mFileDescriptor,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof tv);
+        setsockopt(mFileDescriptor,SOL_SOCKET,SO_SNDTIMEO,&tv,sizeof tv);
 }
 
 void PosixTcpSocket::setReceiveTimeout( const struct timeval & tv ) {
     if( mFileDescriptor >= 0 )
-        setsockopt(mFileDescriptor,SOL_SOCKET,SO_SNDTIMEO,&tv,sizeof tv);
+        setsockopt(mFileDescriptor,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof tv);
 }
 
 int PosixTcpSocket::getFileDescriptor( void ) const {
