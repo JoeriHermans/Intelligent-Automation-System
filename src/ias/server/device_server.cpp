@@ -161,6 +161,7 @@ void DeviceServer::startDispatchThread( void ) {
             }
             switch(type) {
             case 0x00:
+                std::cout << "Server heartbeat received." << std::endl;
                 if( !heartbeatSend )
                     serverHeartbeat();
                 break;
