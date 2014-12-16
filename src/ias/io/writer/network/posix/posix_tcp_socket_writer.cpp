@@ -25,6 +25,7 @@
 // System dependencies.
 #include <cassert>
 #include <unistd.h>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/io/writer/network/posix/posix_tcp_socket_writer.h>
@@ -53,6 +54,7 @@ std::size_t PosixTcpSocketWriter::writeByte( const char byte ) {
     nBytes = 0;
     if( mSocket->isConnected() ) {
         nBytes = write(mSocket->getFileDescriptor(),&byte,1);
+        std::cout << "Number of bytes: " << nBytes << std::endl;
         if( nBytes < 0 ) {
             nBytes = 0;
             mSocket->closeConnection();
