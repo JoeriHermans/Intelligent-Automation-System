@@ -30,6 +30,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <iostream>
 #include <poll.h>
 #include <netdb.h>
@@ -78,4 +79,13 @@ bool enableKeepAlive( const int fd ) {
     s = (setsockopt(fd,SOL_SOCKET,SO_KEEPALIVE,&optval,sizeof optval) >= 0);
 
     return ( s );
+}
+
+bool disableNagle( const int fd ) {
+    static const int optval = 1;
+    bool s;
+
+    s = (setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,&optval,sizeof optval) >= 0);
+
+    return (s);
 }
