@@ -263,8 +263,10 @@ void ClientApplication::responseMessage( void ) {
 
     reader = mSocket->getReader();
     messageSize = 0;
+    std::cout << "Retrieving message size." << std::endl;
     reader->readBytes(reinterpret_cast<char *>(&messageSize),2);
     messageSize = ntohs(messageSize);
+    std::cout << "Message size: " << std::to_string(messageSize) << std::endl;
     bytesRead = 0;
     char buffer[messageSize + 1];
     while( mSocket->isConnected() && bytesRead < messageSize ) {
@@ -280,18 +282,21 @@ void ClientApplication::responseMessage( void ) {
 void ClientApplication::readResponse( void ) {
     Reader * reader;
     std::uint8_t type;
+    bool responseRead;
 
     reader = mSocket->getReader();
     type = 0xff;
-    while( mSocket->isConnected() &&
+    responseRead = false;
+    while( !responseRead &&
+           mSocket->isConnected() &&
            reader->readBytes(reinterpret_cast<char *>(&type),1) == 1 ) {
         switch(type) {
         case 0x00:
-            std::cout << "Respond to heartbeat" << std::endl;
             responseHeartbeat();
             break;
         case 0x01:
             responseMessage();
+            responseRead = true;
             break;
         }
     }
