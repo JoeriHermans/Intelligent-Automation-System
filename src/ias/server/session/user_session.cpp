@@ -230,9 +230,7 @@ void UserSession::run( void ) {
                 continue;
             }
             switch(type) {
-            case 0x00:
-                std::cout << "Heartbeat received." << std::endl;
-                break; // Heartbeat received.
+            case 0x00: break; // Heartbeat received.
             case 0x01:
                 processCommand();
             default:
