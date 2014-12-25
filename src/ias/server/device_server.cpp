@@ -218,7 +218,6 @@ void DeviceServer::setServerTimeouts( void ) {
     tv.tv_sec = 20;
     tv.tv_usec = 0;
     mSocket->setReceiveTimeout(tv);
-    mSocket->setSendTimeout(tv);
 }
 
 DeviceServer::DeviceServer( ServerSocket * serverSocket,
