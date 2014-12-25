@@ -230,7 +230,10 @@ void UserSession::run( void ) {
                 continue;
             }
             switch(type) {
-            case 0x00: break; // Heartbeat received.
+            case 0x00:
+                if( !heartbeatSend )
+                    heartbeat();
+                break;
             case 0x01:
                 processCommand();
             default:
