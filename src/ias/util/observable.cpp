@@ -42,12 +42,12 @@ Observable::~Observable( void ) {
 
 bool Observable::containsObserver( const Observer * observer ) const {
     bool contains;
-    
+
     mMutexObservers.lock();
-    contains = ( std::find(mObservers.begin(),mObservers.end(),observer) != 
+    contains = ( std::find(mObservers.begin(),mObservers.end(),observer) !=
                  mObservers.end() );
     mMutexObservers.unlock();
-    
+
     return ( contains );
 }
 
@@ -68,9 +68,11 @@ void Observable::removeObserver( const Observer * observer ) {
 void Observable::addObserver( Observer * observer ) {
     // Checking the precondition.
     assert( observer != nullptr );
-    if( !containsObserver(observer) )
+    if( !containsObserver(observer) ) {
+        mMutexObservers.lock();
         mObservers.push_back(observer);
-    mMutexObservers.unlock();
+        mMutexObservers.unlock();
+    }
 }
 
 void Observable::removeObservers( void ) {
@@ -81,7 +83,7 @@ void Observable::removeObservers( void ) {
 
 void Observable::notifyObservers( void ) {
     std::vector<Observer *>::const_iterator it;
-    
+
     mMutexObservers.lock();
     for( it = mObservers.begin() ; it != mObservers.end() ; ++it ) {
         (*it)->update();
@@ -91,10 +93,10 @@ void Observable::notifyObservers( void ) {
 
 void Observable::notifyObservers( void * argument ) {
     std::vector<Observer *>::const_iterator it;
-    
+
     // Checking the precondition.
     assert( argument != nullptr );
-    
+
     mMutexObservers.lock();
     for( it = mObservers.begin() ; it != mObservers.end() ; ++it ) {
         (*it)->update(argument);
