@@ -45,6 +45,27 @@
 int connect( const std::string & address, const std::size_t port );
 
 /**
+ * Connects to the specified host through the specified SOCKS proxy.
+ *
+ * @pre     The specified addresses cannot be empty and the specified ports
+ *          has to be larger than 0.
+ * @param   proxyAddress
+ *          The address of the SOCKS proxy.
+ * @param   proxyPort
+ *          The port of the SOCKS proxy.
+ * @param   address
+ *          The address of the host we wish to connect to.
+ * @param   port
+ *          The port of the host we wish to connect to.
+ * @return  >= 0: A file descriptor associated with the connection.
+ *          -1: Could not connect to the remote host.
+ */
+int connectToSocks( const std::string & proxyAddress,
+                    const std::size_t proxyPort,
+                    const std::string & address,
+                    const std::size_t port );
+
+/**
  * Enables the SO_KEEPALIVE methodology of the specified socket.
  *
  * @pre     The specified parameter needs to be larger or equal to zero.

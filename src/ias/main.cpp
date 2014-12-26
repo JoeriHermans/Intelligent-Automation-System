@@ -36,7 +36,7 @@
 
 // Application dependencies.
 #include <ias/application/constants.h>
-#include <ias/application/client_application.h>
+#include <ias/application/client/client_application.h>
 #include <ias/application/controller_application.h>
 #include <ias/application/server_application.h>
 #include <ias/main.h>

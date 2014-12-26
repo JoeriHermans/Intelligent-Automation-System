@@ -38,6 +38,7 @@
 
 // System dependencies.
 #include <ias/network/util.h>
+#include <ias/network/proxy/socks.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -94,4 +95,26 @@ bool disableNagle( const int fd ) {
     s = (setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,&optval,sizeof optval) >= 0);
 
     return (s);
+}
+
+int connectToSocks( const std::string & proxyAddress,
+                    const std::size_t proxyPort,
+                    const std::string & address,
+                    const std::size_t port ) {
+    int fd;
+
+    // Checking the precondition.
+    assert( !proxyAddress.empty() && proxyPort > 0 &&
+            !address.empty() && port > 0 );
+
+    fd = -1;
+    if( !proxyAddress.empty() && proxyPort > 0 ) {
+        fd = connect(proxyAddress,proxyPort);
+        if( fd >= 0 && !socksConnect(address,port,fd) ) {
+            close(fd);
+            fd = -1;
+        }
+    }
+
+    return ( fd );
 }

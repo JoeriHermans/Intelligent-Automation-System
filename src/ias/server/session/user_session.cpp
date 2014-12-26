@@ -236,6 +236,7 @@ void UserSession::run( void ) {
                 break;
             case 0x01:
                 processCommand();
+                break;
             default:
                 stop();
                 break;

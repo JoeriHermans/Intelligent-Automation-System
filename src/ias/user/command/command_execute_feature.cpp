@@ -43,7 +43,7 @@ const char CommandExecuteFeature::kIdentifier[] = "execf";
 void CommandExecuteFeature::setDeviceContainer( Container<Device *> * d ) {
     // Checking the precondition.
     assert( d != nullptr );
-    
+
     mDevices = d;
 }
 
@@ -63,24 +63,26 @@ std::string CommandExecuteFeature::execute( const std::string & parameters ) {
     std::string featureIdentifier;
     std::string parameter;
     Device * device;
-    
-    ss << parameters;
-    ss >> deviceIdentifier;
-    ss >> featureIdentifier;
-    parameter = ss.str().substr(deviceIdentifier.length() + 
-                                featureIdentifier.length() + 1);
-    trim(deviceIdentifier);
-    trim(featureIdentifier);
-    trim(parameter);
-    device = mDevices->get(deviceIdentifier);
-    if( device != nullptr ) {
-        Action action(featureIdentifier,parameter);
-        
-        device->execute(action);
-        output = kProtocolAck;
-    } else {
-        output = kProtocolNack;
+
+    if( parameters.length() > 0 ) {
+        ss << parameters;
+        ss >> deviceIdentifier;
+        ss >> featureIdentifier;
+        parameter = ss.str().substr(deviceIdentifier.length() +
+                                    featureIdentifier.length() + 1);
+        trim(deviceIdentifier);
+        trim(featureIdentifier);
+        trim(parameter);
+        device = mDevices->get(deviceIdentifier);
+        if( device != nullptr ) {
+            Action action(featureIdentifier,parameter);
+
+            device->execute(action);
+            output = kProtocolAck;
+        }
     }
-    
+    if( output.length() == 0 )
+        output = kProtocolNack;
+
     return ( output );
 }

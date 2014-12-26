@@ -1,11 +1,12 @@
 /**
- * An application which is responsible for handling the client inputs.
+ * An application which is responsible for handling the client/server
+ * communications.
  *
  * @date                    Jul 17, 2014
  * @author                  Joeri HERMANS
- * @version                 0.1
+ * @version                 0.2
  *
- * Copyright 2013 Joeri HERMANS
+ * Copyright 2014 Joeri HERMANS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +26,11 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <string>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
-
 // Application dependencies.
-#include <ias/network/socket.h>
 #include <ias/application/application.h>
+#include <ias/application/client/controller/client_application_controller.h>
+#include <ias/application/client/model/client_application_model.h>
+#include <ias/application/client/view/console_client_application_view.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -48,30 +46,25 @@ class ClientApplication : public Application {
     // BEGIN Private members. ////////////////////////////////////////
 
     /**
-     * Contains the socket which is connected with the remote IAS host.
+     * Contains the controller of the client application.
      *
      * @note    By default, this member will be equal to the null reference.
      */
-    Socket * mSocket;
+    ClientApplicationController * mController;
 
     /**
-     * A flag which indicates if the user is logged in.
+     * Contains the model of the client application.
      *
-     * @note    By default, this member will be equal to false.
+     * @note    By default, this member will be equal to the null reference.
      */
-    bool mLoggedIn;
+    ClientApplicationModel * mModel;
 
     /**
-     * Contains the username of the authenticated used.
+     * Contains the view which this application will run.
      *
-     * @note    By default, this member will be equal to the empty string.
+     * @note    By default, this member will be equal to the null reference.
      */
-    std::string mUsername;
-
-    /**
-     * Contains the SSL context.
-     */
-    SSL_CTX * mSslContext;
+    View * mView;
 
     // END Private members. //////////////////////////////////////////
 
@@ -79,33 +72,13 @@ class ClientApplication : public Application {
 
     inline void initialize( void );
 
-    void initializeSslContext( void );
+    void initializeController( const int argc , const char ** argv );
 
-    void analyzeArguments( const int argc , const char ** argv );
+    void initializeModel( const int argc , const char ** argv );
 
-    std::string fetchAddress( const int argc , const char ** argv ) const;
+    void initializeView( const int argc , const char ** argv );
 
-    std::size_t fetchPort( const int argc , const char ** argv ) const;
-
-    std::string fetchSocksServer( const int argc , const char ** argv ) const;
-
-    bool sslRequested( const int argc , const char ** argv ) const;
-
-    int connectToSocksProxy( const std::string & proxy,
-                             const std::string & clientAddress,
-                             const std::size_t clientPort ) const;
-
-    void login( void );
-
-    void processCommands( void );
-
-    void writeMessage( const std::string & message ) const;
-
-    void readResponse( void );
-
-    void responseHeartbeat( void );
-
-    void responseMessage( void );
+    void registerViews( void );
 
     // END Private methods. //////////////////////////////////////////
 
