@@ -29,6 +29,12 @@
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 #include <string>
+#include <thread>
+#include <mutex>
+#include <queue>
+#include <chrono>
+#include <condition_variable>
+#include <ctime>
 
 // Application dependencies.
 #include <ias/network/socket.h>
@@ -41,6 +47,12 @@ class ClientApplicationModel : public Observable {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+
+    /**
+     * A command which tells the application to stop.
+     */
+    static const char kCommandQuit[];
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -73,6 +85,39 @@ class ClientApplicationModel : public Observable {
      */
     bool mLoggedIn;
 
+    /**
+     * Contains the threads which will handle the client / server communication.
+     *
+     * @note    By default, this member will be equal to the null reference.
+     */
+    std::thread * mCommunicationThreadSend;
+    std::thread * mCommunicationThreadReceive;
+
+    /**
+     * Contains the queue which contains that need to executed.
+     *
+     * @note    By default, this queue will be empty.
+     */
+    std::queue<std::string> mCommandQueue;
+
+    /**
+     * Contains the mutex which will be responsible for handling the access
+     * to the command queue.
+     */
+    std::mutex mCommandMutex;
+
+    /**
+     * A mutex to lock the send thread.
+     */
+    std::mutex mSendMutex;
+
+    /**
+     * A condition variable which is responsible for locking the sending thread
+     * when no data is available.
+     */
+    std::condition_variable mSendLock;
+    std::mutex mMutexThreadSendLock;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -87,6 +132,18 @@ class ClientApplicationModel : public Observable {
     void readResponses( void );
 
     void readResponse( void );
+
+    void sendCommand( const std::string & command );
+
+    void sendHeartbeat( void );
+
+    void stopCommunicationThreads( void );
+
+    void spawnCommunicationThreads( void );
+
+    void handleCommunicationSend( void );
+
+    void handleCommunicationReceive( void );
 
     // END Private methods. //////////////////////////////////////////
 

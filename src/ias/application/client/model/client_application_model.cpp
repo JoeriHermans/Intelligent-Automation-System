@@ -34,8 +34,15 @@
 #include <ias/network/posix/ssl/posix_ssl_socket.h>
 #include <ias/network/proxy/socks.h>
 #include <ias/network/util.h>
+#include <ias/user/command/command_stop.h>
 
 // END Includes. /////////////////////////////////////////////////////
+
+// BEGIN Constants. //////////////////////////////////////////////////
+
+const char ClientApplicationModel::kCommandQuit[] = "quit";
+
+// END Constants. ////////////////////////////////////////////////////
 
 void ClientApplicationModel::initialize( void ) {
     mSocket = nullptr;
@@ -43,6 +50,8 @@ void ClientApplicationModel::initialize( void ) {
     mSocksHost.clear();
     mSocksPort = 0;
     mLoggedIn = false;
+    mCommunicationThreadSend = nullptr;
+    mCommunicationThreadReceive = nullptr;
 }
 
 void ClientApplicationModel::setSocketTimeouts( void ) {
@@ -51,7 +60,7 @@ void ClientApplicationModel::setSocketTimeouts( void ) {
     // Checking the precondition.
     assert( mSocket != nullptr );
 
-    tv.tv_sec = 10;
+    tv.tv_sec = 1;
     tv.tv_usec = 0;
     mSocket->setReceiveTimeout(tv);
 }
@@ -74,13 +83,30 @@ void ClientApplicationModel::readResponses( void ) {
 
     reader = mSocket->getReader();
     messageType = 0xff;
-    if( reader->readBytes(reinterpret_cast<char *>(&messageType),1) == 1 ) {
+    if( reader->readBytes(reinterpret_cast<char *>(&messageType),1) == 1 &&
+        isConnected() ) {
         switch(messageType) {
+        case 0x00:
+            sendHeartbeat();
+            break;
         case 0x01:
             readResponse();
             break;
         }
     }
+}
+
+void ClientApplicationModel::sendHeartbeat( void ) {
+    static const std::uint8_t beat = 0x00;
+    Writer * writer;
+
+    // Checking the precondition.
+    assert( isConnected() );
+
+    mSendMutex.lock();
+    writer = mSocket->getWriter();
+    writer->writeBytes(reinterpret_cast<const char *>(&beat),1);
+    mSendMutex.unlock();
 }
 
 void ClientApplicationModel::readResponse( void ) {
@@ -99,6 +125,91 @@ void ClientApplicationModel::readResponse( void ) {
     reader->readBytes(buffer,static_cast<std::size_t>(messageSize));
     buffer[messageSize] = 0;
     notifyObservers(buffer);
+}
+
+void ClientApplicationModel::stopCommunicationThreads( void ) {
+    if( mCommunicationThreadSend != nullptr ) {
+        mSendLock.notify_one();
+        mCommunicationThreadSend->join();
+        delete mCommunicationThreadSend;
+        mCommunicationThreadSend = nullptr;
+    }
+    if( mCommunicationThreadReceive != nullptr ) {
+        mCommunicationThreadReceive->join();
+        delete mCommunicationThreadReceive;
+        mCommunicationThreadReceive = nullptr;
+    }
+}
+
+void ClientApplicationModel::spawnCommunicationThreads( void ) {
+    if( mCommunicationThreadReceive == nullptr ) {
+        mCommunicationThreadReceive = new std::thread([this]{
+                handleCommunicationReceive();
+        });
+    }
+    if( mCommunicationThreadSend == nullptr ) {
+        mCommunicationThreadSend = new std::thread([this]{
+                handleCommunicationSend();
+        });
+    }
+}
+
+void ClientApplicationModel::handleCommunicationSend( void ) {
+    std::unique_lock<std::mutex> lock(mMutexThreadSendLock);
+    std::string command;
+
+    while( isConnected() ) {
+        mCommandMutex.lock();
+        if( !mCommandQueue.empty() ) {
+            command = mCommandQueue.front();
+            mCommandMutex.unlock();
+        } else {
+            mCommandMutex.unlock();
+            mSendLock.wait(lock);
+            continue;
+        }
+        if( !command.empty() && isConnected() ) {
+            sendCommand(command);
+            mCommandMutex.lock();
+            mCommandQueue.pop();
+            mCommandMutex.unlock();
+            if( command == kCommandQuit ||
+                command == CommandStop::kIdentifier ) {
+                break;
+            }
+        }
+    }
+}
+
+void ClientApplicationModel::sendCommand( const std::string & command ) {
+    static const std::uint8_t message_type = 0x01;
+    Writer * writer;
+    std::uint8_t bytesWritten;
+    std::uint8_t commandLength;
+    std::uint8_t dBytes;
+    std::size_t n;
+
+    mSendMutex.lock();
+    writer = mSocket->getWriter();
+    writer->writeBytes(reinterpret_cast<const char *>(&message_type),1);
+    // Retrieve the command's length.
+    commandLength = static_cast<std::uint8_t>(command.length());
+    writer->writeBytes(reinterpret_cast<const char *>(&commandLength),1);
+    bytesWritten = 0;
+    while( mSocket->isConnected() && bytesWritten < commandLength ) {
+        dBytes = commandLength - bytesWritten;
+        n = writer->writeBytes(command.c_str() + bytesWritten,dBytes);
+        if( n == 0 )
+            break;
+        bytesWritten += n;
+    }
+    mSendMutex.unlock();
+}
+
+void ClientApplicationModel::handleCommunicationReceive( void ) {
+    while( isConnected() ) {
+        readResponses();
+    }
 }
 
 ClientApplicationModel::ClientApplicationModel( void ) {
@@ -122,7 +233,11 @@ bool ClientApplicationModel::proxySpecified( void ) const {
 
 void ClientApplicationModel::closeConnection( void ) {
     if( mSocket != nullptr ) {
+        mSendLock.notify_one();
+        while( !mCommandQueue.empty() )
+            usleep(10000);
         mSocket->closeConnection();
+        stopCommunicationThreads();
         delete mSocket;
         mSocket = nullptr;
         mLoggedIn = false;
@@ -221,34 +336,19 @@ void ClientApplicationModel::authorize( const std::string & username,
             reader->readByte(reinterpret_cast<char *>(&byte)) == 1 &&
             byte == 0x01 ) {
             mLoggedIn = true;
+            stopCommunicationThreads();
+            spawnCommunicationThreads();
         }
     }
     notifyObservers();
 }
 
 void ClientApplicationModel::execute( const std::string & command ) {
-    static const std::uint8_t message_type = 0x01;
-    Writer * writer;
-    std::uint8_t bytesWritten;
-    std::uint8_t commandLength;
-    std::uint8_t dBytes;
-    std::size_t n;
-
     // Checking the precondition.
     assert( isConnected() && !command.empty() && command.length() <= 0xff );
 
-    writer = mSocket->getWriter();
-    writer->writeBytes(reinterpret_cast<const char *>(&message_type),1);
-    // Retrieve the command's length.
-    commandLength = static_cast<std::uint8_t>(command.length());
-    writer->writeBytes(reinterpret_cast<const char *>(&commandLength),1);
-    bytesWritten = 0;
-    while( mSocket->isConnected() && bytesWritten < commandLength ) {
-        dBytes = commandLength - bytesWritten;
-        n = writer->writeBytes(command.c_str() + bytesWritten,dBytes);
-        if( n == 0 )
-            break;
-        bytesWritten += n;
-    }
-    readResponses();
+    mCommandMutex.lock();
+    mCommandQueue.push(command);
+    mSendLock.notify_one();
+    mCommandMutex.unlock();
 }

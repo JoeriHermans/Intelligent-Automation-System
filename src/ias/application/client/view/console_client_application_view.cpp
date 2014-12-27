@@ -26,6 +26,7 @@
 // System dependencies.
 #include <cassert>
 #include <iostream>
+#include <sstream>
 #include <termios.h>
 #include <unistd.h>
 
@@ -62,8 +63,6 @@ const char ConsoleClientApplicationView::kMessageNotConnected[] =
 const char ConsoleClientApplicationView::kMessageSpecifyCredentials[] =
         "Please specify your user credentials.";
 const char ConsoleClientApplicationView::kMessageShell[] = "IAS > ";
-
-const char ConsoleClientApplicationView::kCommandQuit[] = "quit";
 
 // END Constants. ////////////////////////////////////////////////////
 
@@ -129,30 +128,25 @@ void ConsoleClientApplicationView::login( void ) {
 
 void ConsoleClientApplicationView::executeCommands( void ) {
     std::string command;
+    bool terminate;
 
     // Checking the precondition.
     assert( mModel->isConnected() );
 
-    while( mModel->isConnected() ) {
-        printLineEnd();
-        print(kMessageShell);
+    terminate = false;
+    printLineEnd();
+    print(kMessageShell);
+    while( mModel->isConnected() && !terminate ) {
         std::cin >> command;
         if( mModel->isConnected() ) {
-            if( command == kCommandQuit ) {
-                printLineEnd();
-                stop();
-            } else if( command == CommandStop::kIdentifier ) {
-                mController->execute(command);
-                printLineEnd();
-                stop();
-            } else {
-                mController->execute(command);
-            }
-        } else {
-            printLineEnd();
-            stop();
+            mController->execute(command);
+            if( command == CommandStop::kIdentifier ||
+                command == ClientApplicationModel::kCommandQuit )
+                terminate = true;
         }
     }
+    printLineEnd();
+    stop();
 }
 
 void ConsoleClientApplicationView::print( const std::string & str ) const {
@@ -325,4 +319,6 @@ void ConsoleClientApplicationView::update( void * argument ) {
 
     buffer = static_cast<char *>(argument);
     printLine(buffer);
+    printLineEnd();
+    print(kMessageShell);
 }

@@ -26,6 +26,9 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <mutex>
+
 // Application dependencies.
 #include <ias/application/client/model/client_application_model.h>
 #include <ias/application/client/controller/client_application_controller.h>
@@ -59,11 +62,6 @@ class ConsoleClientApplicationView : public View {
     static const char kMessageNotConnected[];
     static const char kMessageSpecifyCredentials[];
     static const char kMessageShell[];
-
-    /**
-     * Specified commands the client application needs to watch out for.
-     */
-    static const char kCommandQuit[];
 
     // END Class constants. //////////////////////////////////////////
 
