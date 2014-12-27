@@ -71,6 +71,7 @@ inline void ConsoleClientApplicationView::initialize( void ) {
     mController = nullptr;
     mModel = nullptr;
     mState = 0;
+    mHostPort = 0;
 }
 
 void ConsoleClientApplicationView::setController(
@@ -93,7 +94,7 @@ void ConsoleClientApplicationView::printWelcomeMessage( void ) const {
 }
 
 void ConsoleClientApplicationView::connect( void ) {
-    mController->createConnection("127.0.0.1",5001);
+    mController->createConnection(mHostAddress,mHostPort);
 }
 
 void ConsoleClientApplicationView::login( void ) {
@@ -184,12 +185,104 @@ void ConsoleClientApplicationView::handleLoginState( void ) {
     }
 }
 
+void ConsoleClientApplicationView::setProxy( const int argc,
+                                             const char ** argv ) {
+    std::string proxy;
+
+    // Checking the precondition.
+    assert( argc > 0 && argv != nullptr );
+
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagSocks) == 0 && argc > (i + 1) ) {
+            proxy = argv[i + 1];
+            break;
+        }
+    }
+    if( !proxy.empty() ) {
+        std::istringstream iss(proxy);
+        std::string address;
+        std::string strPort;
+        std::size_t port;
+
+        std::getline(iss,address,':');
+        std::getline(iss,strPort);
+        if( !address.empty() && !strPort.empty() ) {
+            port = static_cast<std::size_t>(std::stoi(strPort));
+            if( port > 0 )
+                mController->setProxy(address,port);
+        }
+    }
+}
+
+void ConsoleClientApplicationView::setSsl( const int argc,
+                                           const char ** argv ) {
+    // Checking the precondition.
+    assert( argc > 0 && argv != nullptr );
+
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagSsl) == 0 ) {
+            mController->enableSsl();
+            break;
+        }
+    }
+}
+
+void ConsoleClientApplicationView::setHostDetails( const int argc,
+                                                   const char ** argv ) {
+    // Checking the precondition.
+    assert( argc > 0 && argv != nullptr );
+
+    setHost(argc,argv);
+    setPort(argc,argv);
+}
+
+void ConsoleClientApplicationView::setHost( const int argc,
+                                            const char ** argv ) {
+    std::string host;
+
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagAddress) == 0 && argc > (i + 1) ) {
+            host = argv[i + 1];
+            break;
+        }
+    }
+    if( host.empty() )
+        host = kDefaultServerAddress;
+    // Set the host.
+    mHostAddress = host;
+}
+
+void ConsoleClientApplicationView::setPort( const int argc,
+                                            const char ** argv ) {
+    std::string strPort;
+    std::size_t port;
+
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagPort) == 0 && argc > (i + 1) ) {
+            strPort = argv[i + 1];
+            break;
+        }
+    }
+    if( !strPort.empty() )
+        port = static_cast<std::size_t>(std::stoi(strPort));
+    else if( mModel->sslRequested() )
+        port = kDefaultUserServerPortSsl;
+    else
+        port = kDefaultUserServerPort;
+    // Set the port.
+    mHostPort = port;
+}
+
 ConsoleClientApplicationView::ConsoleClientApplicationView(
+        const int argc, const char ** argv,
         ClientApplicationController * controller,
         ClientApplicationModel * model ) {
     initialize();
     setController(controller);
     setModel(model);
+    setProxy(argc,argv);
+    setSsl(argc,argv);
+    setHostDetails(argc,argv);
 }
 
 void ConsoleClientApplicationView::run( void ) {

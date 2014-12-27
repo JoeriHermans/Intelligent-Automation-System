@@ -51,14 +51,13 @@ void ClientApplication::initializeModel( const int argc, const char ** argv ) {
     assert( mModel == nullptr && argc > 0 && argv != nullptr );
 
     mModel = new ClientApplicationModel();
-    // TODO Read arguments and apply settings.
 }
 
 void ClientApplication::initializeView( const int argc , const char ** argv ) {
     // Checking the precondition.
     assert( mController != nullptr && argc > 0 && argv != nullptr );
 
-    mView = new ConsoleClientApplicationView(mController,mModel);
+    mView = new ConsoleClientApplicationView(argc,argv,mController,mModel);
 }
 
 void ClientApplication::registerViews( void ) {

@@ -66,3 +66,23 @@ void ClientApplicationController::execute( const std::string & command ) {
 void ClientApplicationController::closeConnection( void ) {
     mModel->closeConnection();
 }
+
+void ClientApplicationController::setProxy( const std::string & address,
+                                            const std::size_t port ) {
+    // Checking the precondition.
+    assert( !address.empty() && port > 0 );
+
+    mModel->setProxy(address,port);
+}
+
+void ClientApplicationController::setSsl( const bool flag ) {
+    mModel->requestSsl(flag);
+}
+
+void ClientApplicationController::enableSsl( void ) {
+    setSsl(true);
+}
+
+void ClientApplicationController::disableSsl( void ) {
+    setSsl(false);
+}

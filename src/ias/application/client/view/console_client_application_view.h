@@ -92,6 +92,15 @@ class ConsoleClientApplicationView : public View {
      */
     unsigned int mState;
 
+    /**
+     * Contains the host details of the remote service.
+     *
+     * @note    By default, the address will be empty and the port
+     *          will be equal to 0.
+     */
+    std::string mHostAddress;
+    std::size_t mHostPort;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -122,6 +131,16 @@ class ConsoleClientApplicationView : public View {
 
     void handleLoginState( void );
 
+    void setProxy( const int argc , const char ** argv );
+
+    void setSsl( const int argc , const char ** argv );
+
+    void setHostDetails( const int argc , const char ** argv );
+
+    void setHost( const int argc , const char ** argv );
+
+    void setPort( const int argc , const char ** argv );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -133,7 +152,8 @@ class ConsoleClientApplicationView : public View {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    ConsoleClientApplicationView( ClientApplicationController * controller,
+    ConsoleClientApplicationView( const int argc , const char ** argv,
+                                  ClientApplicationController * controller,
                                   ClientApplicationModel * model );
 
     // END Constructors. /////////////////////////////////////////////

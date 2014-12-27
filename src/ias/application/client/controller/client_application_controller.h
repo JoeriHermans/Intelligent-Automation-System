@@ -94,6 +94,15 @@ class ClientApplicationController {
 
     void closeConnection( void );
 
+    void setProxy( const std::string & address,
+                   const std::size_t port );
+
+    void setSsl( const bool flag );
+
+    void enableSsl( void );
+
+    void disableSsl( void );
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
