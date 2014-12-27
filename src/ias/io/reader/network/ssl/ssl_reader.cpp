@@ -75,6 +75,9 @@ std::size_t SslReader::readByte( char * byte ) {
 std::size_t SslReader::readBytes( char * buffer , const std::size_t bufferSize ) {
     int nBytes;
 
+    // Checking the precondition.
+    assert( buffer != nullptr && bufferSize > 0 );
+
     nBytes = 0;
     if( mSocket->isConnected() ) {
         mMutex.lock();

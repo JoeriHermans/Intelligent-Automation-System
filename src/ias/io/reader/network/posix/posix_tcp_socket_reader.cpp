@@ -52,6 +52,9 @@ void PosixTcpSocketReader::closeReader( void ) {
 std::size_t PosixTcpSocketReader::readByte( char * byte ) {
     long nBytes;
 
+    // Checking the precondition.
+    assert( byte != nullptr );
+
     nBytes = 0;
     if( mSocket->isConnected() ) {
         mMutex.lock();
