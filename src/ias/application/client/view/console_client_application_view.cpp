@@ -139,14 +139,17 @@ void ConsoleClientApplicationView::executeCommands( void ) {
         std::cin >> command;
         if( mModel->isConnected() ) {
             if( command == kCommandQuit ) {
+                printLineEnd();
                 stop();
             } else if( command == CommandStop::kIdentifier ) {
                 mController->execute(command);
+                printLineEnd();
                 stop();
             } else {
                 mController->execute(command);
             }
         } else {
+            printLineEnd();
             stop();
         }
     }
