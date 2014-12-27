@@ -131,7 +131,7 @@ bool ControllerSession::heartbeat( void ) {
     bool ok;
 
     writer = getSocket()->getWriter();
-    ok = (writer->writeBytes(reinterpret_cast<const char *>(beat),1) == 1);
+    ok = (writer->writeBytes(reinterpret_cast<const char *>(&beat),1) == 1);
 
     return ( ok );
 }
