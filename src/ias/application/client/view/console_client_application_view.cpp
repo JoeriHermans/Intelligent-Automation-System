@@ -150,7 +150,7 @@ void ConsoleClientApplicationView::executeCommands( void ) {
 }
 
 void ConsoleClientApplicationView::print( const std::string & str ) const {
-    std::cout << str;
+    std::cout << str << std::flush;
 }
 
 void ConsoleClientApplicationView::printLine( const std::string & str ) const {
