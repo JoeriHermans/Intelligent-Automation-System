@@ -154,16 +154,16 @@ void ConsoleClientApplicationView::print( const std::string & str ) const {
 }
 
 void ConsoleClientApplicationView::printLine( const std::string & str ) const {
-    std::cout << str << std::endl;
+    std::cout << str << std::endl << std::flush;
 }
 
 void ConsoleClientApplicationView::printLineEnd( void ) const {
-    std::cout << std::endl;
+    std::cout << std::endl << std::flush;
 }
 
 void ConsoleClientApplicationView::printMessage(
         const std::string & str ) const {
-    std::cout << "> " << str << std::endl;
+    std::cout << "> " << str << std::endl << std::flush;
 }
 
 void ConsoleClientApplicationView::handleConnectionState( void ) const {

@@ -113,12 +113,20 @@ void PosixSslSocket::pollSocket( void ) const {
             #endif
             pfd.revents = 0;
             if( poll(&pfd,1,0) >= 1 ) {
-                close(SSL_get_fd(mSsl));
-                SSL_free(mSsl);
-                mSsl = nullptr;
+                shutdownConnection();
             }
         }
     }
+}
+
+void PosixSslSocket::shutdownConnection( void ) const {
+    int fd;
+
+    fd = SSL_get_fd(mSsl);
+    SSL_shutdown(mSsl);
+    if( fd >= 0 )
+        close(fd);
+    SSL_set_fd(mSsl,-1);
 }
 
 PosixSslSocket::PosixSslSocket( SSL_CTX * sslContext ) {
@@ -133,15 +141,16 @@ PosixSslSocket::PosixSslSocket( SSL * ssl ) {
 
 PosixSslSocket::~PosixSslSocket( void ) {
     closeConnection();
+    if( mSsl != nullptr )
+        SSL_free(mSsl);
+    mSsl = nullptr;
     delete mReader; mReader = nullptr;
     delete mWriter; mWriter = nullptr;
 }
 
 void PosixSslSocket::closeConnection( void ) {
     if( isConnected() ) {
-        close(SSL_get_fd(mSsl));
-        SSL_free(mSsl);
-        mSsl = nullptr;
+        shutdownConnection();
     }
 }
 
@@ -156,7 +165,7 @@ bool PosixSslSocket::createConnection( const std::string & address,
 bool PosixSslSocket::isConnected( void ) const {
     pollSocket();
 
-    return ( mSsl != nullptr );
+    return ( mSsl != nullptr && SSL_get_fd(mSsl) >= 0 );
 }
 
 Reader * PosixSslSocket::getReader( void ) const {

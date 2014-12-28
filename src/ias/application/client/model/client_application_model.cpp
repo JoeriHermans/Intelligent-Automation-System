@@ -83,8 +83,7 @@ void ClientApplicationModel::readResponses( void ) {
 
     reader = mSocket->getReader();
     messageType = 0xff;
-    if( reader->readBytes(reinterpret_cast<char *>(&messageType),1) == 1 &&
-        isConnected() ) {
+    if( reader->readBytes(reinterpret_cast<char *>(&messageType),1) == 1 ) {
         switch(messageType) {
         case 0x00:
             sendHeartbeat();
@@ -297,6 +296,8 @@ void ClientApplicationModel::createConnection( const std::string & host,
         } else {
             mSocket = new PosixTcpSocket(fd);
         }
+        if( mSocket != nullptr )
+            setSocketTimeouts();
     }
     notifyObservers();
 }

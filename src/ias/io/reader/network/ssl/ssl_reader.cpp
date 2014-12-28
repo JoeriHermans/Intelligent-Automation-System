@@ -24,6 +24,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/io/reader/network/ssl/ssl_reader.h>

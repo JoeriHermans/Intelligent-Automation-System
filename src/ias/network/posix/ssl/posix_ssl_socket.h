@@ -79,6 +79,8 @@ class PosixSslSocket : public Socket {
 
     void pollSocket( void ) const;
 
+    void shutdownConnection( void ) const;
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
