@@ -137,13 +137,14 @@ void ConsoleClientApplicationView::executeCommands( void ) {
     printLineEnd();
     print(kMessageShell);
     while( mModel->isConnected() && !terminate ) {
-        std::cin >> command;
-        if( mModel->isConnected() ) {
+        std::getline(std::cin,command);
+        if( mModel->isConnected() && !command.empty() ) {
             mController->execute(command);
             if( command == CommandStop::kIdentifier ||
                 command == ClientApplicationModel::kCommandQuit )
                 terminate = true;
         }
+        command.clear();
     }
     printLineEnd();
     stop();
