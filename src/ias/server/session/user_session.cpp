@@ -90,7 +90,7 @@ void UserSession::authorize( void ) {
 
         w = getSocket()->getWriter();
         code[0] = 0x00;
-        code[1] = 0x01;
+        code[1] = 0xff;
         w->writeBytes(reinterpret_cast<char *>(&code),2);
     }
 }

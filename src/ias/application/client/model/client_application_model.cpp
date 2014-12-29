@@ -91,6 +91,9 @@ void ClientApplicationModel::readResponses( void ) {
         case 0x01:
             readResponse();
             break;
+        case 0xff:
+            mSocket->closeConnection();
+            break;
         }
     }
 }
