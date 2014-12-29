@@ -175,11 +175,13 @@ void ConsoleClientApplicationView::handleConnectionState( void ) const {
 }
 
 void ConsoleClientApplicationView::handleLoginState( void ) {
-    if( mModel->isLoggedIn() ) {
-        printMessage(kMessageLoggedIn);
+    if( mModel->isConnected() ) {
+        if( mModel->isLoggedIn() )
+            printMessage(kMessageLoggedIn);
+        else
+            stop();
     } else {
         printMessage(kMessageLoginFailed);
-        stop();
     }
 }
 
