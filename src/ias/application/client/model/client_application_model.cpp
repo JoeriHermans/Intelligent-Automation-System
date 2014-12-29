@@ -112,18 +112,17 @@ void ClientApplicationModel::readResponse( void ) {
     Reader * reader;
     std::uint16_t messageSize;
 
-    // Checking the precondition.
-    assert( mSocket->isConnected() );
-
-    reader = mSocket->getReader();
-    messageSize = 0;
-    reader->readBytes(reinterpret_cast<char *>(&messageSize),
-                      sizeof(messageSize));
-    messageSize = ntohs(messageSize);
-    char buffer[messageSize + 1];
-    reader->readBytes(buffer,static_cast<std::size_t>(messageSize));
-    buffer[messageSize] = 0;
-    notifyObservers(buffer);
+    if( mSocket->isConnected() ) {
+        reader = mSocket->getReader();
+        messageSize = 0;
+        reader->readBytes(reinterpret_cast<char *>(&messageSize),
+                          sizeof(messageSize));
+        messageSize = ntohs(messageSize);
+        char buffer[messageSize + 1];
+        reader->readBytes(buffer,static_cast<std::size_t>(messageSize));
+        buffer[messageSize] = 0;
+        notifyObservers(buffer);
+    }
 }
 
 void ClientApplicationModel::stopCommunicationThreads( void ) {
