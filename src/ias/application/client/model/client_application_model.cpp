@@ -190,21 +190,23 @@ void ClientApplicationModel::sendCommand( const std::string & command ) {
     std::uint8_t dBytes;
     std::size_t n;
 
-    mSendMutex.lock();
-    writer = mSocket->getWriter();
-    writer->writeBytes(reinterpret_cast<const char *>(&message_type),1);
-    // Retrieve the command's length.
-    commandLength = static_cast<std::uint8_t>(command.length());
-    writer->writeBytes(reinterpret_cast<const char *>(&commandLength),1);
-    bytesWritten = 0;
-    while( mSocket->isConnected() && bytesWritten < commandLength ) {
-        dBytes = commandLength - bytesWritten;
-        n = writer->writeBytes(command.c_str() + bytesWritten,dBytes);
-        if( n == 0 )
-            break;
-        bytesWritten += n;
+    if( command != kCommandQuit ) {
+        mSendMutex.lock();
+        writer = mSocket->getWriter();
+        writer->writeBytes(reinterpret_cast<const char *>(&message_type),1);
+        // Retrieve the command's length.
+        commandLength = static_cast<std::uint8_t>(command.length());
+        writer->writeBytes(reinterpret_cast<const char *>(&commandLength),1);
+        bytesWritten = 0;
+        while( mSocket->isConnected() && bytesWritten < commandLength ) {
+            dBytes = commandLength - bytesWritten;
+            n = writer->writeBytes(command.c_str() + bytesWritten,dBytes);
+            if( n == 0 )
+                break;
+            bytesWritten += n;
+        }
+        mSendMutex.unlock();
     }
-    mSendMutex.unlock();
 }
 
 void ClientApplicationModel::handleCommunicationReceive( void ) {
