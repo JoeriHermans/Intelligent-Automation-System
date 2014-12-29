@@ -88,9 +88,10 @@ void UserSession::authorize( void ) {
         std::uint8_t code[2];
         Writer * w;
 
+        // Send authorization byte.
         w = getSocket()->getWriter();
         code[0] = 0x00;
-        code[1] = 0xff;
+        code[1] = 0x01;
         w->writeBytes(reinterpret_cast<char *>(&code),2);
     }
 }
