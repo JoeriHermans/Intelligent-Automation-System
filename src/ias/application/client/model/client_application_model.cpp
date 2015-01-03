@@ -319,7 +319,7 @@ void ClientApplicationModel::authorize( const std::string & username,
 
     // Checking the precondition.
     assert( !username.empty() && username.length() <= 0xff &&
-            !password.empty() && !password.length() <= 0xff &&
+            !password.empty() && password.length() <= 0xff &&
             mSocket != nullptr );
 
     if( mSocket->isConnected() ) {
