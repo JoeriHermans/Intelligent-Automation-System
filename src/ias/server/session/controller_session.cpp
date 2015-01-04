@@ -59,14 +59,16 @@ void ControllerSession::authorize( void ) {
             readBytes(securityCode,header[2]) ) {
             identifier[header[1]] = 0;
             securityCode[header[2]] = 0;
-            controller = mControllers->get(identifier);
-            if( controller != nullptr &&
-                controller->matchesSecurityCode(securityCode) &&
-                !controller->isConnected() ) {
-                logi("Controller " + controller->getIdentifier() + " authorized.");
-                mController = controller;
-                mController->setConnected(getSocket());
-                mFlagRunning = true;
+            if( strlen(identifier) > 0 ) {
+                controller = mControllers->get(identifier);
+                if( controller != nullptr &&
+                    controller->matchesSecurityCode(securityCode) &&
+                    !controller->isConnected() ) {
+                    logi("Controller " + controller->getIdentifier() + " authorized.");
+                    mController = controller;
+                    mController->setConnected(getSocket());
+                    mFlagRunning = true;
+                }
             }
         }
     }

@@ -110,9 +110,11 @@ User * UserSession::authenticateUser( const char * username,
     // Checking the precondition.
     assert( username != nullptr && password != nullptr );
 
-    user = mUsers->get(username);
-    if( user != nullptr && !user->matchesPassword(password) ) {
-        user = nullptr;
+    if( strlen(username) > 0 ) {
+        user = mUsers->get(username);
+        if( user != nullptr && !user->matchesPassword(password) ) {
+            user = nullptr;
+        }
     }
 
     return ( user );
