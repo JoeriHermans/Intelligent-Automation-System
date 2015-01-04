@@ -115,6 +115,8 @@ User * UserSession::authenticateUser( const char * username,
         if( user != nullptr && !user->matchesPassword(password) ) {
             user = nullptr;
         }
+    } else {
+        user = nullptr;
     }
 
     return ( user );
