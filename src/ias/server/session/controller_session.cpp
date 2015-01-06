@@ -48,7 +48,9 @@ void ControllerSession::setContainer( Container<Controller *> * controllers ) {
 
 void ControllerSession::authorize( void ) {
     std::uint8_t header[3];
+    std::uint8_t response = 0x00;
     Controller * controller;
+    Writer * writer;
 
     logi("Authorizing controller.");
     if( readBytes(reinterpret_cast<char *>(header),3) && header[0] == 0x00 ) {
@@ -68,10 +70,13 @@ void ControllerSession::authorize( void ) {
                     mController = controller;
                     mController->setConnected(getSocket());
                     mFlagRunning = true;
+                    response = 0x01;
                 }
             }
         }
     }
+    writer = getSocket()->getWriter();
+    writer->writeBytes(reinterpret_cast<const char *>(&response),1);
     if( !mFlagRunning )
         loge("Controller authorization failed.");
 }

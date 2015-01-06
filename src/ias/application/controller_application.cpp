@@ -251,9 +251,11 @@ void ControllerApplication::allocateDeviceServer( void ) {
 
 void ControllerApplication::authenticateWithServer( void ) {
     std::uint8_t header[3];
+    std::uint8_t response;
     std::string message;
     std::size_t n;
     Writer * writer;
+    Reader * reader;
     bool success;
 
     const std::string & controllerIdentifier =
@@ -275,6 +277,7 @@ void ControllerApplication::authenticateWithServer( void ) {
     header[2] = static_cast<std::uint8_t>(securityCode.length());
     message = controllerIdentifier + securityCode;
     writer = mSocket->getWriter();
+    reader = mSocket->getReader();
     writer->lock();
     n = writer->writeBytes(reinterpret_cast<const char *>(header),3);
     success &= ( n > 0 );
@@ -282,7 +285,9 @@ void ControllerApplication::authenticateWithServer( void ) {
                            message.length());
     success &= ( n > 0 );
     writer->unlock();
-    if( !success ) {
+    response = 0x00;
+    reader->readBytes(reinterpret_cast<char *>(&response),1);
+    if( !success && response == 0x01 ) {
         mSocket->closeConnection();
         logi("Authentication failed.");
     } else {
