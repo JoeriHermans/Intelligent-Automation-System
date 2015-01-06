@@ -287,11 +287,11 @@ void ControllerApplication::authenticateWithServer( void ) {
     writer->unlock();
     response = 0x00;
     reader->readBytes(reinterpret_cast<char *>(&response),1);
-    if( !success && response == 0x01 ) {
-        mSocket->closeConnection();
-        logi("Authentication failed.");
-    } else {
+    if( success && response == 0x01 ) {
         logi("Authenticated.");
+    } else {
+        logi("Authentication failed.");
+        mSocket->closeConnection();
     }
 }
 
