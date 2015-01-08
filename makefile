@@ -1,6 +1,7 @@
 CC = g++
 LD = g++
 
+SHELL = bash
 MODULES = ai application building controller d
 LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx -o ias
 CCFLAGS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L -I"src/" \
