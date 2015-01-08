@@ -3,8 +3,8 @@
  * database.
  *
  * @date                    Jul 5, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -46,49 +46,49 @@ class DatabaseFactory : public Factory<T> {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains the connection with the database.
      */
     DatabaseConnection * mDbConnection;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setDbConnection( DatabaseConnection * connection ) {
         // Checking the precondition.
         assert( connection != nullptr && connection->isConnected() );
-        
+
         mDbConnection = connection;
     }
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
 
     // BEGIN Protected methods. //////////////////////////////////////
-    
+
     DatabaseConnection * getDbConnection( void ) const {
         return ( mDbConnection );
     }
-    
+
     // END Protected methods. ////////////////////////////////////////
 
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     DatabaseFactory( DatabaseConnection * connection ) {
         setDbConnection( connection );
     }
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~DatabaseFactory( void ) = default;
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
