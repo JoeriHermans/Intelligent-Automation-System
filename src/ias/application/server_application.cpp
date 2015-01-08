@@ -417,6 +417,10 @@ void ServerApplication::initializeDispatcher( void ) {
         new CommandLoadRule(mDbConnection,&mContainerDevices,
                             &mContainerRules,&mOperators)
     );
+    mDispatcher.registerCommand(
+        CommandUsers::kIdentifier,
+        new CommandUsers(&mContainerUsers)
+    );
 }
 
 void ServerApplication::initializeLogger( void ) {
