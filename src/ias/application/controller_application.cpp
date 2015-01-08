@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <openssl/err.h>
 
 // Application dependencies.
 #include <ias/application/controller_application.h>
@@ -155,11 +156,13 @@ void ControllerApplication::connectToServer( void ) {
     fd = -1;
     if( mProperties.contains(kConfigSocksAddress) &&
         mProperties.contains(kConfigSocksPort) ) {
+        logi("Connecting to server through SOCKS proxy.");
         const std::string & proxyAddress = mProperties.get(kConfigSocksAddress);
         const std::string & proxyPort = mProperties.get(kConfigSocksPort);
         fd = connectToProxy(proxyAddress,proxyPort,
                             serverAddress,serverPort);
     } else {
+        logi("Connecting to remote server.");
         port = static_cast<std::size_t>(std::stoi(serverPort));
         fd = connect(serverAddress,port);
     }
@@ -180,6 +183,8 @@ void ControllerApplication::connectToServer( void ) {
         } else {
             mSocket = new PosixTcpSocket(fd);
         }
+    } else {
+        loge("Could not connect to remote server.");
     }
 }
 
