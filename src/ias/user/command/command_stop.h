@@ -36,26 +36,26 @@ class CommandStop : public Command {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-    
+
     static const char kIdentifier[];
-        
+
     // END Class constants. //////////////////////////////////////////
 
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-    
+
     /**
      * Contains a reference to the server application.
      */
     ServerApplication * mApplication;
-    
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setApplication( ServerApplication * application );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -66,21 +66,21 @@ class CommandStop : public Command {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     CommandStop( ServerApplication * application );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~CommandStop( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual std::string execute( const std::string & parameters );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

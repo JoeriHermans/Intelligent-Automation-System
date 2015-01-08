@@ -71,11 +71,20 @@ void UserSession::authorize( void ) {
                     password[length] = 0;
                     hashedPassword = sha256GlobalSalts(password);
                     mUser = authenticateUser(username,hashedPassword.c_str());
-                    if( mUser != nullptr )
-                        logi(mUser->getIdentifier() + " has been authorized.");
-                    else
+                    if( mUser != nullptr ) {
+                        if( !mUser->isLoggedIn() ) {
+                            mUser->setLoggedIn(true);
+                            logi(mUser->getUsername() +
+                                    " has been authorized.");
+                        } else {
+                            loge(mUser->getUsername() +
+                                    " is already logged in");
+                            mUser = nullptr;
+                        }
+                    } else {
                         loge(std::string(username) +
                                 " could not be authorized.");
+                    }
                 }
             }
         }
@@ -210,6 +219,8 @@ UserSession::UserSession( Socket * socket,
 
 UserSession::~UserSession( void ) {
     stop();
+    if( mUser != nullptr )
+        mUser->setLoggedIn(false);
 }
 
 void UserSession::run( void ) {

@@ -30,6 +30,10 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+inline void User::initialize( void ) {
+    mLoggedIn = false;
+}
+
 void User::setId( const std::size_t id ) {
     // Checking the precondition.
     assert( id > 0 );
@@ -40,6 +44,7 @@ void User::setId( const std::size_t id ) {
 User::User( const std::size_t id,
             const std::string & username,
             const std::string & password ) {
+    initialize();
     setId(id);
     setUsername(username);
     setPassword(password);
@@ -77,4 +82,12 @@ void User::setPassword( const std::string & password ) {
 
 bool User::matchesPassword( const std::string & password ) const {
     return ( mPassword == password );
+}
+
+void User::setLoggedIn( const bool loggedIn ) {
+    mLoggedIn = loggedIn;
+}
+
+bool User::isLoggedIn( void ) const {
+    return ( mLoggedIn );
 }

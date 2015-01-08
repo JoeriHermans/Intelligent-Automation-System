@@ -43,9 +43,9 @@ class Container {
     // END Class constants. //////////////////////////////////////////
 
     private:
-        
+
     // BEGIN Data structures. ////////////////////////////////////////
-        
+
     struct Compare {
         inline bool operator()( const T & a , const T & b ) {
             return ( a->getId() < b->getId() );
@@ -57,29 +57,29 @@ class Container {
             return ( left < b->getId() );
         }
     };
-        
+
     // END Data structures. //////////////////////////////////////////
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Contains a vector which stores the instances by id.
      */
     std::vector<T> mElements;
-    
+
     /**
      * A mutex to prevent data corruption.
      */
     mutable std::mutex mMutexElements;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void sort( void ) {
         std::sort(mElements.begin(),mElements.end(),Compare());
     }
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -90,51 +90,51 @@ class Container {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     Container( void ) {
         // Nothing to do here.
     }
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~Container( void ) {
         mMutexElements.lock();
         for( auto it = mElements.begin() ; it != mElements.end() ; ++it )
             delete (*it);
         mMutexElements.unlock();
     }
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     std::size_t numElements( void ) const {
         std::size_t n;
-        
+
         mMutexElements.lock();
         n = mElements.size();
         mMutexElements.unlock();
-        
+
         return ( n );
     }
-    
+
     bool contains( const T & element ) const {
         bool contains;
-        
+
         mMutexElements.lock();
         contains = ( std::find(mElements.begin(),mElements.end(),element) !=
                      mElements.end() );
         mMutexElements.unlock();
-        
+
         return ( contains );
     }
-    
+
     void add( T & element ) {
         // Checking the precondition.
         assert( element != nullptr );
-        
+
         if( !contains(element) ) {
             mMutexElements.lock();
             mElements.push_back(element);
@@ -142,7 +142,7 @@ class Container {
             mMutexElements.unlock();
         }
     }
-    
+
     void remove( const T & element ) {
         mMutexElements.lock();
         auto it = std::lower_bound(mElements.begin(),mElements.end(),
@@ -154,14 +154,14 @@ class Container {
         }
         mMutexElements.unlock();
     }
-    
+
     T get( const std::size_t id ) const {
         T currentElement;
         T element;
-        
+
         // Checking the precondition.
         assert( id > 0 );
-        
+
         element = nullptr;
         mMutexElements.lock();
         for( auto it = mElements.begin() ; it != mElements.end() ; ++it ) {
@@ -172,17 +172,17 @@ class Container {
             }
         }
         mMutexElements.unlock();
-        
+
         return ( element );
     }
-    
+
     T get( const std::string & identifier ) const {
         T element;
         T currentElement;
-        
+
         // Checking the precondition.
         assert( !identifier.empty() );
-        
+
         element = nullptr;
         mMutexElements.lock();
         for( auto it = mElements.begin() ; it != mElements.end() ; ++it ) {
@@ -193,22 +193,22 @@ class Container {
             }
         }
         mMutexElements.unlock();
-        
+
         return ( element );
     }
-    
+
     std::vector<T> getAll( void ) const {
         std::vector<T> list;
-        
+
         mMutexElements.lock();
         for( auto it = mElements.begin() ; it != mElements.end() ; ++it ) {
             list.push_back((*it));
         }
         mMutexElements.unlock();
-        
+
         return ( list );
     }
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

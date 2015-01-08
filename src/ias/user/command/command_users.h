@@ -1,11 +1,13 @@
 /**
- * A class which describes the properties and actions of a user.
+ * A class which is responsible for providing information about users.
+ * By default, when no parameters are specified, this function will list the
+ * users which are currently logged in into the system (like the UNIX command).
  *
- * @date                    Jul 9, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    8 January, 2015
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
- * Copyright 2013 Joeri HERMANS
+ * Copyright 2015 Joeri HERMANS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +22,26 @@
  * limitations under the License.
  */
 
-#ifndef USER_H_
-#define USER_H_
+#ifndef COMMAND_USERS_H_
+#define COMMAND_USERS_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <string>
+// Application dependencies.
+#include <ias/user/user.h>
+#include <ias/user/command/command.h>
+#include <ias/util/container.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class User {
+class CommandUsers : public Command {
 
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+
+    static const char kIdentifier[];
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -42,34 +49,17 @@ class User {
     // BEGIN Private members. ////////////////////////////////////////
 
     /**
-     * Contains the unique id of the user.
+     * A contains which holds all users in the system.
      */
-    std::size_t mId;
-
-    /**
-     * Contains the unique username of the user.
-     */
-    std::string mUsername;
-
-    /**
-     * Contains the unique hashed password of the user.
-     */
-    std::string mPassword;
-
-    /**
-     * A flag which indicates if a user is logged in.
-     *
-     * @note    By default, this member will be equal to false.
-     */
-    bool mLoggedIn;
+    const Container<User *> * mUsers;
 
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
 
-    inline void initialize( void );
+    void setContainer( const Container<User *> * users );
 
-    void setId( const std::size_t id );
+    std::string onlineUsers( void ) const;
 
     // END Private methods. //////////////////////////////////////////
 
@@ -82,35 +72,19 @@ class User {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    User( const std::size_t id,
-          const std::string & username,
-          const std::string & password );
+    CommandUsers( const Container<User *> * users );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~User( void );
+    virtual ~CommandUsers( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    std::size_t getId( void ) const;
-
-    void setUsername( const std::string & username );
-
-    const std::string & getUsername( void ) const;
-
-    const std::string & getIdentifier( void ) const;
-
-    void setPassword( const std::string & password );
-
-    bool matchesPassword( const std::string & password ) const;
-
-    void setLoggedIn( const bool loggedIn );
-
-    bool isLoggedIn( void ) const;
+    virtual std::string execute( const std::string & parameters );
 
     // END Public methods. ///////////////////////////////////////////
 
@@ -119,4 +93,4 @@ class User {
 
 };
 
-#endif /* USER_H_ */
+#endif /* COMMAND_USERS_H_ */
