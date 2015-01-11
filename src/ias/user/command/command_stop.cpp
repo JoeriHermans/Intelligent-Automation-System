@@ -40,7 +40,7 @@ const char CommandStop::kIdentifier[] = "stop";
 void CommandStop::setApplication( ServerApplication * app ) {
     // Checking the precondition.
     assert( app != nullptr );
-    
+
     mApplication = app;
 }
 
@@ -55,9 +55,9 @@ CommandStop::~CommandStop( void ) {
 
 std::string CommandStop::execute( const std::string & parameters ) {
     std::string result;
-    
+
     mApplication->stop();
     result = kProtocolAck;
-    
+
     return ( result );
 }

@@ -74,8 +74,8 @@ const char kConfigNetworkDeviceSslKey[] = "network_device_ssl_key";
 const char kConfigSocksAddress[] = "socks_address";
 const char kConfigSocksPort[] = "socks_port";
 
-const char kProtocolAck[] = "{\"response\": \"ACK\"}";
-const char kProtocolNack[] = "{\"response\": \"NACK\"}";
+const char kProtocolAck[] = "{\"response\":\"ACK\"}";
+const char kProtocolNack[] = "{\"response\":\"NACK\"}";
 
 const char kDefaultServerAddress[] = "127.0.0.1";
 const unsigned int kDefaultDeviceServerPort = 5002;
