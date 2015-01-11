@@ -69,9 +69,10 @@ std::string CommandListControllers::execute( const std::string & params ) {
         output += "  {\n";
         output += "    \"identifier\":\"" + c->getIdentifier() + "\",\n";
         output += "    \"state\":" + std::to_string(c->isConnected()) + "\n";
+        output += "\n  }";
         if( n > 1 && i < (n - 1) )
-            output += ",";
-        output += "\n  }\n";
+              output += ",";
+        output += "\n";
     }
     output += "]}";
 
