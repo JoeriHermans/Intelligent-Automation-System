@@ -28,6 +28,7 @@
 #include <iostream>
 
 // Application dependencies.
+#include <ias/device/device.h>
 #include <ias/server/session/controller_session.h>
 #include <ias/logger/logger.h>
 

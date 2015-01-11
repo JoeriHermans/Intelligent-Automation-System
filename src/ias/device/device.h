@@ -36,9 +36,7 @@
 #include <ias/technology/technology.h>
 #include <ias/util/identifiable.h>
 #include <ias/util/observable.h>
-
-// Forward declarations.
-class Controller;
+#include <ias/controller/controller.h>
 
 // END Includes. /////////////////////////////////////////////////////
 

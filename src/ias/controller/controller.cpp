@@ -28,6 +28,7 @@
 #include <utility>
 
 // Application dependencies.
+#include <ias/device/device.h>
 #include <ias/controller/controller.h>
 #include <ias/logger/logger.h>
 

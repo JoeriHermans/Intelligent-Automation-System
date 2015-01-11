@@ -28,6 +28,7 @@
 
 // Application dependencies.
 #include <ias/controller/factory/controller_database_factory.h>
+#include <ias/device/device.h>
 
 // END Includes. /////////////////////////////////////////////////////
 

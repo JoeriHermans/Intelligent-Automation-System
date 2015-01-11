@@ -31,9 +31,11 @@
 #include <vector>
 
 // Application dependencies.
-#include <ias/device/device.h>
 #include <ias/network/socket.h>
 #include <ias/util/identifiable.h>
+
+// Forward declaration.
+class Device;
 
 // END Includes. /////////////////////////////////////////////////////
 
