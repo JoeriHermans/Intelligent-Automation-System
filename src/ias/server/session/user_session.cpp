@@ -51,10 +51,9 @@ void UserSession::setUserContainer( Container<User *> * users ) {
 }
 
 void UserSession::authorize( void ) {
-    std::uint8_t type;
+    std::uint8_t type = 0xff;
 
     logi("Authorizing user.");
-    type = 0xff;
     if( readBytes(reinterpret_cast<char *>(&type),1) ) {
         switch(type) {
         case 0x00:
