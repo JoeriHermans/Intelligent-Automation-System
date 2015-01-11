@@ -80,6 +80,10 @@ class UserSession : public Session {
 
     void authorize( void );
 
+    void authorizeNormal( void );
+
+    void authorizeApiKey( void );
+
     User * authenticateUser( const char * username,
                              const char * password ) const;
 

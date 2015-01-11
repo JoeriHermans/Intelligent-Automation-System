@@ -52,17 +52,44 @@ void UserSession::setUserContainer( Container<User *> * users ) {
 
 void UserSession::authorize( void ) {
     std::uint8_t type;
-    std::uint8_t length;
-    std::string hashedPassword;
 
     logi("Authorizing user.");
     type = 0xff;
+    if( readBytes(reinterpret_cast<char *>(&type),1) ) {
+        switch(type) {
+        case 0x00:
+            authorizeNormal();
+            break;
+        case 0x01:
+            authorizeApiKey();
+            break;
+        }
+    }
+    if( mUser == nullptr )
+        loge("User authorization failed.");
+    if( mUser == nullptr ) {
+        getSocket()->closeConnection();
+    } else {
+        std::uint8_t code[2];
+        Writer * w;
+
+        // Send authorization byte.
+        w = getSocket()->getWriter();
+        code[0] = 0x00;
+        code[1] = 0x01;
+        w->writeBytes(reinterpret_cast<char *>(&code),2);
+    }
+}
+
+void UserSession::authorizeNormal( void ) {
+    std::uint8_t length;
+    std::string hashedPassword;
+
+    logi("Authorizing user using username and password.");
     length = 0x00;
-    if( readBytes(reinterpret_cast<char *>(&type),1) &&
-        type == 0x00 &&
-        readBytes(reinterpret_cast<char *>(&length),1) ) {
+    if( readBytes(reinterpret_cast<char *>(&length),1) ) {
         char username[length + 1];
-        if( readBytes(username,length) && length > 1 ) {
+        if( length > 1 && readBytes(username,length) ) {
             username[length] = 0;
             length = 0x00;
             if( readBytes(reinterpret_cast<char *>(&length),1) ) {
@@ -89,19 +116,19 @@ void UserSession::authorize( void ) {
             }
         }
     }
-    if( mUser == nullptr )
-        loge("User authorization failed.");
-    if( mUser == nullptr ) {
-        getSocket()->closeConnection();
-    } else {
-        std::uint8_t code[2];
-        Writer * w;
+}
 
-        // Send authorization byte.
-        w = getSocket()->getWriter();
-        code[0] = 0x00;
-        code[1] = 0x01;
-        w->writeBytes(reinterpret_cast<char *>(&code),2);
+void UserSession::authorizeApiKey( void ) {
+    std::uint8_t length;
+    std::string hashedKey;
+
+    logi("Authorizing user using API key.");
+    if( readBytes(reinterpret_cast<char *>(&length),1) ) {
+        char key[length + 1];
+        if( length > 1 && readBytes(key,length) ) {
+            // TODO Implement.
+            logi("API key: " + std::string(key));
+        }
     }
 }
 
