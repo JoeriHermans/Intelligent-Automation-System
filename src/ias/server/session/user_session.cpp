@@ -123,7 +123,7 @@ void UserSession::authorizeApiKey( void ) {
 
     logi("Authorizing user using API key.");
     length = 0xff;
-    if( readBytes(reinterpret_cast<char *>(&length),1) && length == 64 ) {
+    if( readBytes(reinterpret_cast<char *>(&length),1) && length > 0 ) {
         char key[length + 1];
         key[length] = 0;
         if( length > 1 && readBytes(key,length) ) {
