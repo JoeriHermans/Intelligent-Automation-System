@@ -250,9 +250,9 @@ void UserSession::sendResponse( const char * buffer , const std::size_t n ) {
 
     b = 0x01;
     writer = getSocket()->getWriter();
-    writer->writeBytes(reinterpret_cast<const char *>(&b),1);
     messageSize = static_cast<std::uint16_t>(n);
     messageSize = htons(messageSize);
+    writer->writeBytes(reinterpret_cast<const char *>(&b),1);
     writer->writeBytes(reinterpret_cast<const char *>(&messageSize),
                        sizeof(messageSize));
     writer->writeBytes(buffer,n);
