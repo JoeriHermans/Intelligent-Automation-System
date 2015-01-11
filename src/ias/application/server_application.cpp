@@ -351,7 +351,8 @@ void ServerApplication::initializeUserServer( void ) {
     if( serverSocket->bindToPort() ) {
         mServerUser = new UserServer(serverSocket,
                                      &mContainerUsers,
-                                     &mDispatcher);
+                                     &mDispatcher,
+                                     mDbConnection);
     } else {
         delete serverSocket;
     }
@@ -376,7 +377,8 @@ void ServerApplication::initializeUserSslServer( void ) {
         if( serverSocket->bindToPort() ) {
             mServerUserSsl = new UserServer(serverSocket,
                                             &mContainerUsers,
-                                            &mDispatcher);
+                                            &mDispatcher,
+                                            mDbConnection);
         } else {
             delete serverSocket;
         }

@@ -30,6 +30,7 @@
 #include <ias/user/user.h>
 #include <ias/util/container.h>
 #include <ias/user/command/command_dispatcher.h>
+#include <ias/database/interface/database_connection.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -50,6 +51,12 @@ class UserSession : public Session {
      * @note    By default, this member will be equal to the null reference.
      */
     Container<User *> * mUsers;
+
+    /**
+     * Holds the database connection in order to check the
+     * credentials of a user.
+     */
+    DatabaseConnection * mDbConnection;
 
     /**
      * Contains the user which is associated with this session.
@@ -78,11 +85,15 @@ class UserSession : public Session {
 
     void setDispatcher( CommandDispatcher * dispatcher );
 
+    void setDatabaseConnection( DatabaseConnection * dbConnection );
+
     void authorize( void );
 
     void authorizeNormal( void );
 
     void authorizeApiKey( void );
+
+    void validateApiKey( const std::string & key );
 
     User * authenticateUser( const char * username,
                              const char * password ) const;
@@ -110,7 +121,8 @@ class UserSession : public Session {
 
     UserSession( Socket * socket,
                  Container<User *> * users,
-                 CommandDispatcher * dispatcher );
+                 CommandDispatcher * dispatcher,
+                 DatabaseConnection * dbConnection );
 
     // END Constructors. /////////////////////////////////////////////
 

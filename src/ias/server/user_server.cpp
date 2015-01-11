@@ -38,6 +38,7 @@
 inline void UserServer::initialize( void ) {
     mUsers = nullptr;
     mMainThread = nullptr;
+    mDbConnection = nullptr;
     mFlagRunning = true;
     mDispatcher = nullptr;
 }
@@ -54,6 +55,13 @@ void UserServer::setDispatcher( CommandDispatcher * dispatcher ) {
     assert( dispatcher != nullptr );
 
     mDispatcher = dispatcher;
+}
+
+void UserServer::setDatabaseConnection( DatabaseConnection * dbConnection ) {
+    // Checking the precondition.
+    assert( dbConnection != nullptr );
+
+    mDbConnection = dbConnection;
 }
 
 void UserServer::cleanupFinishingThreads( void ) {
@@ -80,11 +88,13 @@ void UserServer::signalSessions( void ) {
 
 UserServer::UserServer( ServerSocket * serverSocket,
                         Container<User *> * users,
-                        CommandDispatcher * dispatcher ) :
+                        CommandDispatcher * dispatcher,
+                        DatabaseConnection * dbConnection ) :
     Server(serverSocket) {
     initialize();
     setUserContainer(users);
     setDispatcher(dispatcher);
+    setDatabaseConnection(dbConnection);
 }
 
 UserServer::~UserServer( void ) {
@@ -103,8 +113,8 @@ void UserServer::start( void ) {
                 socket = serverSocket->acceptSocket(1);
                 if( socket != nullptr ) {
                     logi("Starting new user session.");
-                    session = new UserSession(socket,mUsers,
-                                              mDispatcher);
+                    session = new UserSession(socket,mUsers,mDispatcher,
+                                              mDbConnection);
                     session->addObserver(this);
                     mSessions[session] =
                         new std::thread([session]{

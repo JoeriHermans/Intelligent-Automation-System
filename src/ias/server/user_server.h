@@ -34,6 +34,7 @@
 #include <mutex>
 
 // Application dependencies.
+#include <ias/database/interface/database_connection.h>
 #include <ias/server/server.h>
 #include <ias/server/session/session.h>
 #include <ias/user/user.h>
@@ -60,50 +61,60 @@ class UserServer : public Server {
     Container<User *> * mUsers;
 
     /**
+     * Contains the database connection which will be used to check the
+     * user credentials of incoming connections.
+     *
+     * @note    By default, this member will be equal to the null reference.
+     */
+    DatabaseConnection * mDbConnection;
+
+    /**
      * A map which holds all running controller sessions and the
      * corresponding sessions.
      */
     std::map<Session *,std::thread *> mSessions;
-    
+
     /**
      * A set of threads which are meant for cleanup.
      */
     std::vector<std::thread *> mInactiveThreads;
-    
+
     /**
      * Contains a pointer to the main server thread.
      */
     std::thread * mMainThread;
-    
+
     /**
      * A class which is responsible for dispatching user commands.
      */
     CommandDispatcher * mDispatcher;
-    
+
     /**
      * A flag which indicates if the server needs to stop.
      */
     bool mFlagRunning;
-    
+
     /**
      * A mutex which sync's the access to the sessions map.
      */
     std::mutex mMutexSessions;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     inline void initialize( void );
-    
+
     void setUserContainer( Container<User *> * users );
-    
+
     void setDispatcher( CommandDispatcher * dispatcher );
-    
+
+    void setDatabaseConnection( DatabaseConnection * dbConnection );
+
     void cleanupFinishingThreads( void );
-    
+
     void signalSessions( void );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -114,31 +125,32 @@ class UserServer : public Server {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     UserServer( ServerSocket * serverSocket,
                 Container<User *> * users,
-                CommandDispatcher * dispatcher );
-    
+                CommandDispatcher * dispatcher,
+                DatabaseConnection * dbConnection );
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~UserServer( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void start( void );
-    
+
     virtual void stop( void );
-    
+
     virtual void join( void );
-    
+
     virtual void update( void );
-    
+
     virtual void update( void * argument );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

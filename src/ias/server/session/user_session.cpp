@@ -40,6 +40,7 @@
 inline void UserSession::initialize( void ) {
     mUsers = nullptr;
     mUser = nullptr;
+    mDbConnection = nullptr;
     mFlagRunning = true;
 }
 
@@ -48,6 +49,13 @@ void UserSession::setUserContainer( Container<User *> * users ) {
     assert( users != nullptr );
 
     mUsers = users;
+}
+
+void UserSession::setDatabaseConnection( DatabaseConnection * dbConnection ) {
+    // Checking the precondition.
+    assert( dbConnection != nullptr );
+
+    mDbConnection = dbConnection;
 }
 
 void UserSession::authorize( void ) {
@@ -128,10 +136,13 @@ void UserSession::authorizeApiKey( void ) {
         key[length] = 0;
         if( length > 1 && readBytes(key,length) ) {
             hashedKey = sha256GlobalSalts(std::string(key));
-            logi("API key: " + hashedKey);
-            // TODO Implement.
+            validateApiKey(hashedKey);
         }
     }
+}
+
+void UserSession::validateApiKey( const std::string & key ) {
+    // TODO Implement.
 }
 
 void UserSession::setDispatcher( CommandDispatcher * dispatcher ) {
@@ -239,11 +250,13 @@ bool UserSession::heartbeat( void ) {
 
 UserSession::UserSession( Socket * socket,
                           Container<User *> * users,
-                          CommandDispatcher * dispatcher ) :
+                          CommandDispatcher * dispatcher,
+                          DatabaseConnection * dbConnection ) :
     Session(socket) {
     initialize();
     setUserContainer(users);
     setDispatcher(dispatcher);
+    setDatabaseConnection(dbConnection);
 }
 
 UserSession::~UserSession( void ) {
