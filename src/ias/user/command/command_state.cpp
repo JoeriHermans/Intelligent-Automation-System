@@ -71,7 +71,7 @@ std::string CommandState::execute( const std::string & parameters ) {
                 response = "{\"state\":[\n";
                 for( std::size_t i = 0 ; i < n ; ++i ) {
                     member = members.at(i);
-                    response += "{\"" + member->getIdentifier() + "\":\"" +
+                    response += "  {\"" + member->getIdentifier() + "\":\"" +
                                         device->get(member->getIdentifier()) +
                                         "\"}";
                     if( n > 1 && i < ( n - 1 ) )

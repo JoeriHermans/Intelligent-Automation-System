@@ -65,7 +65,7 @@ std::string CommandListCommands::execute( const std::string & parameters ) {
     output = "{\"commands\":[\n";
     for( std::size_t i = 0 ; i < n ; ++i ) {
         Command * c = commands.at(i);
-        output += "\"" + c->getIdentifier() + "\"";
+        output += "  \"" + c->getIdentifier() + "\"";
         if( n > 1 && i < (n - 1) )
             output += ",";
         output += "\n";

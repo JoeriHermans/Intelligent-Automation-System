@@ -65,7 +65,7 @@ std::string CommandListRules::execute( const std::string & parameters ) {
     if( n > 0 ) {
         response = "{\"rules\":[\n";
         for( std::size_t i = 0 ; i < n ; ++i ) {
-            response += "{\"id\":" + std::to_string(rules.at(i)->getId()) + "}";
+            response += "  {\"id\":" + std::to_string(rules.at(i)->getId()) + "}";
             if( i < (n - 1) )
                 response += ',';
             response += "\n";
