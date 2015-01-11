@@ -163,8 +163,12 @@ void UserSession::validateApiKey( const std::string & key ) {
                 id = static_cast<std::size_t>(
                         std::stoull(row->getColumn(0),nullptr,0));
                 user = mUsers->get(id);
-                if( user != nullptr )
+                if( user != nullptr ) {
                     mUser = user;
+                    logi(key + " authenticated.");
+                } else {
+                    loge(key + " could not be authenticated.");
+                }
                 delete row;
             }
             delete result;
