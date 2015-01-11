@@ -29,6 +29,7 @@
 // Application dependencies.
 #include <ias/application/constants.h>
 #include <ias/user/command/command_device_detail.h>
+#include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -88,9 +89,15 @@ CommandDeviceDetail::CommandDeviceDetail( Container<Device *> * devices ) :
 }
 
 std::string CommandDeviceDetail::execute( const std::string & parameters ) {
+    const Device * d;
     std::string response;
 
-    const Device * d = mDevices->get(parameters);
+    if( isNumber(parameters) ) {
+        std::size_t id = std::stoull(parameters,nullptr,0);
+        d = mDevices->get(id);
+    } else {
+        d = mDevices->get(parameters);
+    }
     if( d != nullptr )
         buildResponse(d,response);
     if( response.empty() )
