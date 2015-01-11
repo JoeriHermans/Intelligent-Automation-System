@@ -145,6 +145,7 @@ void UserSession::validateApiKey( const std::string & key ) {
     DatabaseStatement * statement;
     DatabaseResult * result;
     DatabaseResultRow * row;
+    User * user;
     std::size_t id;
 
     // Checking the precondition.
@@ -161,7 +162,9 @@ void UserSession::validateApiKey( const std::string & key ) {
                 row = result->next();
                 id = static_cast<std::size_t>(
                         std::stoull(row->getColumn(0),nullptr,0));
-                std::cout << "Fetched user id: " << std::to_string(id) << std::endl;
+                user = mUsers->get(id);
+                if( user != nullptr )
+                    mUser = user;
                 delete row;
             }
             delete result;
