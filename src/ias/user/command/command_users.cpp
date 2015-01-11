@@ -52,6 +52,7 @@ std::string CommandUsers::onlineUsers( void ) const {
     std::vector<User *> users = mUsers->getAll();
     for( auto it = users.begin() ; it != users.end() ; ++it ) {
         user = (*it);
+        // FIXME To JSON.
         if( user->isLoggedIn() )
             response += user->getUsername() + "\n";
     }

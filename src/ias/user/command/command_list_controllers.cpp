@@ -38,11 +38,11 @@ const char CommandListControllers::kIdentifier[] = "lsc";
 
 // END Constants. ////////////////////////////////////////////////////
 
-void CommandListControllers::setControllerContainer( 
+void CommandListControllers::setControllerContainer(
     Container<Controller *> * c ) {
     // Checking the precondition.
     assert( c != nullptr );
-    
+
     mControllers = c;
 }
 
@@ -60,19 +60,18 @@ std::string CommandListControllers::execute( const std::string & params ) {
     std::vector<Controller *> controllers;
     Controller * c;
     std::size_t n;
-    
+
     controllers = mControllers->getAll();
     n = controllers.size();
+    output = "{\"output\": [\n";
     for( std::size_t i = 0 ; i < n ; ++i ) {
         c = controllers.at(i);
-        output += c->getIdentifier() + " - ";
-        if( c->isConnected() )
-            output += kOnline;
-        else
-            output += kOffline;
-        if( n > 1 && i < ( n - 1 ) )
-            output += '\n';
+        output += "{\n";
+        output += "\"identifier\":\"" + c->getIdentifier() + "\"\n";
+        output += "\"state\":\"" + std::to_string(c->isConnected()) + "\"\n";
+        output += "\n}\n";
     }
-    
+    output += "]}";
+
     return ( output );
 }

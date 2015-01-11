@@ -57,17 +57,17 @@ CommandListCommands::~CommandListCommands( void ) {
 
 std::string CommandListCommands::execute( const std::string & parameters ) {
     std::vector<Command *> commands;
-    std::string output = "";
+    std::string output;
     std::size_t n;
 
     commands = mDispatcher->getCommands();
     n = commands.size();
+    output = "{\"commands\":[\n";
     for( std::size_t i = 0 ; i < n ; ++i ) {
         Command * c = commands.at(i);
-        output += c->getIdentifier();
-        if( i < (n - 1) )
-        	output += '\n';
+        output += "\"" + c->getIdentifier() + "\"\n";
     }
+    output = "]}";
 
     return ( output );
 }
