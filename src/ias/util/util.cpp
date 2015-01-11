@@ -43,25 +43,25 @@
 
 bool flagSpecified( const int argc , const char ** argv , const char * flag ) {
     bool specified;
-    
+
     // Checking the preconditions.
     assert( argc > 0 && argv != nullptr && flag != nullptr );
-    
+
     specified = false;
     for( int i = 0 ; !specified && i < argc ; ++i ) {
         if( strcmp(argv[i],flag) == 0 )
             specified = true;
     }
-    
+
     return ( specified );
 }
 
 int flagIndex( const int argc , const char ** argv , const char * flag ) {
     int index;
-    
+
     // Checking the preconditions.
     assert( argc > 0 && argv != nullptr && flag != nullptr );
-    
+
     index = -1;
     for( int i = 0 ; i < argc ; ++i ) {
         if( strcmp(argv[i],flag) == 0 ) {
@@ -69,19 +69,19 @@ int flagIndex( const int argc , const char ** argv , const char * flag ) {
             break;
         }
     }
-    
+
     return ( index );
 }
 
-std::string sha256( const std::string & str, 
+std::string sha256( const std::string & str,
                     const std::string & presalt,
                     const std::string & postsalt ) {
     unsigned char hash[SHA256_DIGEST_LENGTH];
     char nhash[65];
-    
+
     std::string hashed;
     std::string toHash;
-    
+
     toHash = presalt + str + postsalt;
     SHA256_CTX sha256;
     SHA256_Init(&sha256);
@@ -92,7 +92,7 @@ std::string sha256( const std::string & str,
     }
     nhash[64] = 0;
     hashed = nhash;
-    
+
     return ( hashed );
 }
 
@@ -102,6 +102,12 @@ std::string sha256GlobalSalts( const std::string & str ) {
     return ( sha256(str,gSaltPre,gSaltPost) );
 }
 
+std::string gSaltApiKeyPre;
+std::string gSaltApiKeyPost;
+std::string hashKey( const std::string & apiKey ) {
+    return ( sha256(apiKey,gSaltApiKeyPre,gSaltApiKeyPost) );
+}
+
 void trim( std::string & s ) {
     s.erase(0, s.find_first_not_of(kTrimCharacters));
     s.erase(s.find_last_not_of(kTrimCharacters) + 1);
@@ -109,7 +115,7 @@ void trim( std::string & s ) {
 
 std::size_t numWords( const std::string & string ) {
     std::size_t n;
-    
+
     n = 0;
     for( auto & it : string ) {
         if( it == ' ' )
@@ -117,7 +123,7 @@ std::size_t numWords( const std::string & string ) {
     }
     if( string.length() > 0 )
         ++n;
-    
+
     return ( n );
 }
 
