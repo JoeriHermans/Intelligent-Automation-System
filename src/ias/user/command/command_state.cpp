@@ -42,7 +42,7 @@ const char CommandState::kIdentifier[] = "state";
 void CommandState::setDeviceContainer( Container<Device *> * devices ) {
     // Checking the precondition.
     assert( devices != nullptr );
-    
+
     mDevices = devices;
 }
 
@@ -67,17 +67,23 @@ std::string CommandState::execute( const std::string & parameters ) {
             const Technology * t = device->getTechnology();
             const std::vector<Member *> & members = t->getMembers();
             n = members.size();
-            for( std::size_t i = 0 ; i < n ; ++i ) {
-                member = members.at(i);
-                response += member->getIdentifier() + ": " +
-                            device->get(member->getIdentifier());
-                if( n > 1 && i < ( n - 1 ) )
-                    response += '\n';
+            if( n > 0 ) {
+                response = "{\"state\":[\n";
+                for( std::size_t i = 0 ; i < n ; ++i ) {
+                    member = members.at(i);
+                    response += "{\"" + member->getIdentifier() + "\":\"" +
+                                        device->get(member->getIdentifier()) +
+                                        "\"}";
+                    if( n > 1 && i < ( n - 1 ) )
+                        response += ',';
+                    response += "\n";
+                }
+                response += "]}";
             }
         }
     }
     if( response.length() == 0 )
         response = kProtocolNack;
-    
+
     return ( response );
 }

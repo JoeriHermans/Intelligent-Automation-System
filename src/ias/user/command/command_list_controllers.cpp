@@ -63,13 +63,13 @@ std::string CommandListControllers::execute( const std::string & params ) {
 
     controllers = mControllers->getAll();
     n = controllers.size();
-    output = "{\"output\": [\n";
+    output = "{\"controllers\": [\n";
     for( std::size_t i = 0 ; i < n ; ++i ) {
         c = controllers.at(i);
         output += "  {\n";
         output += "    \"identifier\":\"" + c->getIdentifier() + "\",\n";
         output += "    \"state\":" + std::to_string(c->isConnected()) + "\n";
-        output += "\n  }";
+        output += "  }";
         if( n > 1 && i < (n - 1) )
               output += ",";
         output += "\n";
