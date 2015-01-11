@@ -207,6 +207,7 @@ void UserSession::processCommand( void ) {
     Reader * reader;
     std::uint8_t size;
 
+    logi("Processing command.");
     reader = getSocket()->getReader();
     size = 0x00;
     reader->readByte(reinterpret_cast<char *>(&size));
@@ -240,6 +241,7 @@ void UserSession::analyzeCommand( const char * command ) {
     } else {
         response = kProtocolNack;
     }
+    logi("Sending response.");
     sendResponse(response.c_str(),response.length());
 }
 
@@ -310,6 +312,7 @@ void UserSession::run( void ) {
         reader = socket->getReader();
         setTimeouts();
         while( mFlagRunning && socket->isConnected() ) {
+            logi("Reading type.");
             type = 0xff;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
             if( nBytes == 0 ) {
