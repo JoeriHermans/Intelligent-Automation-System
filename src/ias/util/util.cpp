@@ -102,12 +102,6 @@ std::string sha256GlobalSalts( const std::string & str ) {
     return ( sha256(str,gSaltPre,gSaltPost) );
 }
 
-std::string gSaltApiKeyPre;
-std::string gSaltApiKeyPost;
-std::string hashKey( const std::string & apiKey ) {
-    return ( sha256(apiKey,gSaltApiKeyPre,gSaltApiKeyPost) );
-}
-
 void trim( std::string & s ) {
     s.erase(0, s.find_first_not_of(kTrimCharacters));
     s.erase(s.find_last_not_of(kTrimCharacters) + 1);

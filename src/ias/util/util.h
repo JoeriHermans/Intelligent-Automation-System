@@ -38,10 +38,6 @@ extern std::string gSaltPre;
 extern std::string gSaltPost;
 std::string sha256GlobalSalts( const std::string & str );
 
-extern std::string gSaltApiKeyPre;
-extern std::string gSaltApiKeyPost;
-std::string hashApiKey( const std::string & apiKey );
-
 void trim( std::string & s );
 
 std::size_t numWords( const std::string & string );
