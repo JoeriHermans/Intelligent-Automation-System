@@ -123,7 +123,8 @@ void UserSession::authorizeApiKey( void ) {
     std::string hashedKey;
 
     logi("Authorizing user using API key.");
-    if( readBytes(reinterpret_cast<char *>(&length),1) ) {
+    length = 0xff;
+    if( readBytes(reinterpret_cast<char *>(&length),1) && length == 64 ) {
         char key[length + 1];
         if( length > 1 && readBytes(key,length) ) {
             hashedKey = sha256GlobalSalts(std::string(key));
