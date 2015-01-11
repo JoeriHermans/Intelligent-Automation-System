@@ -38,6 +38,8 @@ extern std::string gSaltPre;
 extern std::string gSaltPost;
 std::string sha256GlobalSalts( const std::string & str );
 
+bool isNumber( const std::string & s );
+
 void trim( std::string & s );
 
 std::size_t numWords( const std::string & string );

@@ -102,6 +102,12 @@ std::string sha256GlobalSalts( const std::string & str ) {
     return ( sha256(str,gSaltPre,gSaltPost) );
 }
 
+bool isNumber( const std::string & s ) {
+    return !s.empty() && std::find_if(s.begin(),s.end(),[](char c) {
+                return !std::isdigit(c);
+            }) == s.end();
+}
+
 void trim( std::string & s ) {
     s.erase(0, s.find_first_not_of(kTrimCharacters));
     s.erase(s.find_last_not_of(kTrimCharacters) + 1);
