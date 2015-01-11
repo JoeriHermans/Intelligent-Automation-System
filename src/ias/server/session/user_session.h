@@ -104,6 +104,8 @@ class UserSession : public Session {
 
     void sendResponse( const char * buffer , const std::size_t n );
 
+    void setLoginTimeouts( void );
+
     void setTimeouts( void );
 
     bool heartbeat( void );

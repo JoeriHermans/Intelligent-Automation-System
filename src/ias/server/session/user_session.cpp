@@ -269,6 +269,17 @@ void UserSession::setTimeouts( void ) {
     socket->setSendTimeout(tv);
 }
 
+void UserSession::setLoginTimeouts( void ) {
+    Socket * socket;
+    struct timeval tv;
+
+    tv.tv_sec = 60;
+    tv.tv_usec = 0;
+    socket = getSocket();
+    socket->setReceiveTimeout(tv);
+    socket->setSendTimeout(tv);
+}
+
 bool UserSession::heartbeat( void ) {
     static const char beat = 0x00;
     Writer * writer;
@@ -304,6 +315,7 @@ void UserSession::run( void ) {
     Reader * reader;
     Socket * socket;
 
+    setLoginTimeouts();
     authorize();
     if( mUser != nullptr ) {
         socket = getSocket();
