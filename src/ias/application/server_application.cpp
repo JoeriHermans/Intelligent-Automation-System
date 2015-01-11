@@ -52,6 +52,7 @@
 #include <ias/user/command/command_list_commands.h>
 #include <ias/user/command/command_delete_rule.h>
 #include <ias/user/command/command_users.h>
+#include <ias/user/command/command_device_detail.h>
 #include <ias/rule/factory/rule_database_factory.h>
 #include <ias/user/command/command_list_rules.h>
 #include <ias/user/command/command_load_rule.h>
@@ -422,6 +423,10 @@ void ServerApplication::initializeDispatcher( void ) {
     mDispatcher.registerCommand(
         CommandUsers::kIdentifier,
         new CommandUsers(&mContainerUsers)
+    );
+    mDispatcher.registerCommand(
+        CommandDeviceDetail::kIdentifier,
+        new CommandDeviceDetail(&mContainerDevices)
     );
 }
 
