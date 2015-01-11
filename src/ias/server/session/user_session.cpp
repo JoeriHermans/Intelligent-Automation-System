@@ -151,8 +151,8 @@ void UserSession::validateApiKey( const std::string & key ) {
     assert( key.length() > 0 );
 
     if( mDbConnection->isConnected() ) {
-        std::string sql = "SELECT user_id"
-                          "FROM api_keys"
+        std::string sql = "SELECT user_id "
+                          "FROM api_keys "
                           "WHERE api_keys.key = '" + key + "';";
         statement = mDbConnection->createStatement(sql);
         if( statement != nullptr ) {
