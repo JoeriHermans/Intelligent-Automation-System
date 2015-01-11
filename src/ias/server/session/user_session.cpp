@@ -65,6 +65,7 @@ void UserSession::authorize( void ) {
             break;
         }
     }
+    printf("Type: %u\n",type);
     if( mUser == nullptr )
         loge("User authorization failed.");
     if( mUser == nullptr ) {
