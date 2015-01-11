@@ -142,7 +142,32 @@ void UserSession::authorizeApiKey( void ) {
 }
 
 void UserSession::validateApiKey( const std::string & key ) {
-    // TODO Implement.
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+    DatabaseResultRow * row;
+    std::size_t id;
+
+    // Checking the precondition.
+    assert( key.length() > 0 );
+
+    if( mDbConnection->isConnected() ) {
+        std::string sql = "SELECT user_id"
+                          "FROM api_keys"
+                          "WHERE api_keys.key = '" + key + "';";
+        statement = mDbConnection->createStatement(sql);
+        if( statement != nullptr ) {
+            result = statement->execute();
+            if( result != nullptr && result->hasNext() ) {
+                row = result->next();
+                id = static_cast<std::size_t>(
+                        std::stoull(row->getColumn(0),nullptr,0));
+                std::cout << "Fetched user id: " << std::to_string(id) << std::endl;
+                delete row;
+            }
+            delete result;
+            delete statement;
+        }
+    }
 }
 
 void UserSession::setDispatcher( CommandDispatcher * dispatcher ) {
