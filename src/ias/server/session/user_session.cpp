@@ -102,7 +102,7 @@ void UserSession::authorizeNormal( void ) {
             length = 0x00;
             if( readBytes(reinterpret_cast<char *>(&length),1) ) {
                 char password[length + 1];
-                if( readBytes(password,length) && length > 1 ) {
+                if( length > 1 && readBytes(password,length) ) {
                     password[length] = 0;
                     hashedPassword = sha256GlobalSalts(password);
                     mUser = authenticateUser(username,hashedPassword.c_str());

@@ -33,7 +33,7 @@
 void DeviceChannel::setSocket( Socket * socket ) {
     // Checking the precondition.
     assert( socket != nullptr );
-    
+
     mSocket = socket;
 }
 
@@ -46,6 +46,12 @@ DeviceChannel::~DeviceChannel( void ) {
 }
 
 void DeviceChannel::pipe( const std::string & argument ) {
-    if( mSocket->isConnected() )
-        mSocket->getWriter()->writeBytes(argument.c_str(),argument.length());
+    if( mSocket->isConnected() ) {
+        Writer * writer;
+
+        writer = mSocket->getWriter();
+        writer->lock();
+        writer->writeBytes(argument.c_str(),argument.length());
+        writer->unlock();
+    }
 }
