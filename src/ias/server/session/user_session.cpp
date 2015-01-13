@@ -152,25 +152,19 @@ void UserSession::validateApiKey( const std::string & key ) {
     // Checking the precondition.
     assert( key.length() > 0 );
 
-    std::cout << "---- Validating key." << std::endl;
     if( mDbConnection->isConnected() ) {
         // Query is safe, because it has been hashed.
         std::string sql = "SELECT user_id, expires "
                           "FROM api_keys "
                           "WHERE api_keys.key = '" + key + "';";
-        std::cout << "---- Creating statement." << std::endl;
         statement = mDbConnection->createStatement(sql);
         if( statement != nullptr ) {
-            std::cout << "---- Executing statement." << std::endl;
             result = statement->execute();
-            std::cout << "---- Statement executed." << std::endl;
             if( result != nullptr && result->hasNext() ) {
                 row = result->next();
                 id = static_cast<std::size_t>(
                         std::stoull(row->getColumn(0),nullptr,0));
-                std::cout << "---- Fetching user." << std::endl;
                 user = mUsers->get(id);
-                std::cout << "---- User fetched." << std::endl;
                 if( user != nullptr ) {
                     mUser = user;
                     logi(key + " authenticated.");
