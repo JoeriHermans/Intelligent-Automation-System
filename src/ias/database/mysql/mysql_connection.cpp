@@ -23,9 +23,10 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <assert.h>
-#include <stdio.h>
+#include <cassert>
+#include <cstdio>
 #include <syslog.h>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/database/interface/database_connection.h>
@@ -84,13 +85,13 @@ DatabaseStatement * MySqlConnection::createStatement( const std::string & sql ) 
     // Checking the precondition.
     assert( sql.length() > 0 );
 
-//    // Check if the connection with the server is still active.
-//    if( mysql_ping(mConnection) == 0 )
-        // Allocate a new mysql statement.
+    // Check if the connection with the server is still active.
+    if( mysql_ping(mConnection) == 0 ) {
+        std::cout << "Statement allocated" << std::endl;
         statement = new MySqlStatement(this,sql);
-//    else
-        // No statement should be allocated.
-//        statement = nullptr;
+    } else {
+        statement = nullptr;
+    }
 
     return ( statement );
 }
