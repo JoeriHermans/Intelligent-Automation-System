@@ -50,6 +50,8 @@ void DeviceChannel::pipe( const std::string & argument ) {
         Writer * writer;
 
         writer = mSocket->getWriter();
+        writer->lock();
         writer->writeBytes(argument.c_str(),argument.length());
+        writer->unlock();
     }
 }

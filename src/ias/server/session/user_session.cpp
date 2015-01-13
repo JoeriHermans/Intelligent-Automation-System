@@ -135,7 +135,9 @@ void UserSession::authorizeApiKey( void ) {
     if( readBytes(reinterpret_cast<char *>(&length),1) && length > 0 ) {
         char key[length + 1];
         key[length] = 0;
+        std::cout << "Reading key." << std::endl << std::flush;
         if( length > 1 && readBytes(key,length) ) {
+            std::cout << "Key has been read." << std::endl << std::flush;
             hashedKey = sha256GlobalSalts(std::string(key));
             validateApiKey(hashedKey);
         }
@@ -231,7 +233,6 @@ void UserSession::analyzeCommand( const char * command ) {
     // Checking the precondition.
     assert( command != nullptr );
 
-    std::cout << "Executing command." << std::endl;
     cmd = command;
     ss << cmd;
     ss >> identifier;

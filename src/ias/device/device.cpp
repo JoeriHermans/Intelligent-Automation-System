@@ -213,11 +213,13 @@ void Device::execute( const Action & action ) {
         header[2] = static_cast<std::uint8_t>(identifier.length());
         header[3] = static_cast<std::uint8_t>(param.length());
         nBytes = header[1] + header[2] + header[3];
+        writer->lock();
         writer->writeBytes(reinterpret_cast<const char *>(&header),4);
         char buffer[nBytes];
         memcpy(buffer,mIdentifier.c_str(),header[1]);
         memcpy(buffer + header[1],identifier.c_str(),header[2]);
         memcpy(buffer + header[1] + header[2],param.c_str(),header[3]);
         writer->writeBytes(buffer,nBytes);
+        writer->unlock();
     }
 }
