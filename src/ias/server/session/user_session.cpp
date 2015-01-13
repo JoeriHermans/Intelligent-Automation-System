@@ -25,6 +25,7 @@
 // System dependencies.
 #include <cassert>
 #include <cstring>
+#include <ctime>
 #include <iostream>
 #include <netinet/in.h>
 #include <sstream>
@@ -147,13 +148,14 @@ void UserSession::validateApiKey( const std::string & key ) {
     DatabaseResultRow * row;
     User * user;
     std::size_t id;
+    std::size_t expires;
 
     // Checking the precondition.
     assert( key.length() > 0 );
 
     if( mDbConnection->isConnected() ) {
         // Query is safe, because it has been hashed.
-        std::string sql = "SELECT user_id "
+        std::string sql = "SELECT user_id, expires"
                           "FROM api_keys "
                           "WHERE api_keys.key = '" + key + "';";
         statement = mDbConnection->createStatement(sql);
@@ -163,8 +165,11 @@ void UserSession::validateApiKey( const std::string & key ) {
                 row = result->next();
                 id = static_cast<std::size_t>(
                         std::stoull(row->getColumn(0),nullptr,0));
+                expires = static_cast<std::size_t>(
+                        std::stoull(row->getColumn(1),nullptr,0));
                 user = mUsers->get(id);
-                if( user != nullptr ) {
+                if( user != nullptr &&
+                    expires >= static_cast<std::size_t>(time(nullptr)) ) {
                     mUser = user;
                     logi(key + " authenticated.");
                 } else {
