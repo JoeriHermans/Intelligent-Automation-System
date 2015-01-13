@@ -55,15 +55,12 @@ DatabaseResult * MySqlStatement::execute( void ) {
     MySqlResult * result;
 
     result = nullptr;
-    std::cout << "Querying" << std::endl << std::flush;
     if( mysql_query(mConnection,getQuery().c_str()) == 0 ) {
-        std::cout << "Queried" << std::endl << std::flush;
+        std::cout << "Allocating result..." << std::endl << std::flush;
         mysqlResult = mysql_store_result(mConnection);
-        std::cout << "Stored" << std::endl << std::flush;
+        std::cout << "Allocating result." << std::endl << std::flush;
         result = new MySqlResult(mysqlResult);
-        std::cout << "Result allocated." << std::endl << std::flush;
-    } else {
-        std::cout << "Couldn't query." << std::endl << std::flush;
+        std::cout << "Result allocated" << std::endl << std::flush;
     }
 
     return ( result );
