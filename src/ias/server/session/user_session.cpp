@@ -160,26 +160,40 @@ void UserSession::validateApiKey( const std::string & key ) {
         std::string sql = "SELECT user_id, expires "
                           "FROM api_keys "
                           "WHERE api_keys.key = '" + key + "';";
+        std::cout << "Creating database statement." << std::endl << std::flush;
         statement = mDbConnection->createStatement(sql);
+        std::cout << "Database statement created." << std::endl << std::flush;
         if( statement != nullptr ) {
+            std::cout << "Executing statement." << std::endl << std::flush;
             result = statement->execute();
+            std::cout << "Statement executed." << std::endl << std::flush;
             if( result != nullptr && result->hasNext() ) {
+                std::cout << "Fetching rows." << std::endl << std::flush;
                 row = result->next();
+                std::cout << "Got row" << std::endl << std::flush;
                 id = static_cast<std::size_t>(
                         std::stoull(row->getColumn(0),nullptr,0));
+                std::cout << "Fetching user." << std::endl << std::flush;
                 user = mUsers->get(id);
+                std::cout << "User fetched." << std::endl << std::flush;
                 if( user != nullptr ) {
                     mUser = user;
+                    std::cout << "Going to log." << std::endl << std::flush;
                     logi(key + " authenticated.");
+                    std::cout << "Logged!" << std::endl << std::flush;
                 }
                 delete row;
             }
             delete result;
             delete statement;
+            std::cout << "Deletes" << std::endl << std::flush;
         }
     }
-    if( mUser == nullptr )
+    if( mUser == nullptr ) {
+        std::cout << "Logging error." << std::endl << std::flush;
         loge(key + " could not be authenticated.");
+        std::cout << "Error logged." << std::endl << std::flush;
+    }
     std::cout << "End of validation." << std::endl << std::flush;
     std::cout << "Top kek." << std::endl << std::flush;
 }
