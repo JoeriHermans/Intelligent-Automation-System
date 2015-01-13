@@ -231,6 +231,7 @@ void UserSession::analyzeCommand( const char * command ) {
     // Checking the precondition.
     assert( command != nullptr );
 
+    std::cout << "Executing command." << std::endl;
     cmd = command;
     ss << cmd;
     ss >> identifier;
