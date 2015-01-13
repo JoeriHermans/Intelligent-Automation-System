@@ -154,7 +154,7 @@ void UserSession::validateApiKey( const std::string & key ) {
 
     if( mDbConnection->isConnected() ) {
         // Query is safe, because it has been hashed.
-        std::string sql = "SELECT user_id"
+        std::string sql = "SELECT user_id, expires "
                           "FROM api_keys "
                           "WHERE api_keys.key = '" + key + "';";
         statement = mDbConnection->createStatement(sql);
