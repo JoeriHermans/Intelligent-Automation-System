@@ -139,6 +139,7 @@ void UserSession::authorizeApiKey( void ) {
         if( length > 1 && readBytes(key,length) ) {
             std::cout << "Key has been read." << std::endl << std::flush;
             hashedKey = sha256GlobalSalts(std::string(key));
+            std::cout << "Key has been hashed." << std::endl;
             validateApiKey(hashedKey);
         }
     }
@@ -179,6 +180,8 @@ void UserSession::validateApiKey( const std::string & key ) {
     }
     if( mUser == nullptr )
         loge(key + " could not be authenticated.");
+    std::cout << "End of validation." << std::endl << std::flush;
+    std::cout << "Top kek." << std::endl << std::flush;
 }
 
 void UserSession::setDispatcher( CommandDispatcher * dispatcher ) {
