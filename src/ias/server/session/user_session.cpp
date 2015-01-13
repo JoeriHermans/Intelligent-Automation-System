@@ -168,6 +168,7 @@ void UserSession::validateApiKey( const std::string & key ) {
                 expires = static_cast<std::size_t>(
                         std::stoull(row->getColumn(1),nullptr,0));
                 user = mUsers->get(id);
+                std::cout << "Expires: " << expires << std::endl;
                 if( user != nullptr &&
                     expires >= static_cast<std::size_t>(time(nullptr)) ) {
                     mUser = user;
