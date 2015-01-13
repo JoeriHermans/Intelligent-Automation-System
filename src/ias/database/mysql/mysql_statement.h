@@ -56,11 +56,21 @@ class MySqlStatement : public DatabaseStatement {
      */
     MYSQL * mConnection;
 
+    /**
+     * Contains a pointer to the mysql connection object.
+     *
+     * @note    By default, this member will be equal to
+     *          the null reference.
+     */
+    MySqlConnection * mDbConnection;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
 
     inline void setConnection( MYSQL * connection );
+
+    inline void setDbConnection( MySqlConnection * dbConnection );
 
     // END Private methods. //////////////////////////////////////////
 

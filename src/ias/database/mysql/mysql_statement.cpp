@@ -40,10 +40,18 @@ inline void MySqlStatement::setConnection( MYSQL * connection ) {
     mConnection = connection;
 }
 
+inline void MySqlStatement::setDbConnection( MySqlConnection * dbConnection ) {
+    // Checking the precondition.
+    assert( dbConnection != nullptr );
+
+    mDbConnection = dbConnection;
+}
+
 MySqlStatement::MySqlStatement( MySqlConnection * connection , const std::string & query )
     : DatabaseStatement( connection , query ) {
     // Set the connection member.
     setConnection(static_cast<MYSQL *>(connection->getLink()));
+    setDbConnection(connection);
 }
 
 MySqlStatement::~MySqlStatement( void ) {
@@ -55,11 +63,12 @@ DatabaseResult * MySqlStatement::execute( void ) {
     MySqlResult * result;
 
     result = nullptr;
+    mDbConnection->getMutex().lock();
     if( mysql_query(mConnection,getQuery().c_str()) == 0 ) {
         mysqlResult = mysql_store_result(mConnection);
         result = new MySqlResult(mysqlResult);
     }
-    std::cout << "Returning result" << std::endl << std::flush;
+    mDbConnection->getMutex().unlock();
 
     return ( result );
 }

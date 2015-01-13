@@ -28,6 +28,7 @@
 // System dependencies.
 #include <mysql/mysql.h>
 #include <mysql/my_global.h>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/database/interface/database_connection.h>
@@ -52,6 +53,11 @@ class MySqlConnection : public DatabaseConnection {
      *          the NULL reference.
      */
     MYSQL * mConnection;
+
+    /**
+     * Contains the mutex which is associated with the connection lock.
+     */
+    mutable std::mutex mMutexConnection;
 
     // END Private members. //////////////////////////////////////////
 
@@ -94,6 +100,8 @@ class MySqlConnection : public DatabaseConnection {
     virtual DatabasePreparedStatement * prepareStatement( const std::string & sql );
 
     virtual void * getLink( void );
+
+    std::mutex & getMutex( void ) const;
 
     // END Public methods. ///////////////////////////////////////////
 
