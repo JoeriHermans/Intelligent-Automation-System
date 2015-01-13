@@ -81,7 +81,7 @@ class Session : public Observable {
         bytesRead = 0;
         while( bytesRead != n ) {
             nBytes = reader->readBytes(buffer + bytesRead,n - bytesRead);
-            if( !mSocket->isConnected() )
+            if( nBytes == 0 )
                 return ( false );
             bytesRead += nBytes;
         }
