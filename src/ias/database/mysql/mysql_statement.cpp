@@ -23,8 +23,9 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <assert.h>
-#include <stdio.h>
+#include <cassert>
+#include <cstdio>
+#include <iostream>
 #include <syslog.h>
 
 // Application dependencies.
@@ -53,14 +54,15 @@ DatabaseResult * MySqlStatement::execute( void ) {
     MYSQL_RES * mysqlResult;
     MySqlResult * result;
 
-    // Initialize the result.
     result = nullptr;
-    // Try to execute the specified query.
+    std::cout << "Querying" << std::endl << std::flush;
     if( mysql_query(mConnection,getQuery().c_str()) == 0 ) {
-        // Retrieve the mysql-result from the connection.
+        std::cout << "Queried" << std::endl << std::flush;
         mysqlResult = mysql_store_result(mConnection);
-        // Allocate a new instance.
+        std::cout << "Stored" << std::endl << std::flush;
         result = new MySqlResult(mysqlResult);
+    } else {
+        std::cout << "Couldn't query." << std::endl << std::flush;
     }
 
     return ( result );
