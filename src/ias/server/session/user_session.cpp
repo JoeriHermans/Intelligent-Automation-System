@@ -135,11 +135,8 @@ void UserSession::authorizeApiKey( void ) {
     if( readBytes(reinterpret_cast<char *>(&length),1) && length > 0 ) {
         char key[length + 1];
         key[length] = 0;
-        std::cout << "Reading key." << std::endl << std::flush;
         if( length > 1 && readBytes(key,length) ) {
-            std::cout << "Key has been read." << std::endl << std::flush;
             hashedKey = sha256GlobalSalts(std::string(key));
-            std::cout << "Key has been hashed." << std::endl;
             validateApiKey(hashedKey);
         }
     }
@@ -160,11 +157,8 @@ void UserSession::validateApiKey( const std::string & key ) {
         std::string sql = "SELECT user_id, expires "
                           "FROM api_keys "
                           "WHERE api_keys.key = '" + key + "';";
-        std::cout << "Creating database statement." << std::endl << std::flush;
         statement = mDbConnection->createStatement(sql);
-        std::cout << "Database statement created." << std::endl << std::flush;
         if( statement != nullptr ) {
-            std::cout << "Executing statement." << std::endl << std::flush;
             result = statement->execute();
             std::cout << "Statement executed." << std::endl << std::flush;
             if( result != nullptr && result->hasNext() ) {
