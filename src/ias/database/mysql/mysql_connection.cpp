@@ -84,13 +84,13 @@ DatabaseStatement * MySqlConnection::createStatement( const std::string & sql ) 
     // Checking the precondition.
     assert( sql.length() > 0 );
 
-    // Check if the connection with the server is still active.
-    if( mysql_ping(mConnection) == 0 )
+//    // Check if the connection with the server is still active.
+//    if( mysql_ping(mConnection) == 0 )
         // Allocate a new mysql statement.
         statement = new MySqlStatement(this,sql);
-    else
+//    else
         // No statement should be allocated.
-        statement = nullptr;
+//        statement = nullptr;
 
     return ( statement );
 }
