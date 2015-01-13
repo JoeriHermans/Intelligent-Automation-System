@@ -84,7 +84,7 @@ bool PosixTcpServerSocket::bindToPort( void ) {
 
                 setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof yes);
                 if( bind(fd,serverInfo->ai_addr,serverInfo->ai_addrlen) == 0 &&
-                    listen(fd,20) == 0 ) {
+                    listen(fd,256) == 0 ) {
                     bound = true;
                     FD_ZERO(&mRfds);
                     FD_SET(fd,&mRfds);
