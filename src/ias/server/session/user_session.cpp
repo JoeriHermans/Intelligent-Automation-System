@@ -148,14 +148,13 @@ void UserSession::validateApiKey( const std::string & key ) {
     DatabaseResultRow * row;
     User * user;
     std::size_t id;
-    std::size_t expires;
 
     // Checking the precondition.
     assert( key.length() > 0 );
 
     if( mDbConnection->isConnected() ) {
         // Query is safe, because it has been hashed.
-        std::string sql = "SELECT user_id, expires"
+        std::string sql = "SELECT user_id"
                           "FROM api_keys "
                           "WHERE api_keys.key = '" + key + "';";
         statement = mDbConnection->createStatement(sql);
@@ -165,16 +164,10 @@ void UserSession::validateApiKey( const std::string & key ) {
                 row = result->next();
                 id = static_cast<std::size_t>(
                         std::stoull(row->getColumn(0),nullptr,0));
-                expires = static_cast<std::size_t>(
-                        std::stoull(row->getColumn(1),nullptr,0));
                 user = mUsers->get(id);
-                std::cout << "Expires: " << expires << std::endl;
-                if( user != nullptr &&
-                    expires >= static_cast<std::size_t>(time(nullptr)) ) {
+                if( user != nullptr ) {
                     mUser = user;
                     logi(key + " authenticated.");
-                } else {
-                    loge(key + " could not be authenticated.");
                 }
                 delete row;
             }
@@ -182,6 +175,8 @@ void UserSession::validateApiKey( const std::string & key ) {
             delete statement;
         }
     }
+    if( mUser == nullptr )
+        loge(key + " could not be authenticated.");
 }
 
 void UserSession::setDispatcher( CommandDispatcher * dispatcher ) {
