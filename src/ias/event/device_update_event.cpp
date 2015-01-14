@@ -69,7 +69,13 @@ DeviceUpdateEvent::DeviceUpdateEvent( const Device * device,
 std::string DeviceUpdateEvent::toString( void ) const {
     std::string response;
 
-    // TODO Implement.
+    response = "{\n";
+    response += "  \"type\":\"" + std::string(kIdentifier) + "\"\n";
+    response += "  \"device_id\":\"" + std::to_string(mDevice->getId()) + "\"\n";
+    response += "  \"device_identifier\":\"" + mDevice->getIdentifier() + "\"\n";
+    response += "  \"state_identifier\":\"" + mStateIdentifier + "\"\n";
+    response += "  \"state_value\":\"" + mStateValue + "\"\n";
+    response += "}";
 
     return ( response );
 }
