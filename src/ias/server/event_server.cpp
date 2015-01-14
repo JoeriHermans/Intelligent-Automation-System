@@ -30,7 +30,6 @@
 // Application dependencies.
 #include <ias/server/event_server.h>
 #include <ias/logger/logger.h>
-#include <ias/server/session/event_session.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -81,39 +80,39 @@ EventServer::~EventServer( void ) {
 }
 
 void EventServer::start( void ) {
-    if( mMainThread == nullptr ) {
-        mMainThread = new std::thread([this](){
-            ServerSocket * serverSocket;
-            Session * session;
-            Socket * socket;
-
-            serverSocket = getServerSocket();
-            while( mFlagRunning ) {
-                socket = serverSocket->acceptSocket(1);
-                if( socket != nullptr ) {
-                    logi("Starting new events session.");
-                    session = new EventSession(socket,mDbConnection);
-                    session->addObserver(this);
-                    mSessions[session] =
-                        new std::thread([session]{
-                            session->run();
-                            session->notifyObservers(session);
-                            delete session;
-                            logi("Terminating events session.");
-                        });
-                } else if( !serverSocket->isBound() ) {
-                    stop();
-                }
-                cleanupFinishingThreads();
-            }
-            signalSessions();
-            while( mSessions.size() > 0 ||
-                   mInactiveThreads.size() > 0 ) {
-                signalSessions();
-                cleanupFinishingThreads();
-            }
-        });
-    }
+//    if( mMainThread == nullptr ) {
+//        mMainThread = new std::thread([this](){
+//            ServerSocket * serverSocket;
+//            Session * session;
+//            Socket * socket;
+//
+//            serverSocket = getServerSocket();
+//            while( mFlagRunning ) {
+//                socket = serverSocket->acceptSocket(1);
+//                if( socket != nullptr ) {
+//                    logi("Starting new events session.");
+//                    session = new EventSession(socket,mDbConnection);
+//                    session->addObserver(this);
+//                    mSessions[session] =
+//                        new std::thread([session]{
+//                            session->run();
+//                            session->notifyObservers(session);
+//                            delete session;
+//                            logi("Terminating events session.");
+//                        });
+//                } else if( !serverSocket->isBound() ) {
+//                    stop();
+//                }
+//                cleanupFinishingThreads();
+//            }
+//            signalSessions();
+//            while( mSessions.size() > 0 ||
+//                   mInactiveThreads.size() > 0 ) {
+//                signalSessions();
+//                cleanupFinishingThreads();
+//            }
+//        });
+//    }
 }
 
 void EventServer::stop( void ) {
