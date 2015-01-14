@@ -49,6 +49,10 @@ EventSession::EventSession( Socket * socket,
     setDatabaseConnection(dbConnection);
 }
 
+EventSession::~EventSession( void ) {
+    // Nothing to do here.
+}
+
 void EventSession::run( void ) {
     // TODO Implement.
 }
