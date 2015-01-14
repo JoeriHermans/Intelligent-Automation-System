@@ -31,6 +31,12 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+// BEGIN Constants. //////////////////////////////////////////////////
+
+const char DeviceUpdateEvent::kIdentifier[] = "device_update";
+
+// END Constants. ////////////////////////////////////////////////////
+
 void DeviceUpdateEvent::setStateIdentifier( const std::string & identifier ) {
     // Checking the precondition.
     assert( !identifier.empty() );

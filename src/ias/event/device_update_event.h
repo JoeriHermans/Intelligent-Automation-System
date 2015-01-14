@@ -37,6 +37,9 @@ class DeviceUpdateEvent : public Event {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+
+    static const char kIdentifier[];
+
     // END Class constants. //////////////////////////////////////////
 
     private:
