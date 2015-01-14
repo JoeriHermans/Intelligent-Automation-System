@@ -67,4 +67,3 @@ std::string DeviceUpdateEvent::toString( void ) const {
 
     return ( response );
 }
-}

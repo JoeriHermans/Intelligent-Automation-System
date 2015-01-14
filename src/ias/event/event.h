@@ -66,7 +66,7 @@ class Event {
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual std::string toString( void ) const;
+    virtual std::string toString( void ) const = 0;
 
     // END Public methods. ///////////////////////////////////////////
 
