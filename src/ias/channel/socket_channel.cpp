@@ -2,8 +2,8 @@
  * A class which describes the actions and properties of a device channel.
  *
  * @date                    Jul 7, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -26,26 +26,26 @@
 #include <cassert>
 
 // Application dependencies.
-#include <ias/channel/device_channel.h>
+#include <ias/channel/socket_channel.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-void DeviceChannel::setSocket( Socket * socket ) {
+void SocketChannel::setSocket( Socket * socket ) {
     // Checking the precondition.
     assert( socket != nullptr );
 
     mSocket = socket;
 }
 
-DeviceChannel::DeviceChannel( Socket * socket ) {
+SocketChannel::SocketChannel( Socket * socket ) {
     setSocket(socket);
 }
 
-DeviceChannel::~DeviceChannel( void ) {
+SocketChannel::~SocketChannel( void ) {
     // Nothing to do here.
 }
 
-void DeviceChannel::pipe( const std::string & argument ) {
+void SocketChannel::pipe( const std::string & argument ) {
     if( mSocket->isConnected() ) {
         Writer * writer;
 

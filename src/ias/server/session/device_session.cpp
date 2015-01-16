@@ -28,7 +28,7 @@
 #include <iostream>
 
 // Application dependencies.
-#include <ias/channel/device_channel.h>
+#include <ias/channel/socket_channel.h>
 #include <ias/server/session/device_session.h>
 #include <ias/logger/logger.h>
 
@@ -60,7 +60,7 @@ void DeviceSession::authorize( void ) {
             !mDispatcher->containsChannel(identifier) ) {
             mFlagRunning = true;
             mDevice = identifier;
-            mDispatcher->addChannel(identifier,new DeviceChannel(getSocket()));
+            mDispatcher->addChannel(identifier,new SocketChannel(getSocket()));
             logi(mDevice + " has been authorized.");
         } else {
             stop();

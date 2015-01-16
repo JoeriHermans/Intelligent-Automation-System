@@ -2,8 +2,8 @@
  * A class which describes the actions and properties of a device channel.
  *
  * @date                    Jul 7, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
  * Copyright 2013 Joeri HERMANS
  *
@@ -20,8 +20,8 @@
  * limitations under the License.
  */
 
-#ifndef DEVICE_CHANNEL_H_
-#define DEVICE_CHANNEL_H_
+#ifndef SOCKET_CHANNEL_H_
+#define SOCKET_CHANNEL_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
@@ -34,7 +34,7 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-class DeviceChannel : public Channel<const std::string &> {
+class SocketChannel : public Channel<const std::string &> {
 
     public:
 
@@ -69,13 +69,13 @@ class DeviceChannel : public Channel<const std::string &> {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    DeviceChannel( Socket * socket );
+    SocketChannel( Socket * socket );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~DeviceChannel( void );
+    virtual ~SocketChannel( void );
 
     // END Destructor. ///////////////////////////////////////////////
 
@@ -90,4 +90,4 @@ class DeviceChannel : public Channel<const std::string &> {
 
 };
 
-#endif /* DEVICE_CHANNEL_H_ */
+#endif /* SOCKET_CHANNEL_H_ */
