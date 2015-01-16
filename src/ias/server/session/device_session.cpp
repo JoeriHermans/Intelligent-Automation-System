@@ -28,7 +28,7 @@
 #include <iostream>
 
 // Application dependencies.
-#include <ias/dispatcher/device_channel.h>
+#include <ias/channel/device_channel.h>
 #include <ias/server/session/device_session.h>
 #include <ias/logger/logger.h>
 

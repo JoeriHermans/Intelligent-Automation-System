@@ -26,7 +26,7 @@
 #include <cassert>
 
 // Application dependencies.
-#include <ias/dispatcher/device_channel.h>
+#include <ias/channel/device_channel.h>
 
 // END Includes. /////////////////////////////////////////////////////
 

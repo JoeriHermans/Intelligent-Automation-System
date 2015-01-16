@@ -29,7 +29,7 @@
 #include <string>
 
 // Application dependencies.
-#include <ias/dispatcher/channel.h>
+#include <ias/channel/channel.h>
 #include <ias/network/socket.h>
 
 // END Includes. /////////////////////////////////////////////////////

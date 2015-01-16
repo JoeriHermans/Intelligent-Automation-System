@@ -34,7 +34,7 @@
 #include <map>
 
 // Application dependencies.
-#include <ias/dispatcher/channel.h>
+#include <ias/channel/channel.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
