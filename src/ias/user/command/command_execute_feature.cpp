@@ -68,17 +68,19 @@ std::string CommandExecuteFeature::execute( const std::string & parameters ) {
         ss << parameters;
         ss >> deviceIdentifier;
         ss >> featureIdentifier;
-        parameter = ss.str().substr(deviceIdentifier.length() +
-                                    featureIdentifier.length() + 1);
-        trim(deviceIdentifier);
-        trim(featureIdentifier);
-        trim(parameter);
-        device = mDevices->get(deviceIdentifier);
-        if( device != nullptr ) {
-            Action action(featureIdentifier,parameter);
+        if( !deviceIdentifier.empty() && !featureIdentifier.empty() ) {
+            parameter = ss.str().substr(deviceIdentifier.length() +
+                                        featureIdentifier.length() + 1);
+            trim(deviceIdentifier);
+            trim(featureIdentifier);
+            trim(parameter);
+            device = mDevices->get(deviceIdentifier);
+            if( device != nullptr ) {
+                Action action(featureIdentifier,parameter);
 
-            device->execute(action);
-            output = kProtocolAck;
+                device->execute(action);
+                output = kProtocolAck;
+            }
         }
     }
     if( output.length() == 0 )
