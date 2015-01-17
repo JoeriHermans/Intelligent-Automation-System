@@ -37,12 +37,14 @@
 #include <ias/database/interface/database_driver.h>
 #include <ias/database/mysql/mysql_driver.h>
 #include <ias/database/postgresql/postgresql_driver.h>
+#include <ias/event/event_dispatcher.h>
 #include <ias/technology/technology.h>
 #include <ias/technology/feature.h>
 #include <ias/technology/member.h>
 #include <ias/technology/value_type.h>
 #include <ias/server/controller_server.h>
 #include <ias/server/user_server.h>
+#include <ias/server/event_server.h>
 #include <ias/user/user.h>
 #include <ias/user/factory/user_database_factory.h>
 #include <ias/util/container.h>
@@ -68,7 +70,7 @@ class ServerApplication : public Application {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * Containers which are responsible for keeping track of the multiple
      * elements in IAS.
@@ -83,105 +85,120 @@ class ServerApplication : public Application {
     Container<Building *> mContainerBuildings;
     Container<Area *> mContainerAreas;
     Container<Rule *> mContainerRules;
-    
+
     /**
      * Contains the set of operators which are available to IAS.
      */
     std::map<std::string,Operator *> mOperators;
-    
+
     /**
      * Contains the database connection.
      */
     DatabaseConnection * mDbConnection;
-    
+
     /**
      * Contains the servers which are responsible for handling controller
      * connections and updates.
      */
     ControllerServer * mServerController;
     ControllerServer * mServerControllerSsl;
-    
+
     /**
      * Contains the servers which are responsible for handling user
      * connections and commands.
      */
     UserServer * mServerUser;
     UserServer * mServerUserSsl;
-    
+
+    /**
+     * Event servers which are responsible for delivering event streams.
+     */
+    EventServer * mServerEvent;
+    EventServer * mServerEventSsl;
+
+    /**
+     * Dispatcher which is responsible for dispatching server events.
+     */
+    EventDispatcher mEventDispatcher;
+
     /**
      * Contains all by-default and key-value relationships which have been
      * read from the configuration file.
      */
     Properties mProperties;
-    
+
     /**
      * Contains the user command dispatcher.
      */
     CommandDispatcher mDispatcher;
-    
+
     /**
      * A flag which can be used to stop the server application.
      */
     bool mFlagRunning;
-    
+
     /**
      * A device monitor which is responsible for reporting state updates to
      * the storage medium.
      */
     DeviceMonitor * mDeviceMonitor;
-        
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     inline void initialize( void );
-    
+
     void setup( const int argc , const char ** argv );
-    
+
     void readConfiguration( const std::string & filePath );
-    
+
     void connectToDatabase( void );
-    
+
     void fillUsers( void );
-    
+
     void fillContainers( void );
-    
+
     void fillValueTypes( void );
-    
+
     void fillMembers( void );
-    
+
     void fillFeatures( void );
-    
+
     void fillTechnologies( void );
-    
+
     void fillDevices( void );
-    
+
     void fillControllers( void );
-    
+
     void fillBuildings( void );
-    
+
     void fillAreas( void );
-    
+
     void fillRules( void );
-    
+
     void initializeSalts( void );
-    
+
     void initializeControllerServer( void );
-    
+
     void initializeControllerSslServer( void );
 
     void initializeUserServer( void );
-    
+
     void initializeUserSslServer( void );
 
+    void initializeEventServer( void );
+
+    void initializeEventSslServer( void );
+
     void initializeDispatcher( void );
-    
+
     void initializeLogger( void );
 
     void registerOperators( void );
-    
+
     void cleanupOperators( void );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -192,23 +209,23 @@ class ServerApplication : public Application {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     ServerApplication( const int argc , const char ** argv );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~ServerApplication( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void run( void );
-    
+
     virtual void stop( void );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

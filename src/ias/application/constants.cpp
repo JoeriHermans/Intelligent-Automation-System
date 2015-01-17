@@ -70,6 +70,10 @@ const char kConfigNetworkDevicePort[] = "network_device_port";
 const char kConfigNetworkDeviceSslPort[] = "network_device_ssl_port";
 const char kConfigNetworkDeviceSslCertificate[] = "network_device_ssl_certificate";
 const char kConfigNetworkDeviceSslKey[] = "network_device_ssl_key";
+const char kConfigNetworkEventPort[] = "network_event_port";
+const char kConfigNetworkEventSslPort[] = "network_event_ssl_port";
+const char kConfigNetworkEventSslCertificate[] = "network_event_ssl_certificate";
+const char kConfigNetworkEventSslKey[] = "network_event_ssl_key";
 
 const char kConfigSocksAddress[] = "socks_address";
 const char kConfigSocksPort[] = "socks_port";
@@ -82,3 +86,5 @@ const unsigned int kDefaultDeviceServerPort = 5002;
 const unsigned int kDefaultControllerServerPort = 5000;
 const unsigned int kDefaultUserServerPort = 5001;
 const unsigned int kDefaultUserServerPortSsl = 6001;
+const unsigned int kDefaultEventServerPort = 5003;
+const unsigned int kDefaultEventServerPortSsl = 6003;

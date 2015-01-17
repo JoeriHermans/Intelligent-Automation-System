@@ -69,6 +69,10 @@ extern const char kConfigNetworkDevicePort[];
 extern const char kConfigNetworkDeviceSslPort[];
 extern const char kConfigNetworkDeviceSslCertificate[];
 extern const char kConfigNetworkDeviceSslKey[];
+extern const char kConfigNetworkEventPort[];
+extern const char kConfigNetworkEventSslPort[];
+extern const char kConfigNetworkEventSslCertificate[];
+extern const char kConfigNetworkEventSslKey[];
 
 extern const char kConfigSocksAddress[];
 extern const char kConfigSocksPort[];
@@ -81,5 +85,7 @@ extern const unsigned int kDefaultControllerServerPort;
 extern const unsigned int kDefaultDeviceServerPort;
 extern const unsigned int kDefaultUserServerPort;
 extern const unsigned int kDefaultUserServerPortSsl;
+extern const unsigned int kDefaultEventServerPort;
+extern const unsigned int kDefaultEventServerSslPort;
 
 #endif /* CONSTANTS_H_ */

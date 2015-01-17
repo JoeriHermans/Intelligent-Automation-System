@@ -386,6 +386,53 @@ void ServerApplication::initializeUserSslServer( void ) {
     }
 }
 
+void ServerApplication::initializeEventServer( void ) {
+    ServerSocket * serverSocket;
+    std::string stringPort;
+    unsigned int port;
+
+    if( mProperties.contains(kConfigNetworkUserPort) )
+        stringPort = mProperties.get(kConfigNetworkEventPort);
+    if( !stringPort.empty() )
+        port = static_cast<unsigned int>(atol(stringPort.c_str()));
+    else
+        port = kDefaultEventServerPort;
+    serverSocket = new PosixTcpServerSocket(port);
+    if( serverSocket->bindToPort() ) {
+        mServerEvent = new EventServer(serverSocket,
+                                       mDbConnection,
+                                       &mEventDispatcher);
+    } else {
+        delete serverSocket;
+    }
+}
+
+void ServerApplication::initializeEventSslServer( void ) {
+    ServerSocket * serverSocket;
+    std::string stringPort;
+    std::string certificateFile;
+    std::string keyFile;
+    unsigned int port;
+
+    if( mProperties.contains(kConfigNetworkEventSslPort) )
+        stringPort = mProperties.get(kConfigNetworkEventSslPort);
+    if( mProperties.contains(kConfigNetworkEventSslCertificate) )
+        certificateFile = mProperties.get(kConfigNetworkUserSslCertificate);
+    if( mProperties.contains(kConfigNetworkEventSslKey) )
+        keyFile = mProperties.get(kConfigNetworkEventSslKey);
+    if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
+        port = static_cast<unsigned int>(atol(stringPort.c_str()));
+        serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
+        if( serverSocket->bindToPort() ) {
+            mServerEventSsl = new EventServer(serverSocket,
+                                              mDbConnection,
+                                              &mEventDispatcher);
+        } else {
+            delete serverSocket;
+        }
+    }
+}
+
 void ServerApplication::initializeDispatcher( void ) {
     mDispatcher.registerCommand(
         CommandStop::kIdentifier,
