@@ -515,7 +515,7 @@ void ServerApplication::run( void ) {
     if( mServerUserSsl != nullptr ) {
         logi("Waiting for secure user server to stop.");
         mServerUserSsl->join();
-        logi("User server stopped.");
+        logi("Secure user server stopped.");
     }
 }
 
