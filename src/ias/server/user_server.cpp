@@ -78,5 +78,5 @@ UserServer::~UserServer( void ) {
 }
 
 void UserServer::join( void ) {
-    // Nothing to do here.
+    SessionServer::join();
 }

@@ -64,5 +64,5 @@ ControllerServer::~ControllerServer( void ) {
 }
 
 void ControllerServer::join( void ) {
-    // Nothing to do here.
+    SessionServer::join();
 }

@@ -113,6 +113,14 @@ void SessionServer::stop( void ) {
     mFlagRunning = false;
 }
 
+void SessionServer::join( void ) {
+    if( mMainThread != nullptr ) {
+        mMainThread->join();
+        delete mMainThread;
+        mMainThread = nullptr;
+    }
+}
+
 void SessionServer::update( void ) {}
 
 void SessionServer::update( void * argument ) {

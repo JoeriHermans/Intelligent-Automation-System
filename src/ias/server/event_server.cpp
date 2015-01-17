@@ -67,4 +67,6 @@ EventServer::~EventServer( void ) {
     join();
 }
 
-void EventServer::join( void ) {}
+void EventServer::join( void ) {
+    SessionServer::join();
+}

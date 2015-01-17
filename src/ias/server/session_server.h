@@ -118,7 +118,7 @@ class SessionServer : public Server {
 
     virtual void stop( void );
 
-    virtual void join( void ) = 0;
+    virtual void join( void );
 
     virtual void update( void );
 
