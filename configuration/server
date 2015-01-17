@@ -14,6 +14,7 @@ database_host = 127.0.0.1
 # Network configuration.
 network_controller_port = 5000
 network_user_port = 5001
+network_event_port = 5002
 
 # Network SSL settings.
 # network_controller_ssl_port = 6000
@@ -22,6 +23,9 @@ network_user_port = 5001
 # network_controller_ssl_key = /path
 # network_user_ssl_certificate = /path
 # network_user_ssl_key = /path
+# network_event_ssl_port = 6002
+# network_event_ssl_certificate = /path
+# network_event_ssl_key = /path
 
 # Security settings.
 security_presalt = hash_presalt
