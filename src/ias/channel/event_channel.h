@@ -1,12 +1,8 @@
 /**
- * A class which describes the properties and actions of a channel splitter.
- * This channel will take an element at it source and divides the element over
- * all its exits.
+ * A class which describes the properties and actions of an event channel. This
+ * channel will write the incoming events to the specified socket.
  *
- * Please note that this class is NOT responsible for the descruction of the
- * specified channels.
- *
- * @date                    16 January, 2015
+ * @date                    17 January, 2015
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -25,23 +21,19 @@
  * limitations under the License.
  */
 
-#ifndef CHANNEL_SPLITTER_H_
-#define CHANNEL_SPLITTER_H_
+#ifndef EVENT_CHANNEL_H_
+#define EVENT_CHANNEL_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <cassert>
-#include <vector>
-#include <mutex>
-
 // Application dependencies.
 #include <ias/channel/channel.h>
+#include <ias/event/event.h>
+#include <ias/network/socket.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-template<class T>
-class ChannelSplitter : public Channel<T> {
+class EventChannel : public Channel<const Event *> {
 
     public:
 
@@ -53,20 +45,16 @@ class ChannelSplitter : public Channel<T> {
     // BEGIN Private members. ////////////////////////////////////////
 
     /**
-     * A vector which holds all the exits of the splitter.
-     *
-     * @note    By default, this vector will be empty.
+     * The socket to which this channel will write the event to.
      */
-    std::vector<Channel<T> *> mExits;
-
-    /**
-     * A mutex which synchronizes the access to the exit channels.
-     */
-    mutable std::mutex mMutexExits;
+    Socket * mSocket;
 
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    void setSocket( Socket * socket );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -78,54 +66,19 @@ class ChannelSplitter : public Channel<T> {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    ChannelSplitter( void ) = default;
-
-    ChannelSplitter( const std::vector<Channel<T> *> & exits ) {
-        mExits = exits;
-    }
+    EventChannel( Socket * socket );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~ChannelSplitter( void ) = default;
+    virtual ~EventChannel( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void pipe( T argument ) {
-        mMutexExits.lock();
-        for( auto it = mExits.begin() ; it != mExits.end() ; ++it )
-            (*it)->pipe(argument);
-        mMutexExits.unlock();
-    }
-
-    void addChannel( Channel<T> * channel ) {
-        // Checking the precondition.
-        assert( channel != nullptr );
-
-        mMutexExits.lock();
-        mExits.push_back(channel);
-        mMutexExits.unlock();
-    }
-
-    void removeChannel( const Channel<T> * channel ) {
-        Channel<T> * c;
-
-        // Checking the precondition.
-        assert( channel != nullptr );
-
-        mMutexExits.lock();
-        for( auto it = mExits.begin() ; it != mExits.end() ; ++it ) {
-            c = (*it);
-            if( c == channel ) {
-                mExits.erase(it);
-                break;
-            }
-        }
-        mMutexExits.unlock();
-    }
+    virtual void pipe( const Event * argument );
 
     // END Public methods. ///////////////////////////////////////////
 
@@ -134,4 +87,4 @@ class ChannelSplitter : public Channel<T> {
 
 };
 
-#endif /* CHANNEL_SPLITTER_H_ */
+#endif /* EVENT_CHANNEL_H_ */

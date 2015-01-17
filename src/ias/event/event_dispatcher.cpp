@@ -59,3 +59,17 @@ void EventDispatcher::dispatch( Event * event ) {
     t = new DispatchEventTask(&mSplitter,event);
     mPool->enqueue(t);
 }
+
+void EventDispatcher::addChannel( EventChannel * channel ) {
+    // Checking the precondition.
+    assert( channel != nullptr );
+
+    mSplitter.addChannel(channel);
+}
+
+void EventDispatcher::removeChannel( EventChannel * channel ) {
+    // Checking the precondition.
+    assert( channel != nullptr );
+
+    mSplitter.removeChannel(channel);
+}

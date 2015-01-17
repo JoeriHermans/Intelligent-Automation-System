@@ -28,8 +28,10 @@
 // Application dependencies.
 #include <ias/event/event.h>
 #include <ias/event/dispatch_event_task.h>
+#include <ias/network/socket.h>
 #include <ias/threadpool/threadpool.h>
 #include <ias/channel/channel_splitter.h>
+#include <ias/channel/event_channel.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -94,6 +96,10 @@ class EventDispatcher {
     // BEGIN Public methods. /////////////////////////////////////////
 
     void dispatch( Event * event );
+
+    void addChannel( EventChannel * channel );
+
+    void removeChannel( EventChannel * channel );
 
     // END Public methods. ///////////////////////////////////////////
 

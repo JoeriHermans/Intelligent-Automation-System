@@ -1,8 +1,6 @@
 /**
- * A task which is responsible for dispatching an event to a set of connected
- * channels.
- *
- * Please note that this class we free (delete) the specified event.
+ * A class which describes the properties and actions of an event channel. This
+ * channel will write the incoming events to the specified socket.
  *
  * @date                    17 January, 2015
  * @author                  Joeri HERMANS
@@ -29,36 +27,24 @@
 #include <cassert>
 
 // Application dependencies.
-#include <ias/event/dispatch_event_task.h>
+#include <ias/channel/event_channel.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-void DispatchEventTask::setEvent( Event * event ) {
+void EventChannel::setSocket( Socket * socket ) {
     // Checking the precondition.
-    assert( event != nullptr );
+    assert( socket != nullptr );
 
-    mEvent = event;
+    mSocket = socket;
 }
 
-void DispatchEventTask::setChannelSplitter(
-        ChannelSplitter<const Event *> * splitter ) {
+EventChannel::EventChannel( Socket * socket ) {
+    setSocket(socket);
+}
+
+void EventChannel::pipe( const Event * argument ) {
     // Checking the precondition.
-    assert( splitter != nullptr );
+    assert( argument != nullptr );
 
-    mSplitter = splitter;
-}
-
-DispatchEventTask::DispatchEventTask(
-        ChannelSplitter<const Event *> * splitter, Event * event ) {
-    setEvent(event);
-    setChannelSplitter(splitter);
-}
-
-DispatchEventTask::~DispatchEventTask( void ) {
-    // Free the allocated event.
-    delete mEvent; mEvent = nullptr;
-}
-
-void DispatchEventTask::execute( void ) {
-    mSplitter->pipe(mEvent);
+    // TODO Implement.
 }
