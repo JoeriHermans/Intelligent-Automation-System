@@ -39,10 +39,11 @@
 #include <ias/server/session/session.h>
 #include <ias/server/session/controller_session.h>
 #include <ias/util/container.h>
+#include <ias/server/session_server.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class ControllerServer : public Server {
+class ControllerServer : public SessionServer {
 
     public:
 
@@ -59,32 +60,6 @@ class ControllerServer : public Server {
      */
     Container<Controller *> * mControllers;
 
-    /**
-     * A map which holds all running controller sessions and the
-     * corresponding sessions.
-     */
-    std::map<Session *,std::thread *> mSessions;
-
-    /**
-     * A set of threads which are meant for cleanup.
-     */
-    std::vector<std::thread *> mInactiveThreads;
-
-    /**
-     * Contains a pointer to the main server thread.
-     */
-    std::thread * mMainThread;
-
-    /**
-     * A flag which indicates if the server needs to stop.
-     */
-    bool mFlagRunning;
-
-    /**
-     * A mutex which sync's the access to the sessions map.
-     */
-    std::mutex mMutexSessions;
-
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -93,15 +68,14 @@ class ControllerServer : public Server {
 
     void setControllerContainer( Container<Controller *> * controllers );
 
-    void cleanupFinishingThreads( void );
-
-    void signalSessions( void );
-
     // END Private methods. //////////////////////////////////////////
 
     protected:
 
     // BEGIN Protected methods. //////////////////////////////////////
+
+    virtual Session * getSession( Socket * socket ) const;
+
     // END Protected methods. ////////////////////////////////////////
 
     public:
@@ -121,15 +95,7 @@ class ControllerServer : public Server {
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void start( void );
-
-    virtual void stop( void );
-
     virtual void join( void );
-
-    virtual void update( void );
-
-    virtual void update( void * argument );
 
     // END Public methods. ///////////////////////////////////////////
 

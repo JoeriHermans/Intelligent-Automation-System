@@ -122,7 +122,7 @@ class SessionServer : public Server {
 
     // BEGIN Protected methods. //////////////////////////////////////
 
-    virtual Session * getSession( void ) const = 0;
+    virtual Session * getSession( Socket * socket ) const = 0;
 
     // END Protected methods. ////////////////////////////////////////
 
@@ -157,7 +157,7 @@ class SessionServer : public Server {
                 while( mFlagRunning ) {
                     socket = serverSocket->acceptSocket(1);
                     if( socket != nullptr ) {
-                        session = getSession();
+                        session = getSession(socket);
                         session->addObserver(this);
                         mSessions[session] =
                             new std::thread([session]{

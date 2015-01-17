@@ -36,8 +36,6 @@
 
 inline void ControllerServer::initialize( void ) {
     mControllers = nullptr;
-    mMainThread = nullptr;
-    mFlagRunning = true;
 }
 
 void ControllerServer::setControllerContainer( Container<Controller *> * c ) {
@@ -47,31 +45,16 @@ void ControllerServer::setControllerContainer( Container<Controller *> * c ) {
     mControllers = c;
 }
 
-void ControllerServer::cleanupFinishingThreads( void ) {
-    std::thread * t;
+Session * ControllerServer::getSession( Socket * socket ) const {
+    // Checking the precondition.
+    assert( socket != nullptr );
 
-    while( mInactiveThreads.size() > 0 ) {
-        t = mInactiveThreads.front();
-        if( t != nullptr ) {
-            t->join();
-            delete t;
-        }
-        mInactiveThreads.erase(mInactiveThreads.begin());
-    }
-}
-
-void ControllerServer::signalSessions( void ) {
-    std::map<Session *,std::thread *>::iterator it;
-
-    mMutexSessions.lock();
-    for( it = mSessions.begin() ; it != mSessions.end() ; ++it )
-        it->first->stop();
-    mMutexSessions.unlock();
+    return ( new ControllerSession(socket,mControllers) );
 }
 
 ControllerServer::ControllerServer( ServerSocket * socket,
                                     Container<Controller *> * controllers ) :
-    Server(socket) {
+    SessionServer(socket) {
     initialize();
     setControllerContainer(controllers);
 }
@@ -80,72 +63,6 @@ ControllerServer::~ControllerServer( void ) {
     join();
 }
 
-void ControllerServer::start( void ) {
-    if( mMainThread == nullptr ) {
-        mMainThread = new std::thread([this](){
-            ServerSocket * serverSocket;
-            Session * session;
-            Socket * socket;
-
-            serverSocket = getServerSocket();
-            while( mFlagRunning ) {
-                socket = serverSocket->acceptSocket(1);
-                if( socket != nullptr ) {
-                    logi("Starting new controller session.");
-                    session = new ControllerSession(socket,mControllers);
-                    session->addObserver(this);
-                    mSessions[session] =
-                        new std::thread([session]{
-                            session->run();
-                            session->notifyObservers(session);
-                            delete session;
-                            logi("Terminating controller session.");
-                        });
-                } else if( !serverSocket->isBound() ) {
-                    stop();
-                }
-                cleanupFinishingThreads();
-            }
-            signalSessions();
-            while( mSessions.size() > 0 ||
-                   mInactiveThreads.size() > 0 ) {
-                signalSessions();
-                cleanupFinishingThreads();
-            }
-        });
-    }
-}
-
-void ControllerServer::stop( void ) {
-    mFlagRunning = false;
-}
-
 void ControllerServer::join( void ) {
-    // Check if a main thread is available.
-    if( mMainThread != nullptr ) {
-        mMainThread->join();
-        delete mMainThread;
-        mMainThread = nullptr;
-    }
-}
-
-void ControllerServer::update( void ) {
-    // Do nothing.
-}
-
-void ControllerServer::update( void * argument ) {
-    std::map<Session *,std::thread *>::iterator it;
-    Session * session;
-
-    // Checking the precondition.
-    assert( argument != nullptr );
-
-    session = static_cast<Session *>(argument);
-    it = mSessions.find(session);
-    if( it != mSessions.end() ) {
-        mInactiveThreads.push_back(it->second);
-        mMutexSessions.lock();
-        mSessions.erase(it);
-        mMutexSessions.unlock();
-    }
+    // Nothing to do here.
 }
