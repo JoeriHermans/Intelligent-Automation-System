@@ -52,34 +52,34 @@ class ControllerServer : public Server {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-        
+
     /**
      * A containers which holds the set of all controllers available in
      * IAS.
      */
     Container<Controller *> * mControllers;
-    
+
     /**
      * A map which holds all running controller sessions and the
      * corresponding sessions.
      */
     std::map<Session *,std::thread *> mSessions;
-    
+
     /**
      * A set of threads which are meant for cleanup.
      */
     std::vector<std::thread *> mInactiveThreads;
-    
+
     /**
      * Contains a pointer to the main server thread.
      */
     std::thread * mMainThread;
-    
+
     /**
      * A flag which indicates if the server needs to stop.
      */
     bool mFlagRunning;
-    
+
     /**
      * A mutex which sync's the access to the sessions map.
      */
@@ -88,15 +88,15 @@ class ControllerServer : public Server {
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     inline void initialize( void );
-    
+
     void setControllerContainer( Container<Controller *> * controllers );
-    
+
     void cleanupFinishingThreads( void );
-    
+
     void signalSessions( void );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -107,34 +107,34 @@ class ControllerServer : public Server {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     ControllerServer( ServerSocket * socket,
                       Container<Controller *> * controllers );
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~ControllerServer( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void start( void );
-    
+
     virtual void stop( void );
-    
+
     virtual void join( void );
-    
+
     virtual void update( void );
-    
+
     virtual void update( void * argument );
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
-    
+
     // END Static methods. ///////////////////////////////////////////
 
 };
