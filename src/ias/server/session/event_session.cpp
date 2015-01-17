@@ -30,6 +30,7 @@
 // Application dependencies.
 #include <ias/server/session/event_session.h>
 #include <ias/logger/logger.h>
+#include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -54,6 +55,105 @@ void EventSession::setEventDispatcher( EventDispatcher * eventDispatcher ) {
     mEventDispatcher = eventDispatcher;
 }
 
+void EventSession::setAuthenticationTimeouts( void ) {
+    struct timeval tv;
+    Socket * socket;
+
+    tv.tv_sec = 60;
+    tv.tv_usec = 0;
+    socket = getSocket();
+    socket->setReceiveTimeout(tv);
+}
+
+void EventSession::setTimeouts( void ) {
+    struct timeval tv;
+    Socket * socket;
+
+    tv.tv_sec = 10;
+    tv.tv_usec = 0;
+    socket = getSocket();
+    socket->setReceiveTimeout(tv);
+}
+
+void EventSession::authorize( void ) {
+    std::uint8_t type = 0xff;
+
+    logi("Authorizing event stream.");
+    if( readBytes(reinterpret_cast<char *>(&type),1) ) {
+        switch(type) {
+        case 0x00:
+            mFlagRunning = false;
+            break;
+        case 0x01:
+            authorizeApiKey();
+            break;
+        }
+    }
+    if( !mFlagRunning ) {
+        loge("Could not authenticate event stream.");
+        getSocket()->closeConnection();
+    } else {
+        std::uint8_t code[2];
+        Writer * w;
+
+        // Send authorization byte.
+        w = getSocket()->getWriter();
+        code[0] = 0x00;
+        code[1] = 0x01;
+        w->writeBytes(reinterpret_cast<char *>(&code),2);
+    }
+}
+
+void EventSession::authorizeApiKey( void ) {
+    std::uint8_t length;
+    std::string hashedKey;
+
+    logi("Authorizing user using API key.");
+    length = 0xff;
+    if( readBytes(reinterpret_cast<char *>(&length),1) && length > 0 ) {
+        char key[length + 1];
+        key[length] = 0;
+        if( length > 1 && readBytes(key,length) ) {
+            hashedKey = sha256GlobalSalts(std::string(key));
+            validateApiKey(hashedKey);
+        }
+    }
+}
+
+void EventSession::validateApiKey( const std::string & key ) {
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+
+    // Checking the precondition.
+    assert( key.length() > 0 );
+
+    if( mDbConnection->isConnected() ) {
+        // Query is safe, because it has been hashed.
+        std::string sql = "SELECT user_id, expires "
+                          "FROM api_keys "
+                          "WHERE api_keys.key = '" + key + "';";
+        statement = mDbConnection->createStatement(sql);
+        if( statement != nullptr ) {
+            result = statement->execute();
+            if( result == nullptr || !result->hasNext() )
+                mFlagRunning = false;
+            delete result;
+            delete statement;
+        }
+    }
+}
+
+bool EventSession::heartbeat( void ) {
+    static const char beat = 0x00;
+    Writer * writer;
+    bool ok;
+
+    writer = getSocket()->getWriter();
+    ok = (writer->writeByte(beat) == 1);
+
+    return ( ok );
+}
+
 EventSession::EventSession( Socket * socket, DatabaseConnection * connection,
                             EventDispatcher * eventDispatcher ) :
     Session(socket) {
@@ -68,7 +168,40 @@ EventSession::~EventSession( void ) {
 }
 
 void EventSession::run( void ) {
-    // TODO Implement.
+    bool heartbeatSend = false;
+    std::uint8_t type;
+    std::size_t nBytes;
+    Socket * socket;
+    Reader * reader;
+
+    setAuthenticationTimeouts();
+    authorize();
+    if( mFlagRunning ) {
+        socket = getSocket();
+        reader = socket->getReader();
+        setTimeouts();
+        while( mFlagRunning && socket->isConnected() ) {
+            type = 0xff;
+            nBytes = reader->readByte(reinterpret_cast<char *>(&type));
+            if( nBytes == 0 ) {
+                if( !heartbeat() || heartbeatSend )
+                    stop();
+                else
+                    heartbeatSend = true;
+                continue;
+            }
+            switch(type) {
+            case 0x00:
+                if( !heartbeatSend )
+                    heartbeat();
+                break;
+            default:
+                stop();
+                break;
+            }
+            heartbeatSend = false;
+        }
+    }
 }
 
 void EventSession::stop( void ) {

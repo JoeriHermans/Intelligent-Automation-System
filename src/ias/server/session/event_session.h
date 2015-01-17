@@ -86,6 +86,18 @@ class EventSession : public Session {
 
     void setEventDispatcher( EventDispatcher * eventDispatcher );
 
+    void setAuthenticationTimeouts( void );
+
+    void setTimeouts( void );
+
+    void authorize( void );
+
+    void authorizeApiKey( void );
+
+    void validateApiKey( const std::string & key );
+
+    bool heartbeat( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:

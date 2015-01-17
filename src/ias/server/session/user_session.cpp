@@ -73,9 +73,8 @@ void UserSession::authorize( void ) {
             break;
         }
     }
-    if( mUser == nullptr )
-        loge("User authorization failed.");
     if( mUser == nullptr ) {
+        loge("User authorization failed.");
         getSocket()->closeConnection();
     } else {
         std::uint8_t code[2];
