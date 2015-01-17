@@ -39,10 +39,11 @@
 #include <ias/network/server_socket.h>
 #include <ias/server/server.h>
 #include <ias/server/session/session.h>
+#include <ias/server/session_server.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class EventServer : public Server {
+class EventServer : public SessionServer {
 
     public:
 
@@ -69,51 +70,22 @@ class EventServer : public Server {
      */
     EventDispatcher * mEventDispatcher;
 
-    /**
-     * A map which holds all running controller sessions and the
-     * corresponding sessions.
-     */
-    std::map<Session *,std::thread *> mSessions;
-
-    /**
-     * A set of threads which are meant for cleanup.
-     */
-    std::vector<std::thread *> mInactiveThreads;
-
-    /**
-     * Contains the main thread of the server.
-     */
-    std::thread * mMainThread;
-
-    /**
-     * A flag which indicates if the server needs to stop.
-     */
-    bool mFlagRunning;
-
-    /**
-     * A mutes which sync's the access to the sessions map.
-     */
-    std::mutex mMutexSessions;
-
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
 
-    inline void initialize( void );
-
     void setDatabaseConnection( DatabaseConnection * dbConnection );
 
     void setEventDispatcher( EventDispatcher * eventDispatcher );
-
-    void cleanupFinishingThreads( void );
-
-    void signalSessions( void );
 
     // END Private methods. //////////////////////////////////////////
 
     protected:
 
     // BEGIN Protected methods. //////////////////////////////////////
+
+    Session * getSession( Socket * socket ) const;
+
     // END Protected methods. ////////////////////////////////////////
 
     public:
@@ -134,15 +106,7 @@ class EventServer : public Server {
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void start( void );
-
-    virtual void stop( void );
-
     virtual void join( void );
-
-    virtual void update( void );
-
-    virtual void update( void * argument );
 
     // END Public methods. ///////////////////////////////////////////
 

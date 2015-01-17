@@ -34,13 +34,6 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-inline void EventServer::initialize( void ) {
-    mDbConnection = nullptr;
-    mEventDispatcher = nullptr;
-    mMainThread = nullptr;
-    mFlagRunning = true;
-}
-
 void EventServer::setDatabaseConnection( DatabaseConnection * dbConnection ) {
     // Checking the precondition.
     assert( dbConnection != nullptr && dbConnection->isConnected() );
@@ -55,33 +48,17 @@ void EventServer::setEventDispatcher( EventDispatcher * eventDispatcher ) {
     mEventDispatcher = eventDispatcher;
 }
 
-void EventServer::cleanupFinishingThreads( void ) {
-    std::thread * t;
+Session * EventServer::getSession( Socket * socket ) const {
+    // Checking the precondition.
+    assert( socket != nullptr );
 
-    while( mInactiveThreads.size() > 0 ) {
-        t = mInactiveThreads.front();
-        if( t != nullptr ) {
-            t->join();
-            delete t;
-        }
-        mInactiveThreads.erase(mInactiveThreads.begin());
-    }
-}
-
-void EventServer::signalSessions( void ) {
-    std::map<Session *,std::thread *>::iterator it;
-
-    mMutexSessions.lock();
-    for( it = mSessions.begin() ; it != mSessions.end() ; ++it )
-        it->first->stop();
-    mMutexSessions.unlock();
+    return ( new EventSession(socket,mDbConnection,mEventDispatcher) );
 }
 
 EventServer::EventServer( ServerSocket * serverSocket,
                           DatabaseConnection * dbConnection,
                           EventDispatcher * eventDispatcher ) :
-    Server(serverSocket) {
-    initialize();
+    SessionServer(serverSocket) {
     setDatabaseConnection(dbConnection);
     setEventDispatcher(eventDispatcher);
 }
@@ -90,73 +67,4 @@ EventServer::~EventServer( void ) {
     join();
 }
 
-void EventServer::start( void ) {
-    if( mMainThread == nullptr ) {
-        mMainThread = new std::thread([this](){
-            ServerSocket * serverSocket;
-            Session * session;
-            Socket * socket;
-
-            serverSocket = getServerSocket();
-            while( mFlagRunning ) {
-                socket = serverSocket->acceptSocket(1);
-                if( socket != nullptr ) {
-                    logi("Starting new events session.");
-                    session = new EventSession(socket,mDbConnection,
-                                               mEventDispatcher);
-                    session->addObserver(this);
-                    mSessions[session] =
-                        new std::thread([session]{
-                            session->run();
-                            session->notifyObservers(session);
-                            delete session;
-                            logi("Terminating events session.");
-                        });
-                } else if( !serverSocket->isBound() ) {
-                    stop();
-                }
-                cleanupFinishingThreads();
-            }
-            signalSessions();
-            while( mSessions.size() > 0 ||
-                   mInactiveThreads.size() > 0 ) {
-                signalSessions();
-                cleanupFinishingThreads();
-            }
-        });
-    }
-}
-
-void EventServer::stop( void ) {
-    mFlagRunning = false;
-}
-
-void EventServer::join( void ) {
-    // Check if a main thread is available.
-    if( mMainThread != nullptr ) {
-        mMainThread->join();
-        delete mMainThread;
-        mMainThread = nullptr;
-    }
-}
-
-void EventServer::update( void ) {
-    // Do nothing.
-}
-
-void EventServer::update( void * argument ) {
-    std::map<Session *,std::thread *>::iterator it;
-    Session * session;
-
-    // Checking the precondition.
-    assert( argument != nullptr );
-
-    session = static_cast<Session *>(argument);
-    it = mSessions.find(session);
-    if( it != mSessions.end() ) {
-        mInactiveThreads.push_back(it->second);
-        mMutexSessions.lock();
-        mSessions.erase(it);
-        mMutexSessions.unlock();
-    }
-}
+void EventServer::join( void ) {}
