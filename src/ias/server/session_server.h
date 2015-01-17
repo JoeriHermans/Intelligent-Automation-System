@@ -80,41 +80,13 @@ class SessionServer : public Server {
 
     // BEGIN Private methods. ////////////////////////////////////////
 
-    inline void initialize( void ) {
-        mMainThread = nullptr;
-        mFlagRunning = true;
-    }
+    inline void initialize( void );
 
-    void cleanupFinishingThreads( void ) {
-        std::thread * t;
+    void cleanupFinishingThreads( void );
 
-        while( mInactiveThreads.size() > 0 ) {
-            t = mInactiveThreads.front();
-            if( t != nullptr ) {
-                t->join();
-                delete t;
-            }
-            mInactiveThreads.erase(mInactiveThreads.begin());
-        }
-    }
+    void signalSessions( void );
 
-    void signalSessions( void ) {
-        std::map<Session *,std::thread *>::iterator it;
-
-        mMutexSessions.lock();
-        for( it = mSessions.begin() ; it != mSessions.end() ; ++it )
-            it->first->stop();
-        mMutexSessions.unlock();
-    }
-
-    void joinMainthread( void ) {
-        // Check if a main thread is available.
-        if( mMainThread != nullptr ) {
-            mMainThread->join();
-            delete mMainThread;
-            mMainThread = nullptr;
-        }
-    }
+    void joinMainthread( void );
 
     // END Private methods. //////////////////////////////////////////
 
@@ -130,82 +102,27 @@ class SessionServer : public Server {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    SessionServer( ServerSocket * socket ) : Server(socket) {
-        initialize();
-    }
+    SessionServer( ServerSocket * socket );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~SessionServer( void ) {
-        joinMainthread();
-    }
+    virtual ~SessionServer( void );
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void start( void ) {
-        if( mMainThread == nullptr ) {
-            mMainThread = new std::thread([this](){
-                ServerSocket * serverSocket;
-                Session * session;
-                Socket * socket;
+    virtual void start( void );
 
-                serverSocket = getServerSocket();
-                while( mFlagRunning ) {
-                    socket = serverSocket->acceptSocket(1);
-                    if( socket != nullptr ) {
-                        session = getSession(socket);
-                        session->addObserver(this);
-                        mSessions[session] =
-                            new std::thread([session]{
-                                session->run();
-                                session->notifyObservers(session);
-                                delete session;
-                            });
-                    } else if( !serverSocket->isBound() ) {
-                        stop();
-                    }
-                    cleanupFinishingThreads();
-                }
-                signalSessions();
-                while( mSessions.size() > 0 ||
-                       mInactiveThreads.size() > 0 ) {
-                    signalSessions();
-                    cleanupFinishingThreads();
-                }
-            });
-        }
-    }
-
-    virtual void stop( void ) {
-        mFlagRunning = false;
-    }
+    virtual void stop( void );
 
     virtual void join( void ) = 0;
 
-    virtual void update( void ) {
-        // Nothing to do here.
-    }
+    virtual void update( void );
 
-    virtual void update( void * argument ) {
-        std::map<Session *,std::thread *>::iterator it;
-        Session * session;
-
-        // Checking the precondition.
-        assert( argument != nullptr );
-
-        session = static_cast<Session *>(argument);
-        it = mSessions.find(session);
-        if( it != mSessions.end() ) {
-            mInactiveThreads.push_back(it->second);
-            mMutexSessions.lock();
-            mSessions.erase(it);
-            mMutexSessions.unlock();
-        }
-    }
+    virtual void update( void * argument );
 
     // END Public methods. ///////////////////////////////////////////
 

@@ -35,15 +35,15 @@
 
 // Application dependencies.
 #include <ias/database/interface/database_connection.h>
-#include <ias/server/server.h>
 #include <ias/server/session/session.h>
 #include <ias/user/user.h>
 #include <ias/user/command/command_dispatcher.h>
 #include <ias/util/container.h>
+#include <ias/server/session_server.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class UserServer : public Server {
+class UserServer : public SessionServer {
 
     public:
 
@@ -69,41 +69,13 @@ class UserServer : public Server {
     DatabaseConnection * mDbConnection;
 
     /**
-     * A map which holds all running controller sessions and the
-     * corresponding sessions.
-     */
-    std::map<Session *,std::thread *> mSessions;
-
-    /**
-     * A set of threads which are meant for cleanup.
-     */
-    std::vector<std::thread *> mInactiveThreads;
-
-    /**
-     * Contains a pointer to the main server thread.
-     */
-    std::thread * mMainThread;
-
-    /**
      * A class which is responsible for dispatching user commands.
      */
     CommandDispatcher * mDispatcher;
 
-    /**
-     * A flag which indicates if the server needs to stop.
-     */
-    bool mFlagRunning;
-
-    /**
-     * A mutex which sync's the access to the sessions map.
-     */
-    std::mutex mMutexSessions;
-
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-
-    inline void initialize( void );
 
     void setUserContainer( Container<User *> * users );
 
@@ -111,15 +83,14 @@ class UserServer : public Server {
 
     void setDatabaseConnection( DatabaseConnection * dbConnection );
 
-    void cleanupFinishingThreads( void );
-
-    void signalSessions( void );
-
     // END Private methods. //////////////////////////////////////////
 
     protected:
 
     // BEGIN Protected methods. //////////////////////////////////////
+
+    virtual Session * getSession( Socket * socket ) const;
+
     // END Protected methods. ////////////////////////////////////////
 
     public:
@@ -141,15 +112,7 @@ class UserServer : public Server {
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void start( void );
-
-    virtual void stop( void );
-
     virtual void join( void );
-
-    virtual void update( void );
-
-    virtual void update( void * argument );
 
     // END Public methods. ///////////////////////////////////////////
 

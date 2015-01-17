@@ -35,14 +35,6 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
-inline void UserServer::initialize( void ) {
-    mUsers = nullptr;
-    mMainThread = nullptr;
-    mDbConnection = nullptr;
-    mFlagRunning = true;
-    mDispatcher = nullptr;
-}
-
 void UserServer::setUserContainer( Container<User *> * users ) {
     // Checking the precondition.
     assert( users != nullptr );
@@ -64,34 +56,18 @@ void UserServer::setDatabaseConnection( DatabaseConnection * dbConnection ) {
     mDbConnection = dbConnection;
 }
 
-void UserServer::cleanupFinishingThreads( void ) {
-    std::thread * t;
+Session * UserServer::getSession( Socket * socket ) const {
+    // Checking the precondition.
+    assert( socket != nullptr );
 
-    while( mInactiveThreads.size() > 0 ) {
-        t = mInactiveThreads.front();
-        if( t != nullptr ) {
-            t->join();
-            delete t;
-        }
-        mInactiveThreads.erase(mInactiveThreads.begin());
-    }
-}
-
-void UserServer::signalSessions( void ) {
-    std::map<Session *,std::thread *>::iterator it;
-
-    mMutexSessions.lock();
-    for( it = mSessions.begin() ; it != mSessions.end() ; ++it )
-        it->first->stop();
-    mMutexSessions.unlock();
+    return ( new UserSession(socket,mUsers,mDispatcher,mDbConnection) );
 }
 
 UserServer::UserServer( ServerSocket * serverSocket,
                         Container<User *> * users,
                         CommandDispatcher * dispatcher,
                         DatabaseConnection * dbConnection ) :
-    Server(serverSocket) {
-    initialize();
+    SessionServer(serverSocket) {
     setUserContainer(users);
     setDispatcher(dispatcher);
     setDatabaseConnection(dbConnection);
@@ -101,73 +77,6 @@ UserServer::~UserServer( void ) {
     join();
 }
 
-void UserServer::start( void ) {
-    if( mMainThread == nullptr ) {
-        mMainThread = new std::thread([this](){
-            ServerSocket * serverSocket;
-            Session * session;
-            Socket * socket;
-
-            serverSocket = getServerSocket();
-            while( mFlagRunning ) {
-                socket = serverSocket->acceptSocket(1);
-                if( socket != nullptr ) {
-                    logi("Starting new user session.");
-                    session = new UserSession(socket,mUsers,mDispatcher,
-                                              mDbConnection);
-                    session->addObserver(this);
-                    mSessions[session] =
-                        new std::thread([session]{
-                            session->run();
-                            session->notifyObservers(session);
-                            delete session;
-                            logi("User session terminated.");
-                        });
-                } else if( !serverSocket->isBound() ) {
-                    stop();
-                }
-                cleanupFinishingThreads();
-            }
-            signalSessions();
-            while( mSessions.size() > 0 ||
-                   mInactiveThreads.size() > 0 ) {
-                signalSessions();
-                cleanupFinishingThreads();
-            }
-        });
-    }
-}
-
-void UserServer::stop( void ) {
-    mFlagRunning = false;
-}
-
 void UserServer::join( void ) {
-    // Check if a main thread is available.
-    if( mMainThread != nullptr ) {
-        mMainThread->join();
-        delete mMainThread;
-        mMainThread = nullptr;
-    }
-}
-
-void UserServer::update( void ) {
-    // Do nothing.
-}
-
-void UserServer::update( void * argument ) {
-    std::map<Session *,std::thread *>::iterator it;
-    Session * session;
-
-    // Checking the precondition.
-    assert( argument != nullptr );
-
-    session = static_cast<Session *>(argument);
-    it = mSessions.find(session);
-    if( it != mSessions.end() ) {
-        mInactiveThreads.push_back(it->second);
-        mMutexSessions.lock();
-        mSessions.erase(it);
-        mMutexSessions.unlock();
-    }
+    // Nothing to do here.
 }
