@@ -1,9 +1,9 @@
 /**
- * A class which describes the properties and actions of the event server. This
- * server will be responsible for reporting events to the client. This service
- * can be used to enable Server Sent Events, which removes the need for polling.
+ * A class which describes the actions and properties of an event session. This
+ * session will notify the connected endpoint of server events (like device
+ * updates, e.d.). This way, we can prevent polling.
  *
- * @date                    14 January, 2014
+ * @date                    17 January, 2015
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -22,27 +22,20 @@
  * limitations under the License.
  */
 
-#ifndef EVENT_SERVER_H_
-#define EVENT_SERVER_H_
+#ifndef EVENT_SESSION_H_
+#define EVENT_SESSION_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <map>
-#include <thread>
-#include <vector>
-#include <mutex>
-
 // Application dependencies.
-#include <ias/event/event_dispatcher.h>
 #include <ias/database/interface/database_connection.h>
-#include <ias/network/server_socket.h>
-#include <ias/server/server.h>
+#include <ias/event/event_dispatcher.h>
+#include <ias/network/socket.h>
 #include <ias/server/session/session.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class EventServer : public Server {
+class EventSession : public Session {
 
     public:
 
@@ -54,46 +47,34 @@ class EventServer : public Server {
     // BEGIN Private members. ////////////////////////////////////////
 
     /**
-     * Contains the database connection which will be used to check the
-     * user credentials of incoming connections.
+     * Database connection which will be used to authenticate API keys.
      *
-     * @note        By default, this member will be equal to the null reference.
+     * @note    By default, this member will be equal to the null reference.
      */
     DatabaseConnection * mDbConnection;
 
     /**
-     * The dispatcher which will be responsible for dispatching the server
-     * events to the connected sessions.
+     * Event dispatcher, this object will be used in this class to register
+     * the an active event channel. And, off course, to unregister the channel
+     * when the session is closed.
      *
-     * @note        By default, this member will be equal to the null reference.
+     * @note    By default, this member will be equal to the null reference.
      */
     EventDispatcher * mEventDispatcher;
 
     /**
-     * A map which holds all running controller sessions and the
-     * corresponding sessions.
+     * Holds the active channel when the remote endpoint has been authenticated.
+     *
+     * @note    By default, this member will be equal to the null reference.
      */
-    std::map<Session *,std::thread *> mSessions;
+    EventChannel * mChannel;
 
     /**
-     * A set of threads which are meant for cleanup.
-     */
-    std::vector<std::thread *> mInactiveThreads;
-
-    /**
-     * Contains the main thread of the server.
-     */
-    std::thread * mMainThread;
-
-    /**
-     * A flag which indicates if the server needs to stop.
+     * A flag which indicates whether the session should continue.
+     *
+     * @note    By default, this flag is set.
      */
     bool mFlagRunning;
-
-    /**
-     * A mutes which sync's the access to the sessions map.
-     */
-    std::mutex mMutexSessions;
 
     // END Private members. //////////////////////////////////////////
 
@@ -101,13 +82,9 @@ class EventServer : public Server {
 
     inline void initialize( void );
 
-    void setDatabaseConnection( DatabaseConnection * dbConnection );
+    void setDatabaseConnection( DatabaseConnection * connection );
 
     void setEventDispatcher( EventDispatcher * eventDispatcher );
-
-    void cleanupFinishingThreads( void );
-
-    void signalSessions( void );
 
     // END Private methods. //////////////////////////////////////////
 
@@ -120,29 +97,22 @@ class EventServer : public Server {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    EventServer( ServerSocket * socket,
-                 DatabaseConnection * dbConnection,
-                 EventDispatcher * eventDispatcher );
+    EventSession( Socket * socket, DatabaseConnection * connection,
+                  EventDispatcher * eventDispatcher );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~EventServer( void );
+    virtual ~EventSession( void );
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void start( void );
+    virtual void run( void );
 
     virtual void stop( void );
-
-    virtual void join( void );
-
-    virtual void update( void );
-
-    virtual void update( void * argument );
 
     // END Public methods. ///////////////////////////////////////////
 
@@ -151,4 +121,4 @@ class EventServer : public Server {
 
 };
 
-#endif /* EVENT_SERVER_H_ */
+#endif /* EVENT_SESSION_H_ */

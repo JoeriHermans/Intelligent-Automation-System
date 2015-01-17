@@ -29,12 +29,14 @@
 
 // Application dependencies.
 #include <ias/server/event_server.h>
+#include <ias/server/session/event_session.h>
 #include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 inline void EventServer::initialize( void ) {
     mDbConnection = nullptr;
+    mEventDispatcher = nullptr;
     mMainThread = nullptr;
     mFlagRunning = true;
 }
@@ -44,6 +46,13 @@ void EventServer::setDatabaseConnection( DatabaseConnection * dbConnection ) {
     assert( dbConnection != nullptr && dbConnection->isConnected() );
 
     mDbConnection = dbConnection;
+}
+
+void EventServer::setEventDispatcher( EventDispatcher * eventDispatcher ) {
+    // Checking the precondition.
+    assert( eventDispatcher != nullptr );
+
+    mEventDispatcher = eventDispatcher;
 }
 
 void EventServer::cleanupFinishingThreads( void ) {
@@ -69,10 +78,12 @@ void EventServer::signalSessions( void ) {
 }
 
 EventServer::EventServer( ServerSocket * serverSocket,
-                          DatabaseConnection * dbConnection ) :
+                          DatabaseConnection * dbConnection,
+                          EventDispatcher * eventDispatcher ) :
     Server(serverSocket) {
     initialize();
     setDatabaseConnection(dbConnection);
+    setEventDispatcher(eventDispatcher);
 }
 
 EventServer::~EventServer( void ) {
@@ -80,39 +91,40 @@ EventServer::~EventServer( void ) {
 }
 
 void EventServer::start( void ) {
-//    if( mMainThread == nullptr ) {
-//        mMainThread = new std::thread([this](){
-//            ServerSocket * serverSocket;
-//            Session * session;
-//            Socket * socket;
-//
-//            serverSocket = getServerSocket();
-//            while( mFlagRunning ) {
-//                socket = serverSocket->acceptSocket(1);
-//                if( socket != nullptr ) {
-//                    logi("Starting new events session.");
-//                    session = new EventSession(socket,mDbConnection);
-//                    session->addObserver(this);
-//                    mSessions[session] =
-//                        new std::thread([session]{
-//                            session->run();
-//                            session->notifyObservers(session);
-//                            delete session;
-//                            logi("Terminating events session.");
-//                        });
-//                } else if( !serverSocket->isBound() ) {
-//                    stop();
-//                }
-//                cleanupFinishingThreads();
-//            }
-//            signalSessions();
-//            while( mSessions.size() > 0 ||
-//                   mInactiveThreads.size() > 0 ) {
-//                signalSessions();
-//                cleanupFinishingThreads();
-//            }
-//        });
-//    }
+    if( mMainThread == nullptr ) {
+        mMainThread = new std::thread([this](){
+            ServerSocket * serverSocket;
+            Session * session;
+            Socket * socket;
+
+            serverSocket = getServerSocket();
+            while( mFlagRunning ) {
+                socket = serverSocket->acceptSocket(1);
+                if( socket != nullptr ) {
+                    logi("Starting new events session.");
+                    session = new EventSession(socket,mDbConnection,
+                                               mEventDispatcher);
+                    session->addObserver(this);
+                    mSessions[session] =
+                        new std::thread([session]{
+                            session->run();
+                            session->notifyObservers(session);
+                            delete session;
+                            logi("Terminating events session.");
+                        });
+                } else if( !serverSocket->isBound() ) {
+                    stop();
+                }
+                cleanupFinishingThreads();
+            }
+            signalSessions();
+            while( mSessions.size() > 0 ||
+                   mInactiveThreads.size() > 0 ) {
+                signalSessions();
+                cleanupFinishingThreads();
+            }
+        });
+    }
 }
 
 void EventServer::stop( void ) {
