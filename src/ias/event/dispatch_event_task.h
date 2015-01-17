@@ -1,12 +1,10 @@
 /**
- * A class which describes the properties and actions of a channel splitter.
- * This channel will take an element at it source and divides the element over
- * all its exits.
+ * A task which is responsible for dispatching an event to a set of connected
+ * channels.
  *
- * Please note that this class is NOT responsible for the descruction of the
- * specified channels.
+ * Please note that this class we free (delete) the specified event.
  *
- * @date                    16 January, 2015
+ * @date                    17 January, 2015
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -25,23 +23,19 @@
  * limitations under the License.
  */
 
-#ifndef CHANNEL_SPLITTER_H_
-#define CHANNEL_SPLITTER_H_
+#ifndef TASK_DISPATCH_EVENT_H_
+#define TASK_DISPATCH_EVENT_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <cassert>
-#include <vector>
-#include <mutex>
-
 // Application dependencies.
-#include <ias/channel/channel.h>
+#include <ias/channel/channel_splitter.h>
+#include <ias/event/event.h>
+#include <ias/threadpool/task.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-template<class T>
-class ChannelSplitter : public Channel<T> {
+class DispatchEventTask : public Task {
 
     public:
 
@@ -53,20 +47,28 @@ class ChannelSplitter : public Channel<T> {
     // BEGIN Private members. ////////////////////////////////////////
 
     /**
-     * A vector which holds all the exits of the splitter.
+     * Contains the event which needs to be dispatched to the channels.
      *
-     * @note    By default, this vector will be empty.
+     * @note    By default, this member will be equal to the null reference.
      */
-    std::vector<Channel<T> *> mExits;
+    Event * mEvent;
 
     /**
-     * A mutex which synchronizes the access to the exit channels.
+     * The channel splitter which holds all channels to which we will need
+     * to dispatch the event.
+     *
+     * @note    By default, this member will be equal to the null reference.
      */
-    mutable std::mutex mMutexExits;
+    ChannelSplitter<const Event *> * mSplitter;
 
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    void setEvent( Event * event );
+
+    void setChannelSplitter( ChannelSplitter<const Event *> * splitter );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -78,45 +80,20 @@ class ChannelSplitter : public Channel<T> {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    ChannelSplitter( const std::vector<Channel<T> *> & exits ) {
-        mExits = exits;
-    }
+    DispatchEventTask( ChannelSplitter<const Event *> * splitter,
+                       Event * event );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~ChannelSplitter( void ) = default;
+    virtual ~DispatchEventTask( void );
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual void pipe( T argument ) {
-        mMutexExits.lock();
-        for( auto it = mExits.begin() ; it != mExits.end() ; ++it )
-            (*it)->pipe(argument);
-        mMutexExits.unlock();
-    }
-
-    void addChannel( Channel<T> * channel ) {
-        // Checking the precondition.
-        assert( channel != nullptr );
-
-        mMutexExits.lock();
-        mExits.push_back(channel);
-        mMutexExits.unlock();
-    }
-
-    void removeChannel( const Channel<T> * channel ) {
-        // Checking the precondition.
-        assert( channel != nullptr );
-
-        mMutexExits.lock();
-        mExits.erase(
-                std::remove(mExits.begin(),mExits.end(),channel),mExits.end());
-        mMutexExits.unlock();
-    }
+    virtual void execute( void );
 
     // END Public methods. ///////////////////////////////////////////
 
@@ -125,4 +102,4 @@ class ChannelSplitter : public Channel<T> {
 
 };
 
-#endif /* CHANNEL_SPLITTER_H_ */
+#endif /* TASK_DISPATCH_EVENT_H_ */
