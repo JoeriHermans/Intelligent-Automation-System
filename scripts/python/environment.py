@@ -169,8 +169,8 @@ def parseAndProcessData( json ):
             setClouds(str(clouds))
             setSunriseTimestamp(str(sunrise))
             setSunsetTimestamp(str(sunset))
-    except:
-        print("Parsing error occurred.")
+    except Exception as e:
+        print(str(e))
 
 def update():
     global gApiUrl
