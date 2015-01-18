@@ -25,20 +25,78 @@
 
 // System dependencies.
 #include <cassert>
+#include <cstring>
+#include <string>
 
 // Application dependencies.
+#include <ias/application/constants.h>
 #include <ias/application/event_stream_application.h>
+#include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 inline void EventStreamApplication::initialize( void ) {
     mSocket = nullptr;
     mFlagRunning = true;
+    mServicePort = kDefaultEventServerPort;
+    mFlagSslRequested = false;
+}
+
+void EventStreamApplication::analyzeArguments( const int argc,
+                                               const char ** argv ) {
+    // Checking the precondition.
+    assert( argc > 0 && argv != nullptr );
+
+    fetchServiceAddress(argc,argv);
+    fetchSslRequested(argc,argv);
+}
+
+void EventStreamApplication::fetchServiceAddress( const int argc,
+                                                  const char ** argv ) {
+    std::string stringPort;
+
+    // Fetch the specified address.
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagAddress) == 0 && (i + 1) < argc ) {
+            mServiceAddress = std::string(argv[i + 1]);
+            break;
+        }
+    }
+    // Fetch the specified port.
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagPort) == 0 && (i + 1) < argc ) {
+            stringPort = std::string(argv[i + 1]);
+            break;
+        }
+    }
+    // Parse port, if specified.
+    if( !stringPort.empty() && isNumber(stringPort) ) {
+        std::size_t port;
+
+        port = strtoul(stringPort.c_str(),nullptr,0);
+        if( port > 0 )
+            mServicePort = port;
+    }
+}
+
+void EventStreamApplication::fetchSslRequested( const int argc,
+                                                const char ** argv ) {
+    for( int i = 0 ; i < argc ; ++i ) {
+        if( strcmp(argv[i],kFlagSsl) == 0 ) {
+            mFlagSslRequested = true;
+            break;
+        }
+    }
+}
+
+void EventStreamApplication::connectToStream( void ) {
+    // TODO Implement.
 }
 
 EventStreamApplication::EventStreamApplication( const int argc,
                                                 const char ** argv ) {
     initialize();
+    analyzeArguments(argc,argv);
 }
 
 EventStreamApplication::~EventStreamApplication( void ) {

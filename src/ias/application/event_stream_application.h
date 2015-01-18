@@ -58,11 +58,33 @@ class EventStreamApplication : public Application {
      */
     bool mFlagRunning;
 
+    /**
+     * Contains the remote address information which has been specified by
+     * the user.
+     */
+    std::string mServiceAddress;
+    std::size_t mServicePort;
+
+    /**
+     * A flag which indicates if ssl has been requested.
+     *
+     * @note    By default, this flag will be set to false.
+     */
+    bool mFlagSslRequested;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
 
     inline void initialize( void );
+
+    void analyzeArguments( const int argc , const char ** argv );
+
+    void fetchServiceAddress( const int argc, const char ** argv );
+
+    void fetchSslRequested( const int argc , const char ** argv );
+
+    void connectToStream( void );
 
     // END Private methods. //////////////////////////////////////////
 
