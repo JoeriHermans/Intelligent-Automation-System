@@ -35,6 +35,8 @@ const char kFlagAddress[] = "--address";
 const char kFlagPort[] = "--port";
 const char kFlagSsl[] = "--ssl";
 const char kFlagSocks[] = "--socks";
+const char kFlagEventStream[] = "--eventstream";
+const char kFlagKey[] = "--key";
 
 const char kTrimCharacters[] = " \t\n\r";
 
