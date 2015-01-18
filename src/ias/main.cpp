@@ -99,10 +99,11 @@ void usage( void ) {
     std::cout << "Run as server: ias --server --config <path>" << std::endl;
     std::cout << "Run as controller: ias --controller --config <path>" << std::endl;
     std::cout << "Run as client: ias --client [options]" << std::endl;
-    std::cout << "Run as eventstream: ias --eventstream --key <API key>" << std::endl;
+    std::cout << "Run as eventstream: ias --eventstream --key <API key> [options]" << std::endl;
     std::cout << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << " --address [hostname]" << std::endl;
+    std::cout << " --ssl" << std::endl;
 }
 
 void initializeSsl( void ) {
