@@ -40,6 +40,7 @@
 #include <ias/server/session/controller_session.h>
 #include <ias/util/container.h>
 #include <ias/server/session_server.h>
+#include <ias/event/event_dispatcher.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -60,6 +61,11 @@ class ControllerServer : public SessionServer {
      */
     Container<Controller *> * mControllers;
 
+    /**
+     * Event dispatcher which will be passed on to sessions.
+     */
+    EventDispatcher * mEventDispatcher;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -67,6 +73,8 @@ class ControllerServer : public SessionServer {
     inline void initialize( void );
 
     void setControllerContainer( Container<Controller *> * controllers );
+
+    void setEventDispatcher( EventDispatcher * eventDispatcher );
 
     // END Private methods. //////////////////////////////////////////
 
@@ -83,7 +91,8 @@ class ControllerServer : public SessionServer {
     // BEGIN Constructors. ///////////////////////////////////////////
 
     ControllerServer( ServerSocket * socket,
-                      Container<Controller *> * controllers );
+                      Container<Controller *> * controllers,
+                      EventDispatcher * eventDispatcher );
 
     // END Constructors. /////////////////////////////////////////////
 

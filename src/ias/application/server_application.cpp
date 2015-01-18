@@ -310,7 +310,8 @@ void ServerApplication::initializeControllerServer( void ) {
     serverSocket = new PosixTcpServerSocket(port);
     if( serverSocket->bindToPort() ) {
         mServerController = new ControllerServer(serverSocket,
-                                                 &mContainerControllers);
+                                                 &mContainerControllers,
+                                                 &mEventDispatcher);
     } else {
         delete serverSocket;
     }
@@ -334,7 +335,8 @@ void ServerApplication::initializeControllerSslServer( void ) {
         serverSocket = new PosixSslServerSocket(port,certificateFile,keyFile);
         if( serverSocket->bindToPort() ) {
             mServerControllerSsl = new ControllerServer(serverSocket,
-                                                        &mContainerControllers);
+                                                        &mContainerControllers,
+                                                        &mEventDispatcher);
         } else {
             delete serverSocket;
         }

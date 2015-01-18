@@ -32,6 +32,7 @@
 #include <ias/server/session/session.h>
 #include <ias/util/container.h>
 #include <ias/controller/controller.h>
+#include <ias/event/event_dispatcher.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -59,6 +60,14 @@ class ControllerSession : public Session {
     Controller * mController;
 
     /**
+     * Contains the event dispatcher we will be using to notify device updates
+     * to the events stream.
+     *
+     * @note    By default, this member will be equal to the null reference.
+     */
+    EventDispatcher * mEventDispatcher;
+
+    /**
      * A flag which indicates if the controller session is running.
      */
     bool mFlagRunning;
@@ -71,6 +80,8 @@ class ControllerSession : public Session {
 
     void setContainer( Container<Controller *> * controllers );
 
+    void setEventDispatcher( EventDispatcher * eventDispatcher );
+
     void authorize( void );
 
     void controllerUpdate( void );
@@ -80,6 +91,10 @@ class ControllerSession : public Session {
     void setTimeouts( void );
 
     bool heartbeat( void );
+
+    void dispatchEvent( Device * device,
+                        const std::string & stateIdentifier,
+                        const std::string & stateValue );
 
     // END Private methods. //////////////////////////////////////////
 
@@ -93,7 +108,8 @@ class ControllerSession : public Session {
     // BEGIN Constructors. ///////////////////////////////////////////
 
     ControllerSession( Socket * socket,
-                       Container<Controller *> * controllers );
+                       Container<Controller *> * controllers,
+                       EventDispatcher * eventDispatcher );
 
     // END Constructors. /////////////////////////////////////////////
 

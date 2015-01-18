@@ -45,18 +45,27 @@ void ControllerServer::setControllerContainer( Container<Controller *> * c ) {
     mControllers = c;
 }
 
+void ControllerServer::setEventDispatcher( EventDispatcher * eventDispatcher ) {
+    // Checking the precondition.
+    assert( eventDispatcher != nullptr );
+
+    mEventDispatcher = eventDispatcher;
+}
+
 Session * ControllerServer::getSession( Socket * socket ) const {
     // Checking the precondition.
     assert( socket != nullptr );
 
-    return ( new ControllerSession(socket,mControllers) );
+    return ( new ControllerSession(socket,mControllers,mEventDispatcher) );
 }
 
 ControllerServer::ControllerServer( ServerSocket * socket,
-                                    Container<Controller *> * controllers ) :
+                                    Container<Controller *> * controllers,
+                                    EventDispatcher * eventDispatcher ) :
     SessionServer(socket) {
     initialize();
     setControllerContainer(controllers);
+    setEventDispatcher(eventDispatcher);
 }
 
 ControllerServer::~ControllerServer( void ) {

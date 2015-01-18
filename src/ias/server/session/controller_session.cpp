@@ -31,12 +31,14 @@
 #include <ias/device/device.h>
 #include <ias/server/session/controller_session.h>
 #include <ias/logger/logger.h>
+#include <ias/event/device_update_event.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 inline void ControllerSession::initialize( void ) {
     mController = nullptr;
     mControllers = nullptr;
+    mEventDispatcher = nullptr;
     mFlagRunning = false;
 }
 
@@ -45,6 +47,13 @@ void ControllerSession::setContainer( Container<Controller *> * controllers ) {
     assert( controllers != nullptr );
 
     mControllers = controllers;
+}
+
+void ControllerSession::setEventDispatcher( EventDispatcher * eventDispatcher ) {
+    // Checking the precondition.
+    assert( eventDispatcher != nullptr );
+
+    mEventDispatcher = eventDispatcher;
 }
 
 void ControllerSession::authorize( void ) {
@@ -106,9 +115,10 @@ void ControllerSession::controllerUpdate( void ) {
         stateIdentifier[length[1]] = 0;
         stateValue[length[2]] = 0;
         device = mController->getDevice(deviceIdentifier);
-        if( device != nullptr ) {
-            device->set(stateIdentifier,stateValue);
+        if( device != nullptr &&
+            device->set(stateIdentifier,stateValue) == 0 ) {
             success = true;
+            dispatchEvent(device,stateIdentifier,stateValue);
         }
     }
     if( !success )
@@ -144,11 +154,26 @@ bool ControllerSession::heartbeat( void ) {
     return ( ok );
 }
 
+void ControllerSession::dispatchEvent( Device * device,
+                                       const std::string & stateIdentifier,
+                                       const std::string & stateValue ) {
+    DeviceUpdateEvent * due;
+
+    // Checking the precondition.
+    assert( device != nullptr && !stateIdentifier.empty() &&
+            !stateValue.empty() );
+
+    due = new DeviceUpdateEvent(device,stateIdentifier,stateValue);
+    mEventDispatcher->dispatch(due);
+}
+
 ControllerSession::ControllerSession( Socket * socket,
-                                      Container<Controller *> * controllers ) :
+                                      Container<Controller *> * controllers,
+                                      EventDispatcher * eventDispatcher ) :
     Session(socket) {
     initialize();
     setContainer(controllers);
+    setEventDispatcher(eventDispatcher);
 }
 
 ControllerSession::~ControllerSession( void ) {
