@@ -33,11 +33,15 @@ void startServer( const int argc , const char ** argv );
 
 void startClient( const int argc , const char ** argv );
 
+void startEventStream( const int argc , const char ** argv );
+
 bool controllerRequested( const int argc , const char ** argv );
 
 bool serverRequested( const int argc , const char ** argv );
 
 bool clientRequested( const int argc , const char ** argv );
+
+bool eventStreamRequested( const int argc , const char ** argv );
 
 void initializeSsl( void );
 

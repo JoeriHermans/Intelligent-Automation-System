@@ -39,6 +39,7 @@
 #include <ias/application/client/client_application.h>
 #include <ias/application/controller_application.h>
 #include <ias/application/server_application.h>
+#include <ias/application/event_stream_application.h>
 #include <ias/main.h>
 #include <ias/util/util.h>
 #include <ias/logger/logger.h>
@@ -55,6 +56,9 @@ int main( const int argc , const char ** argv ) {
     else
     if( clientRequested(argc,argv) )
         startClient(argc,argv);
+    else
+    if( eventStreamRequested(argc,argv) )
+        startEventStream(argc,argv);
     else
         usage();
     cleanupSsl();
@@ -81,6 +85,12 @@ void startServer( const int argc , const char ** argv ) {
     application.run();
 }
 
+void startEventStream( const int argc , const char ** argv ) {
+    EventStreamApplication application(argc,argv);
+
+    application.run();
+}
+
 bool serverRequested( const int argc , const char ** argv ) {
     return ( flagSpecified(argc,argv,kFlagServer) );
 }
@@ -91,6 +101,10 @@ bool clientRequested( const int argc , const char ** argv ) {
 
 bool controllerRequested( const int argc , const char ** argv ) {
     return ( flagSpecified(argc,argv,kFlagController) );
+}
+
+bool eventStreamRequested( const int argc , const char ** argv ) {
+    return ( flagSpecified(argc,argv,kFlagEventStream) );
 }
 
 void usage( void ) {
