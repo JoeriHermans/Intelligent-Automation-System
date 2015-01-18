@@ -395,7 +395,7 @@ void ServerApplication::initializeEventServer( void ) {
     std::string stringPort;
     unsigned int port;
 
-    if( mProperties.contains(kConfigNetworkUserPort) )
+    if( mProperties.contains(kConfigNetworkEventPort) )
         stringPort = mProperties.get(kConfigNetworkEventPort);
     if( !stringPort.empty() )
         port = static_cast<unsigned int>(atol(stringPort.c_str()));
@@ -421,7 +421,7 @@ void ServerApplication::initializeEventSslServer( void ) {
     if( mProperties.contains(kConfigNetworkEventSslPort) )
         stringPort = mProperties.get(kConfigNetworkEventSslPort);
     if( mProperties.contains(kConfigNetworkEventSslCertificate) )
-        certificateFile = mProperties.get(kConfigNetworkUserSslCertificate);
+        certificateFile = mProperties.get(kConfigNetworkEventSslCertificate);
     if( mProperties.contains(kConfigNetworkEventSslKey) )
         keyFile = mProperties.get(kConfigNetworkEventSslKey);
     if( !stringPort.empty() && !certificateFile.empty() && !keyFile.empty() ) {
