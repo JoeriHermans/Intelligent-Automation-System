@@ -68,6 +68,8 @@ inline void ServerApplication::initialize( void ) {
     mServerControllerSsl = nullptr;
     mServerUser = nullptr;
     mServerUserSsl = nullptr;
+    mServerEvent = nullptr;
+    mServerEventSsl = nullptr;
     mFlagRunning = true;
     mDeviceMonitor = nullptr;
 }
