@@ -117,6 +117,7 @@ void EventStreamApplication::authorize( void ) {
     assert( mSocket != nullptr && mSocket->isConnected() &&
             !mApiKey.empty() && mApiKey.length() <= 0xff );
 
+    logi("Authorizing.");
     header[0] = 0x01;
     header[1] = static_cast<std::uint8_t>(mApiKey.length());
     writer = mSocket->getWriter();
@@ -125,8 +126,11 @@ void EventStreamApplication::authorize( void ) {
     writer->writeBytes(mApiKey.c_str(),mApiKey.length());
     n = reader->readBytes(reinterpret_cast<char *>(header),2);
     if( n != 2 && !(header[0] == 0x00 && header[1] == 0x01) ) {
+        loge("Authorization failed.");
         mFlagRunning = false;
         mSocket->closeConnection();
+    } else {
+        logi("Authorized.");
     }
 }
 
@@ -136,6 +140,7 @@ void EventStreamApplication::connectToStream( void ) {
     // Checking the precondition.
     assert( !mServiceAddress.empty() && mServicePort > 0 );
 
+    logi("Connecting to " + mServiceAddress);
     fd = connect(mServiceAddress,mServicePort);
     if( fd >= 0 ) {
         if( mFlagSslRequested ) {
@@ -154,8 +159,12 @@ void EventStreamApplication::connectToStream( void ) {
             mSocket = new PosixTcpSocket(fd);
         }
     }
-    if( mSocket == nullptr )
+    if( mSocket == nullptr ) {
+        loge("Connection failed.");
         mFlagRunning = false;
+    } else {
+        logi("Connected.");
+    }
 }
 
 void EventStreamApplication::initializeSslContext( void ) {
@@ -229,6 +238,7 @@ void EventStreamApplication::run( void ) {
             }
         }
     }
+    logi("Closing connection.");
 }
 
 void EventStreamApplication::stop( void ) {
