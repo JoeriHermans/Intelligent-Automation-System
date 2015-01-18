@@ -86,5 +86,5 @@ const unsigned int kDefaultDeviceServerPort = 5002;
 const unsigned int kDefaultControllerServerPort = 5000;
 const unsigned int kDefaultUserServerPort = 5001;
 const unsigned int kDefaultUserServerPortSsl = 6001;
-const unsigned int kDefaultEventServerPort = 5002;
-const unsigned int kDefaultEventServerPortSsl = 6002;
+const unsigned int kDefaultEventServerPort = 5003;
+const unsigned int kDefaultEventServerPortSsl = 6003;
