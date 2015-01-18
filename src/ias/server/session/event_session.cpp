@@ -136,8 +136,12 @@ void EventSession::validateApiKey( const std::string & key ) {
         statement = mDbConnection->createStatement(sql);
         if( statement != nullptr ) {
             result = statement->execute();
-            if( result == nullptr || !result->hasNext() )
+            if( result == nullptr || !result->hasNext() ) {
                 mFlagRunning = false;
+                loge("Event stream could not be authenticated.");
+            } else {
+                logi("Event stream has been authenticated.");
+            }
             delete result;
             delete statement;
         }

@@ -37,6 +37,7 @@
 #include <ias/network/posix/posix_tcp_socket.h>
 #include <ias/network/posix/ssl/posix_ssl_socket.h>
 #include <ias/util/util.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
