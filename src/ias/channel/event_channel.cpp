@@ -25,6 +25,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/channel/event_channel.h>
@@ -49,6 +50,7 @@ void EventChannel::pipe( const Event * argument ) {
     // Checking the precondition.
     assert( argument != nullptr );
 
+    std::cout << "Writing to pipe." << std::endl;
     if( mSocket->isConnected() ) {
         writer = mSocket->getWriter();
         std::string data = argument->toString();

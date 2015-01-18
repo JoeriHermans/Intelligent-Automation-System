@@ -108,7 +108,7 @@ void EventSession::authorizeApiKey( void ) {
     std::uint8_t length;
     std::string hashedKey;
 
-    logi("Authorizing user using API key.");
+    logi("Authorizing event stream using API key.");
     length = 0xff;
     if( readBytes(reinterpret_cast<char *>(&length),1) && length > 0 ) {
         char key[length + 1];
@@ -206,7 +206,7 @@ void EventSession::run( void ) {
 
 void EventSession::stop( void ) {
     if( mFlagRunning ) {
-        logi("Closing user session.");
+        logi("Closing event stream session.");
         mFlagRunning = false;
     }
 }

@@ -27,6 +27,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/event/dispatch_event_task.h>
@@ -60,5 +61,6 @@ DispatchEventTask::~DispatchEventTask( void ) {
 }
 
 void DispatchEventTask::execute( void ) {
+    std::cout << "Executing task." << std::endl;
     mSplitter->pipe(mEvent);
 }
