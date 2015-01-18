@@ -599,4 +599,8 @@ void ServerApplication::stop( void ) {
         mServerUser->stop();
     if( mServerUserSsl != nullptr )
         mServerUserSsl->stop();
+    if( mServerEvent != nullptr )
+        mServerEvent->stop();
+    if( mServerEventSsl != nullptr )
+        mServerEventSsl->stop();
 }
