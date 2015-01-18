@@ -43,8 +43,20 @@ EventChannel::EventChannel( Socket * socket ) {
 }
 
 void EventChannel::pipe( const Event * argument ) {
+    std::uint8_t header[2];
+    Writer * writer;
+
     // Checking the precondition.
     assert( argument != nullptr );
 
-    // TODO Implement.
+    if( mSocket->isConnected() ) {
+        writer = mSocket->getWriter();
+        std::string data = argument->toString();
+        header[0] = 0x01;
+        header[1] = static_cast<std::uint8_t>(data.length());
+        writer->lock();
+        writer->writeBytes(reinterpret_cast<const char *>(header),2);
+        writer->writeBytes(data.c_str(),data.length());
+        writer->unlock();
+    }
 }

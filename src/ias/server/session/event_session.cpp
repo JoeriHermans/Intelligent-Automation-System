@@ -81,11 +81,11 @@ void EventSession::authorize( void ) {
     logi("Authorizing event stream.");
     if( readBytes(reinterpret_cast<char *>(&type),1) ) {
         switch(type) {
-        case 0x00:
-            mFlagRunning = false;
-            break;
         case 0x01:
             authorizeApiKey();
+            break;
+        default:
+            mFlagRunning = false;
             break;
         }
     }

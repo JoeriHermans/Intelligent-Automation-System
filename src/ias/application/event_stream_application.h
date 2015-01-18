@@ -26,6 +26,10 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
 // Application dependencies.
 #include <ias/application/application.h>
 #include <ias/network/socket.h>
@@ -72,6 +76,16 @@ class EventStreamApplication : public Application {
      */
     bool mFlagSslRequested;
 
+    /**
+     * Contains the SSL context.
+     */
+    SSL_CTX * mSslContext;
+
+    /**
+     * A string which holds the API key.
+     */
+    std::string mApiKey;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
@@ -84,7 +98,17 @@ class EventStreamApplication : public Application {
 
     void fetchSslRequested( const int argc , const char ** argv );
 
+    void fetchApiKey( const int argc , const char ** argv );
+
     void connectToStream( void );
+
+    void authorize( void );
+
+    void initializeSslContext( void );
+
+    void sendHeartbeat( void );
+
+    void readEvent( void );
 
     // END Private methods. //////////////////////////////////////////
 
