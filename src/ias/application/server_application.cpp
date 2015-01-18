@@ -526,6 +526,8 @@ ServerApplication::~ServerApplication( void ) {
     delete mServerControllerSsl; mServerControllerSsl = nullptr;
     delete mServerUser; mServerUser = nullptr;
     delete mServerUserSsl; mServerUserSsl = nullptr;
+    delete mServerEvent; mServerEvent = nullptr;
+    delete mServerEventSsl; mServerEventSsl = nullptr;
     delete mDeviceMonitor; mDeviceMonitor = nullptr;
     cleanupOperators();
 }
