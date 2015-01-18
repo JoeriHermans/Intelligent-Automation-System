@@ -543,6 +543,14 @@ void ServerApplication::run( void ) {
         logi("Starting secure user server.");
         mServerUserSsl->start();
     }
+    if( mServerEvent != nullptr ) {
+        logi("Starting event server.");
+        mServerEvent->start();
+    }
+    if( mServerEventSsl != nullptr ) {
+        logi("Starting secure event server.");
+        mServerEventSsl->start();
+    }
     logi("Servers running, waiting for stopping signal...");
     if( mServerController != nullptr ) {
         logi("Waiting for controller server to stop.");
@@ -563,6 +571,16 @@ void ServerApplication::run( void ) {
         logi("Waiting for secure user server to stop.");
         mServerUserSsl->join();
         logi("Secure user server stopped.");
+    }
+    if( mServerEvent != nullptr ) {
+        logi("Waiting for event server to stop.");
+        mServerEvent->join();
+        logi("Event server stopped.");
+    }
+    if( mServerEventSsl != nullptr ) {
+        logi("Waiting for secure event server to stop.");
+        mServerEventSsl->join();
+        logi("Secure event server stopped.");
     }
 }
 
