@@ -101,6 +101,7 @@ void EventSession::authorize( void ) {
         code[0] = 0x00;
         code[1] = 0x01;
         w->writeBytes(reinterpret_cast<char *>(&code),2);
+        setEventChannel();
     }
 }
 
@@ -154,6 +155,14 @@ bool EventSession::heartbeat( void ) {
     return ( ok );
 }
 
+void EventSession::setEventChannel( void ) {
+    // Checking the precondition.
+    assert( getSocket() != nullptr );
+
+    mChannel = new EventChannel(getSocket());
+    mEventDispatcher->addChannel(mChannel);
+}
+
 EventSession::EventSession( Socket * socket, DatabaseConnection * connection,
                             EventDispatcher * eventDispatcher ) :
     Session(socket) {
@@ -163,8 +172,10 @@ EventSession::EventSession( Socket * socket, DatabaseConnection * connection,
 }
 
 EventSession::~EventSession( void ) {
-    if( mChannel != nullptr )
+    if( mChannel != nullptr ) {
         mEventDispatcher->removeChannel(mChannel);
+        delete mChannel; mChannel = nullptr;
+    }
 }
 
 void EventSession::run( void ) {

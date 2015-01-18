@@ -98,6 +98,8 @@ class EventSession : public Session {
 
     bool heartbeat( void );
 
+    void setEventChannel( void );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
