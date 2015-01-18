@@ -99,6 +99,8 @@ void ServerApplication::setup( const int argc , const char ** argv ) {
             initializeControllerSslServer();
             initializeUserServer();
             initializeUserSslServer();
+            initializeEventServer();
+            initializeEventSslServer();
         }
     }
 }
