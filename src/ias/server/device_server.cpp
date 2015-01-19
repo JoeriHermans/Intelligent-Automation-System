@@ -139,7 +139,6 @@ void DeviceServer::dispatchCommand( void ) {
         message.append(parameter);
         mConnectedDevices.dispatch(deviceIdentifier,message);
     } else {
-        loge("A");
         stop();
     }
 }
@@ -156,6 +155,7 @@ void DeviceServer::startDispatchThread( void ) {
         while( mFlagRunning && mSocket->isConnected() ) {
             type = 0xff;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
+            std::cout << "Is connected: " << std::to_string(mSocket->isConnected()) << std::endl << std::flush;
             if( nBytes == 0 ) {
                 if( !serverHeartbeat() || heartbeatSend ) {
                     loge("B");
