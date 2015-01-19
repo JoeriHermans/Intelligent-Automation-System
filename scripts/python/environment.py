@@ -174,13 +174,14 @@ def parseAndProcessData( json ):
 
 def update():
     global gApiUrl
+    global gRunning
     try:
         response = requests.get(gApiUrl)
         if( response.status_code == requests.codes.ok ):
             data = response.json()
             parseAndProcessData(data)
-    except:
-        print("Request error occurred.")
+    except Exception as e:
+        print(str(e))
 
 def setLocation( location ):
     global gLocation
@@ -226,7 +227,8 @@ def processCommands():
     while( gRunning ):
         try:
             processCommand()
-        except:
+        except Exception as e:
+            print(str(e))
             gRunning = False
 
 def environmentMonitor():
