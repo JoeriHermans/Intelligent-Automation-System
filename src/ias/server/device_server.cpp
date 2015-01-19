@@ -117,27 +117,31 @@ void DeviceServer::dispatchCommand( void ) {
     std::uint8_t parameterLength;
     std::string message;
 
-    if( !mSocket->isConnected() )
+    if( mSocket->isConnected() ) {
+        if( !readBytes(reinterpret_cast<char *>(&deviceLength),1) ) return;
+        if( !readBytes(reinterpret_cast<char *>(&identifierLength),1) ) return;
+        if( !readBytes(reinterpret_cast<char *>(&parameterLength),1) ) return;
+        char deviceIdentifier[deviceLength + 1];
+        char identifier[identifierLength + 1];
+        char parameter[parameterLength + 1];
+        if( !readBytes(deviceIdentifier,deviceLength) ) return;
+        if( !readBytes(identifier,identifierLength) ) return;
+        if( parameterLength > 0 && !readBytes(parameter,parameterLength) )
+            return;
+        deviceIdentifier[deviceLength] = 0;
+        identifier[identifierLength] = 0;
+        parameter[parameterLength] = 0;
+        // Format the message
+        message += 0x01;
+        message += identifierLength;
+        message += parameterLength;
+        message.append(identifier);
+        message.append(parameter);
+        mConnectedDevices.dispatch(deviceIdentifier,message);
+    } else {
+        logi("Stopping from command dispatch.");
         stop();
-    if( !readBytes(reinterpret_cast<char *>(&deviceLength),1) ) return;
-    if( !readBytes(reinterpret_cast<char *>(&identifierLength),1) ) return;
-    if( !readBytes(reinterpret_cast<char *>(&parameterLength),1) ) return;
-    char deviceIdentifier[deviceLength + 1];
-    char identifier[identifierLength + 1];
-    char parameter[parameterLength + 1];
-    if( !readBytes(deviceIdentifier,deviceLength) ) return;
-    if( !readBytes(identifier,identifierLength) ) return;
-    if( parameterLength > 0 && !readBytes(parameter,parameterLength) ) return;
-    deviceIdentifier[deviceLength] = 0;
-    identifier[identifierLength] = 0;
-    parameter[parameterLength] = 0;
-    // Format the message
-    message += 0x01;
-    message += identifierLength;
-    message += parameterLength;
-    message.append(identifier);
-    message.append(parameter);
-    mConnectedDevices.dispatch(deviceIdentifier,message);
+    }
 }
 
 void DeviceServer::startDispatchThread( void ) {
