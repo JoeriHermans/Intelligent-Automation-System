@@ -154,15 +154,14 @@ void DeviceServer::startDispatchThread( void ) {
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
             type = 0xff;
+            reader->lock();
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
-            std::cout << "Is connected: " << std::to_string(mSocket->isConnected()) << std::endl << std::flush;
+            reader->unlock();
             if( nBytes == 0 ) {
-                if( !serverHeartbeat() || heartbeatSend ) {
-                    loge("B");
+                if( !serverHeartbeat() || heartbeatSend )
                     stop();
-                } else {
+                else
                     heartbeatSend = true;
-                }
                 continue;
             }
             switch(type) {
@@ -211,7 +210,9 @@ bool DeviceServer::serverHeartbeat( void ) {
     bool ok;
 
     writer = mSocket->getWriter();
+    writer->lock();
     ok = (writer->writeBytes(reinterpret_cast<const char *>(&beat),1) == 1);
+    writer->unlock();
 
     return ( ok );
 }
