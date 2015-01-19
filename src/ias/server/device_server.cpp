@@ -139,7 +139,6 @@ void DeviceServer::dispatchCommand( void ) {
         message.append(parameter);
         mConnectedDevices.dispatch(deviceIdentifier,message);
     } else {
-        logi("Stopping from command dispatch.");
         stop();
     }
 }
@@ -172,7 +171,7 @@ void DeviceServer::startDispatchThread( void ) {
                 dispatchCommand();
                 break;
             default:
-                stop();
+                mFlagRunning = false;
                 break;
             }
             heartbeatSend = false;
@@ -246,7 +245,7 @@ void DeviceServer::stop( void ) {
     if( mFlagRunning ) {
         logi("Stopping device server.");
         mFlagRunning = false;
-        //mSocket->closeConnection();
+        mSocket->closeConnection();
         getServerSocket()->stopListening();
     }
 }
