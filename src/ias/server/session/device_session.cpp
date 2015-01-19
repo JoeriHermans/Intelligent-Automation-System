@@ -133,7 +133,6 @@ void DeviceSession::sendDeviceState( const std::string & stateIdentifier,
     success &= ( n > 0 );
     writer->unlock();
     if( !success ) {
-        logi("Couldn't send device state.");
         stop();
     }
 }
