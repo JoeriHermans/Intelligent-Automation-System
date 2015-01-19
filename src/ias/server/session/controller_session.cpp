@@ -114,16 +114,14 @@ void ControllerSession::controllerUpdate( void ) {
         deviceIdentifier[length[0]] = 0;
         stateIdentifier[length[1]] = 0;
         stateValue[length[2]] = 0;
-        std::cout << "Fetching device." << std::string(deviceIdentifier) << std::endl << std::flush;
         device = mController->getDevice(deviceIdentifier);
-        if( device != nullptr )
-            std::cout << "Device." << std::endl << std::flush;
-        std::cout << "Stateid: " << std::string(stateIdentifier) << std::endl << std::flush;
-        std::cout << "Value: " << std::string(stateValue) << std::endl << std::flush;
         if( device != nullptr &&
             device->set(stateIdentifier,stateValue) == 0 ) {
             success = true;
             dispatchEvent(device,stateIdentifier,stateValue);
+        } else {
+            loge("Couldn't update device state. Reason" +
+                  std::string(stateIdentifier));
         }
     }
     if( !success )
