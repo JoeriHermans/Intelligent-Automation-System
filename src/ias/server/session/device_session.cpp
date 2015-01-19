@@ -184,8 +184,6 @@ void DeviceSession::run( void ) {
             }
         }
     }
-    std::cout << "Server socket status: " << std::to_string(mServerSocket->isConnected()) << std::endl << std::flush;
-    std::cout << "Socket status: " << std::to_string(getSocket()->isConnected()) << std::endl << std::flush;
     if( !mDevice.empty() )
         mDispatcher->removeChannel(mDevice);
     getSocket()->closeConnection();
