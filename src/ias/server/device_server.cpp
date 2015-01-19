@@ -179,7 +179,6 @@ void DeviceServer::startDispatchThread( void ) {
             }
             heartbeatSend = false;
         }
-        loge("B");
         stop();
     });
 }
@@ -207,12 +206,12 @@ void DeviceServer::cleanupFinishingThreads( void ) {
 }
 
 bool DeviceServer::serverHeartbeat( void ) {
-    static const char beat = 0x00;
+    static const std::int8_t beat = 0x00;
     Writer * writer;
     bool ok;
 
     writer = mSocket->getWriter();
-    ok = (writer->writeByte(beat) == 1);
+    ok = (writer->writeBytes(reinterpret_cast<const char *>(&beat),1) == 1);
 
     return ( ok );
 }
