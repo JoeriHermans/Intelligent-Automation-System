@@ -76,8 +76,6 @@ void DeviceServer::startListenThread( void ) {
                         delete session;
                         logi("Device session terminated.");
                     });
-            } else if( !serverSocket->isBound() ) {
-                stop();
             }
             cleanupFinishingThreads();
         }
