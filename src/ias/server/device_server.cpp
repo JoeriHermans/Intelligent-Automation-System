@@ -139,6 +139,7 @@ void DeviceServer::dispatchCommand( void ) {
         message.append(parameter);
         mConnectedDevices.dispatch(deviceIdentifier,message);
     } else {
+        loge("A");
         stop();
     }
 }
@@ -156,10 +157,12 @@ void DeviceServer::startDispatchThread( void ) {
             type = 0xff;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
             if( nBytes == 0 ) {
-                if( !serverHeartbeat() || heartbeatSend )
+                if( !serverHeartbeat() || heartbeatSend ) {
+                    loge("B");
                     stop();
-                else
+                } else {
                     heartbeatSend = true;
+                }
                 continue;
             }
             switch(type) {
@@ -176,6 +179,7 @@ void DeviceServer::startDispatchThread( void ) {
             }
             heartbeatSend = false;
         }
+        loge("B");
         stop();
     });
 }
