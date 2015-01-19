@@ -241,9 +241,12 @@ void DeviceServer::start( void ) {
 }
 
 void DeviceServer::stop( void ) {
-    mFlagRunning = false;
-    mSocket->closeConnection();
-    getServerSocket()->stopListening();
+    if( mFlagRunning ) {
+        logi("Stopping device server.");
+        mFlagRunning = false;
+        mSocket->closeConnection();
+        getServerSocket()->stopListening();
+    }
 }
 
 void DeviceServer::join( void ) {
