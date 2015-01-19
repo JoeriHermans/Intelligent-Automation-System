@@ -167,8 +167,10 @@ void DeviceSession::run( void ) {
     authorize();
     if( getSocket()->isConnected() ) {
         reader = getSocket()->getReader();
+        std::cout << "Entering session." << std::endl;
         while( mFlagRunning && mServerSocket->isConnected() &&
                getSocket()->isConnected() ) {
+            std::cout << "Entering session loop." << std::endl << std::flush;
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
             if( nBytes == 0 ) {
                 stop();
