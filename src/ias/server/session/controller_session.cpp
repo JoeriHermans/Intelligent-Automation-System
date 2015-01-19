@@ -121,6 +121,7 @@ void ControllerSession::controllerUpdate( void ) {
             dispatchEvent(device,stateIdentifier,stateValue);
         }
     }
+    std::cout << "Success: " << std::to_string(success) << std::endl;
     if( !success )
         getSocket()->closeConnection();
 }
