@@ -154,12 +154,10 @@ void DeviceServer::startDispatchThread( void ) {
         reader = mSocket->getReader();
         while( mFlagRunning && mSocket->isConnected() ) {
             type = 0xff;
-            reader->lock();
             nBytes = reader->readByte(reinterpret_cast<char *>(&type));
-            reader->unlock();
             if( nBytes == 0 ) {
                 if( !serverHeartbeat() || heartbeatSend )
-                    stop();
+                    mFlagRunning = false;
                 else
                     heartbeatSend = true;
                 continue;
