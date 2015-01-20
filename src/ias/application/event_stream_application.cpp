@@ -92,6 +92,7 @@ void EventStreamApplication::fetchSslRequested( const int argc,
     for( int i = 0 ; i < argc ; ++i ) {
         if( strcmp(argv[i],kFlagSsl) == 0 ) {
             mFlagSslRequested = true;
+            mServicePort = kDefaultEventServerSslPort;
             break;
         }
     }
