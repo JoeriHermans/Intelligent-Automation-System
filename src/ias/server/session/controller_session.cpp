@@ -32,6 +32,7 @@
 #include <ias/server/session/controller_session.h>
 #include <ias/logger/logger.h>
 #include <ias/event/device_update_event.h>
+#include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -71,10 +72,11 @@ void ControllerSession::authorize( void ) {
             readBytes(securityCode,header[2]) ) {
             identifier[header[1]] = 0;
             securityCode[header[2]] = 0;
+            std::string hashedSecurityCode = sha256GlobalSalts(securityCode);
             if( strlen(identifier) > 0 ) {
                 controller = mControllers->get(identifier);
                 if( controller != nullptr &&
-                    controller->matchesSecurityCode(securityCode) &&
+                    controller->matchesSecurityCode(hashedSecurityCode) &&
                     !controller->isConnected() ) {
                     logi("Controller " + controller->getIdentifier() + " authorized.");
                     mController = controller;
