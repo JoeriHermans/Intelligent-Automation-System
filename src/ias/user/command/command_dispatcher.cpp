@@ -51,28 +51,29 @@ void CommandDispatcher::registerCommand( const std::string & identifier,
 
 bool CommandDispatcher::registered( const std::string & identifier ) const {
     bool registered;
-    
+
     auto it = mCommands.find(identifier);
     if( it != mCommands.end() )
         registered = true;
     else
         registered = false;
-    
+
     return ( registered );
 }
 
-std::string CommandDispatcher::dispatch( const std::string & identifier,
+std::string CommandDispatcher::dispatch( User * user,
+                                         const std::string & identifier,
                                          const std::string & parameters ) {
     std::map<std::string,Command *>::const_iterator it;
     Command * command;
     std::string result;
-    
+
     it = mCommands.find(identifier);
     if( it != mCommands.end() ) {
         command = it->second;
-        result = command->execute(parameters);
+        result = command->execute(user,parameters);
     }
-    
+
     return ( result );
 }
 

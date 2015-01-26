@@ -56,13 +56,17 @@ CommandExecuteFeature::~CommandExecuteFeature( void ) {
     // Nothing to do here.
 }
 
-std::string CommandExecuteFeature::execute( const std::string & parameters ) {
+std::string CommandExecuteFeature::execute( User * user,
+                                            const std::string & parameters ) {
     std::string output;
     std::stringstream ss;
     std::string deviceIdentifier;
     std::string featureIdentifier;
     std::string parameter;
     Device * device;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     if( parameters.length() > 0 ) {
         ss << parameters;

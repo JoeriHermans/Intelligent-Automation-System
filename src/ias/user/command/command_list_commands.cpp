@@ -55,7 +55,8 @@ CommandListCommands::~CommandListCommands( void ) {
     // Nothing to do here.
 }
 
-std::string CommandListCommands::execute( const std::string & parameters ) {
+std::string CommandListCommands::execute( User * user,
+                                          const std::string & parameters ) {
     std::vector<Command *> commands;
     std::string output;
     std::size_t n;

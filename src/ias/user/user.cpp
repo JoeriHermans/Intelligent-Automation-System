@@ -62,11 +62,18 @@ void User::setUsername( const std::string & username ) {
     // Checking the precondition.
     assert( username.length() > 0 );
 
+    mMutex.lock();
     mUsername = username;
+    mMutex.unlock();
 }
 
 const std::string & User::getUsername( void ) const {
-    return ( mUsername );
+
+    mMutex.lock();
+    const std::string & username = mUsername;
+    mMutex.unlock();
+
+    return ( username );
 }
 
 const std::string & User::getIdentifier( void ) const {
@@ -77,17 +84,33 @@ void User::setPassword( const std::string & password ) {
     // Checking the precondition.
     assert( password.length() > 0 );
 
+    mMutex.lock();
     mPassword = password;
+    mMutex.unlock();
 }
 
 bool User::matchesPassword( const std::string & password ) const {
-    return ( mPassword == password );
+    bool match;
+
+    mMutex.lock();
+    match = mPassword == password;
+    mMutex.unlock();
+
+    return ( match );
 }
 
 void User::setLoggedIn( const bool loggedIn ) {
+    mMutex.lock();
     mLoggedIn = loggedIn;
+    mMutex.unlock();
 }
 
 bool User::isLoggedIn( void ) const {
-    return ( mLoggedIn );
+    bool loggedIn;
+
+    mMutex.lock();
+    loggedIn = mLoggedIn;
+    mMutex.unlock();
+
+    return ( loggedIn );
 }

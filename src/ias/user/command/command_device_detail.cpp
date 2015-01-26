@@ -88,9 +88,12 @@ CommandDeviceDetail::CommandDeviceDetail( Container<Device *> * devices ) :
     setDeviceContainer(devices);
 }
 
-std::string CommandDeviceDetail::execute( const std::string & parameters ) {
+std::string CommandDeviceDetail::execute( User * user, const std::string & parameters ) {
     const Device * d;
     std::string response;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     if( isNumber(parameters) ) {
         std::size_t id = std::stoull(parameters,nullptr,0);

@@ -53,8 +53,12 @@ CommandStop::~CommandStop( void ) {
     // Nothing to do here.
 }
 
-std::string CommandStop::execute( const std::string & parameters ) {
+std::string CommandStop::execute( User * user,
+                                  const std::string & parameters ) {
     std::string result;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     mApplication->stop();
     result = kProtocolAck;

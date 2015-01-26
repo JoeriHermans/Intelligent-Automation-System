@@ -64,11 +64,14 @@ CommandDeleteRule::~CommandDeleteRule( void ) {
     // Nothing to do here.
 }
 
-std::string CommandDeleteRule::execute( const std::string & parameters ) {
+std::string CommandDeleteRule::execute( User * user, const std::string & parameters ) {
     std::string response;
     std::vector<Device *> devices;
     bool success;
     Rule * rule;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     success = false;
     if( parameters.length() > 0 ) {

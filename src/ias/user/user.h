@@ -27,6 +27,7 @@
 
 // System dependencies.
 #include <string>
+#include <mutex>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -62,6 +63,11 @@ class User {
      * @note    By default, this member will be equal to false.
      */
     bool mLoggedIn;
+
+    /**
+     * Synchronized data access to the class members.
+     */
+    mutable std::mutex mMutex;
 
     // END Private members. //////////////////////////////////////////
 

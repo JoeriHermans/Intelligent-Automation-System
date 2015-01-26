@@ -1,11 +1,11 @@
 /**
- * A class which is responsible for dispatching user command to actions.
+ * A command which is responsible for changing the password of user.
  *
- * @date                    Jul 18, 2014
- * @author                    Joeri HERMANS
- * @version                    0.1
+ * @date                    26 January, 2015
+ * @author                  Joeri HERMANS
+ * @version                 0.1
  *
- * Copyright 2013 Joeri HERMANS
+ * Copyright 2015 Joeri HERMANS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,25 @@
  * limitations under the License.
  */
 
-#ifndef COMMAND_DISPATCHER_H_
-#define COMMAND_DISPATCHER_H_
+#ifndef COMMAND_PASSWD_H_
+#define COMMAND_PASSWD_H_
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <string>
-#include <vector>
-#include <map>
-
 // Application dependencies.
-#include <ias/user/user.h>
+#include <ias/database/interface/database_connection.h>
 #include <ias/user/command/command.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-class CommandDispatcher {
+class CommandPasswd : public Command {
 
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+
+    static const char kIdentifier[];
+
     // END Class constants. //////////////////////////////////////////
 
     private:
@@ -48,13 +46,23 @@ class CommandDispatcher {
     // BEGIN Private members. ////////////////////////////////////////
 
     /**
-     * A map which holds all commands and unique identifiers.
+     * Instance which holds the connection with the database server.
+     *
+     * @note    By default, this member will be equal to the null
+     *          reference.
      */
-    std::map<std::string,Command *> mCommands;
+    DatabaseConnection * mDbConnection;
 
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    inline void initialize( void );
+
+    void setDatabaseConnection( DatabaseConnection * dbConnection );
+
+    bool updatePassword( User * user , const std::string & password );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -66,28 +74,19 @@ class CommandDispatcher {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    CommandDispatcher( void );
+    CommandPasswd( DatabaseConnection * dbConnection );
 
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~CommandDispatcher( void );
+    virtual ~CommandPasswd( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    void registerCommand( const std::string & identifier,
-                          Command * command );
-
-    bool registered( const std::string & identifier ) const;
-
-    std::string dispatch( User * user,
-                          const std::string & identifier,
-                          const std::string & parameter );
-
-    std::vector<Command *> getCommands( void ) const;
+    virtual std::string execute( User * user, const std::string & parameters );
 
     // END Public methods. ///////////////////////////////////////////
 
@@ -96,4 +95,4 @@ class CommandDispatcher {
 
 };
 
-#endif /* COMMAND_DISPATCHER_H_ */
+#endif /* COMMAND_PASSWD_H_ */

@@ -55,11 +55,15 @@ CommandListControllers::~CommandListControllers( void ) {
     // Nothing to do here.
 }
 
-std::string CommandListControllers::execute( const std::string & params ) {
+std::string CommandListControllers::execute( User * user,
+                                             const std::string & params ) {
     std::string output;
     std::vector<Controller *> controllers;
     Controller * c;
     std::size_t n;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     controllers = mControllers->getAll();
     n = controllers.size();

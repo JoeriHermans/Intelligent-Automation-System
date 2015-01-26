@@ -95,11 +95,15 @@ CommandLoadRule::~CommandLoadRule( void ) {
     // Nothing to do here.
 }
 
-std::string CommandLoadRule::execute( const std::string & parameters ) {
+std::string CommandLoadRule::execute( User * user,
+                                      const std::string & parameters ) {
     std::string response;
     std::size_t ruleId;
     Rule * rule;
     bool success;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     success = false;
     if( parameters.length() > 0 ) {

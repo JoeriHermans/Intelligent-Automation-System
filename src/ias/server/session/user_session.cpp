@@ -237,7 +237,7 @@ void UserSession::analyzeCommand( const char * command ) {
     if( mDispatcher->registered(identifier) ) {
         parameters = cmd.substr(identifier.length());
         trim(parameters);
-        response = mDispatcher->dispatch(identifier,parameters);
+        response = mDispatcher->dispatch(mUser,identifier,parameters);
         assert( response.length() != 0 );
     } else {
         response = kProtocolNack;

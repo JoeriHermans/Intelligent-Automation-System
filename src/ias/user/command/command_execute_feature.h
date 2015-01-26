@@ -37,26 +37,26 @@ class CommandExecuteFeature : public Command {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-        
+
     static const char kIdentifier[];
-        
+
     // END Class constants. //////////////////////////////////////////
 
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-    
+
     /**
      * A contains which holds all devices in IAS.
      */
     Container<Device *> * mDevices;
-    
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setDeviceContainer( Container<Device *> * devices );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -67,21 +67,21 @@ class CommandExecuteFeature : public Command {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     CommandExecuteFeature( Container<Device *> * devices );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~CommandExecuteFeature( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
-    virtual std::string execute( const std::string & parameters );
-    
+
+    virtual std::string execute( User * user, const std::string & parameters );
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

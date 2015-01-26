@@ -65,10 +65,13 @@ CommandUsers::CommandUsers( const Container<User *> * users ) :
     setContainer(users);
 }
 
-std::string CommandUsers::execute( const std::string & parameters ) {
+std::string CommandUsers::execute( User * user,
+                                   const std::string & parameters ) {
     std::string response;
 
-    // TODO Implement.
+    // Checking the precondition.
+    assert( user != nullptr );
+
     response = onlineUsers();
 
     return ( response );

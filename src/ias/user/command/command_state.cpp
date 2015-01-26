@@ -55,11 +55,15 @@ CommandState::~CommandState( void ) {
     // Nothing to do here.
 }
 
-std::string CommandState::execute( const std::string & parameters ) {
+std::string CommandState::execute( User * user,
+                                   const std::string & parameters ) {
     std::string response;
     Device * device;
     Member * member;
     std::size_t n;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     if( parameters.length() > 0 ) {
         device = mDevices->get(parameters);

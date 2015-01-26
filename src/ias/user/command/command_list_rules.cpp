@@ -55,10 +55,14 @@ CommandListRules::~CommandListRules( void ) {
     // Nothing to do here.
 }
 
-std::string CommandListRules::execute( const std::string & parameters ) {
+std::string CommandListRules::execute( User * user,
+                                       const std::string & parameters ) {
     std::string response;
     std::vector<Rule *> rules;
     std::size_t n;
+
+    // Checking the precondition.
+    assert( user != nullptr );
 
     rules = mRules->getAll();
     n = rules.size();

@@ -38,26 +38,26 @@ class CommandListControllers : public Command {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
-        
+
     static const char kIdentifier[];
-        
+
     // END Class constants. //////////////////////////////////////////
 
     private:
 
     // BEGIN Private members. ////////////////////////////////////////
-    
+
     /**
      * A container which holds all controllers.
      */
     Container<Controller *> * mControllers;
-    
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
-    
+
     void setControllerContainer( Container<Controller *> * controllers );
-    
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -68,21 +68,21 @@ class CommandListControllers : public Command {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-    
+
     CommandListControllers( Container<Controller *> * controllers );
-    
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~CommandListControllers( void );
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
-    virtual std::string execute( const std::string & parameters );
-    
+
+    virtual std::string execute( User * user, const std::string & parameters );
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////

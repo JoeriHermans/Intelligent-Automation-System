@@ -108,7 +108,7 @@ class CommandLoadRule : public Command {
 
     // BEGIN Public methods. /////////////////////////////////////////
 
-    virtual std::string execute( const std::string & parameters );
+    virtual std::string execute( User * user, const std::string & parameters );
 
     // END Public methods. ///////////////////////////////////////////
 
