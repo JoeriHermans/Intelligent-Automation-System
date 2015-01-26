@@ -29,6 +29,7 @@
 #include <ias/application/constants.h>
 #include <ias/user/command/command_passwd.h>
 #include <ias/util/util.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -68,6 +69,7 @@ bool CommandPasswd::updatePassword( User * user, const std::string & passwd ) {
     if( statement != nullptr ) {
         result = statement->execute();
         if( result != nullptr ) {
+            logi("Changing password of " + user->getUsername());
             user->setPassword(hashedPassword);
             success = true;
             delete result;
