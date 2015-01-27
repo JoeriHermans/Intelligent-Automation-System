@@ -122,7 +122,7 @@ void ControllerSession::controllerUpdate( void ) {
             success = true;
             dispatchEvent(device,stateIdentifier,stateValue);
         } else {
-            loge("Couldn't update device state. Reason" +
+            loge("Couldn't update device state. Reason: " +
                   std::string(stateIdentifier));
         }
     }
