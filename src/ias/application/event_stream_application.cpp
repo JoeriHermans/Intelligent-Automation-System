@@ -217,29 +217,33 @@ void EventStreamApplication::run( void ) {
     std::size_t nBytes;
     Reader * reader;
 
-    connectToStream();
-    if( mFlagRunning && mSocket != nullptr && mSocket->isConnected() )
-        authorize();
-    if( mFlagRunning ) {
-        reader = mSocket->getReader();
-        while( mFlagRunning && mSocket->isConnected() ) {
-            type = 0xff;
-            nBytes = reader->readBytes(reinterpret_cast<char *>(&type),1);
-            if( nBytes > 0 ) {
-                switch(type) {
-                case 0x00:
-                    sendHeartbeat();
-                    break;
-                case 0x01:
-                    readEvent();
-                    break;
+    if( mApiKey.length() >= 0 ) {
+        connectToStream();
+        if( mFlagRunning && mSocket != nullptr && mSocket->isConnected() )
+            authorize();
+        if( mFlagRunning ) {
+            reader = mSocket->getReader();
+            while( mFlagRunning && mSocket->isConnected() ) {
+                type = 0xff;
+                nBytes = reader->readBytes(reinterpret_cast<char *>(&type),1);
+                if( nBytes > 0 ) {
+                    switch(type) {
+                    case 0x00:
+                        sendHeartbeat();
+                        break;
+                    case 0x01:
+                        readEvent();
+                        break;
+                    }
+                } else {
+                    mSocket->closeConnection();
                 }
-            } else {
-                mSocket->closeConnection();
             }
         }
+        logi("Closing connection.");
+    } else {
+        loge("No API key has been specified.");
     }
-    logi("Closing connection.");
 }
 
 void EventStreamApplication::stop( void ) {
