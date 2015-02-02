@@ -217,7 +217,7 @@ void EventStreamApplication::run( void ) {
     std::size_t nBytes;
     Reader * reader;
 
-    if( mApiKey.length() >= 0 ) {
+    if( !mApiKey.length() ) {
         connectToStream();
         if( mFlagRunning && mSocket != nullptr && mSocket->isConnected() )
             authorize();
