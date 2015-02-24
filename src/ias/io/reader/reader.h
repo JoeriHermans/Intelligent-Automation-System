@@ -56,33 +56,34 @@ class Reader {
     public:
 
     // BEGIN Constructors. ///////////////////////////////////////////
-        
+
     Reader( void ) = default;
-        
+
     // END Constructors. /////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////
-    
+
     virtual ~Reader( void ) = default;
-    
+
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
-    
+
     virtual void closeReader( void ) = 0;
-    
+
     virtual std::size_t readByte( char * byte ) = 0;
-    
-    virtual std::size_t readBytes( char * buffer , const std::size_t bufferSize ) = 0;
-    
+
+    virtual std::size_t readBytes( char * buffer,
+                                   const std::size_t bufferSize ) = 0;
+
     virtual void lock( void ) {
         mLock.lock();
     }
-    
+
     virtual void unlock( void ) {
         mLock.unlock();
     }
-    
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
