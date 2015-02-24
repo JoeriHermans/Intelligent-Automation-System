@@ -32,8 +32,6 @@
 // Application dependencies.
 #include <ias/application/server_application.h>
 #include <ias/application/constants.h>
-#include <ias/building/factory/area_factory_database.h>
-#include <ias/building/factory/building_factory_database.h>
 #include <ias/device/factory/device_database_factory.h>
 #include <ias/technology/factory/value_type_database_factory.h>
 #include <ias/technology/factory/member_database_factory.h>
@@ -178,8 +176,6 @@ void ServerApplication::fillContainers( void ) {
     fillTechnologies();
     fillDevices();
     fillControllers();
-    fillAreas();
-    fillBuildings();
     fillRules();
 }
 
@@ -255,16 +251,6 @@ void ServerApplication::fillControllers( void ) {
     }
 }
 
-void ServerApplication::fillAreas( void ) {
-    AreaDatabaseFactory factory(mDbConnection,&mContainerDevices);
-    std::vector<Area *> areas;
-
-    areas = factory.fetchAll();
-    for( auto it = areas.begin() ; it != areas.end() ; ++it ) {
-        mContainerAreas.add((*it));
-    }
-}
-
 void ServerApplication::fillRules( void ) {
     RuleDatabaseFactory factory(mDbConnection,&mContainerDevices,&mOperators);
     std::vector<Rule *> rules;
@@ -272,16 +258,6 @@ void ServerApplication::fillRules( void ) {
     rules = factory.fetchAll();
     for( auto it = rules.begin() ; it != rules.end() ; ++it ) {
         mContainerRules.add((*it));
-    }
-}
-
-void ServerApplication::fillBuildings( void ) {
-    BuildingDatabaseFactory factory(mDbConnection,&mContainerAreas);
-    std::vector<Building *> buildings;
-
-    buildings = factory.fetchAll();
-    for( auto it = buildings.begin() ; it != buildings.end() ; ++it ) {
-        mContainerBuildings.add((*it));
     }
 }
 

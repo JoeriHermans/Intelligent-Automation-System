@@ -28,8 +28,6 @@
 
 // Application dependencies.
 #include <ias/application/application.h>
-#include <ias/building/area.h>
-#include <ias/building/building.h>
 #include <ias/controller/controller.h>
 #include <ias/device/device.h>
 #include <ias/device/device_monitor.h>
@@ -82,8 +80,6 @@ class ServerApplication : public Application {
     Container<Member *> mContainerMembers;
     Container<ValueType *> mContainerValueTypes;
     Container<User *> mContainerUsers;
-    Container<Building *> mContainerBuildings;
-    Container<Area *> mContainerAreas;
     Container<Rule *> mContainerRules;
 
     /**
@@ -170,10 +166,6 @@ class ServerApplication : public Application {
     void fillDevices( void );
 
     void fillControllers( void );
-
-    void fillBuildings( void );
-
-    void fillAreas( void );
 
     void fillRules( void );
 
