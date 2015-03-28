@@ -47,7 +47,7 @@ inline void EventStreamApplication::initialize( void ) {
     mFlagRunning = true;
     mServicePort = kDefaultEventServerPort;
     mFlagSslRequested = false;
-    mServiceAddress = kDefaultServerAddress;
+    mServiceAddress = std::string(kDefaultServerAddress);
     mServicePort = kDefaultEventServerPort;
 }
 
@@ -104,7 +104,10 @@ void EventStreamApplication::fetchApiKey( const int argc,
                                           const char ** argv ) {
     for( int i = 0 ; i < argc ; ++i ) {
         if( strcmp(argv[i],kFlagKey) == 0 && (i + 1) < argc ) {
-            mApiKey = std::string(argv[i + 1]);
+            std::string temp = std::string(argv[i + 1]);
+            trim(temp);
+            if( !temp.empty() )
+                mApiKey = temp;
             break;
         }
     }
