@@ -51,7 +51,7 @@ class Building : public Identifiable {
     std::size_t mId;
 
     /**
-     * Unique string identifier of a buliding.
+     * Unique string identifier of a building.
      */
     std::string mIdentifier;
 

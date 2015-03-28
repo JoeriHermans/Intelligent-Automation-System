@@ -27,6 +27,10 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <string>
+#include <vector>
+
 // Application dependencies.
 #include <ias/util/identifiable.h>
 
@@ -62,6 +66,14 @@ class Area : public Identifiable {
      * Description of an area.
      */
     std::string mDescription;
+
+    /**
+     * A list of adjacent areas.
+     *
+     * @note    We chose a list because the number of adjacent areas will
+     *          probably always small.
+     */
+    std::vector<Area *> mAdjacentAreas;
 
     // END Private members. //////////////////////////////////////////
 
@@ -111,6 +123,16 @@ class Area : public Identifiable {
     virtual bool hasDescription( void ) const;
 
     virtual void setDescription( const std::string & description );
+
+    std::size_t numAdjacentAreas( void ) const;
+
+    bool isAdjacent( const Area * area ) const;
+
+    Area * getAdjacentArea( const std::size_t index ) const;
+
+    void connectArea( Area * area );
+
+    void connectAreaBidirectionally( Area * area );
 
     // END Public methods. ///////////////////////////////////////////
 
