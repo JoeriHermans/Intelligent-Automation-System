@@ -47,6 +47,8 @@ inline void EventStreamApplication::initialize( void ) {
     mFlagRunning = true;
     mServicePort = kDefaultEventServerPort;
     mFlagSslRequested = false;
+    mServiceAddress = kDefaultServerAddress;
+    mServicePort = kDefaultEventServerPort;
 }
 
 void EventStreamApplication::analyzeArguments( const int argc,
