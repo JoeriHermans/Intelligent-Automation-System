@@ -38,6 +38,7 @@
 #include <ias/network/posix/ssl/posix_ssl_socket.h>
 #include <ias/util/util.h>
 #include <ias/logger/logger.h>
+#include <ias/logger/console/console_logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -49,6 +50,7 @@ inline void EventStreamApplication::initialize( void ) {
     mFlagSslRequested = false;
     mServiceAddress = std::string(kDefaultServerAddress);
     mServicePort = kDefaultEventServerPort;
+    Logger::setLogger(new ConsoleLogger());
 }
 
 void EventStreamApplication::analyzeArguments( const int argc,
@@ -223,6 +225,7 @@ void EventStreamApplication::run( void ) {
     Reader * reader;
 
     if( !mApiKey.empty() ) {
+        logi("Connecting to event stream.");
         connectToStream();
         if( mFlagRunning && mSocket != nullptr && mSocket->isConnected() )
             authorize();
