@@ -47,6 +47,8 @@
 // END Includes. /////////////////////////////////////////////////////
 
 int main( const int argc , const char ** argv ) {
+    if( flagSpecified(argc,argv,kFlagLogo) )
+        displayLogo();
     initializeSsl();
     if( controllerRequested(argc,argv) )
         startController(argc,argv);
@@ -118,6 +120,7 @@ void usage( void ) {
     std::cout << "Options:" << std::endl;
     std::cout << " --address [hostname]" << std::endl;
     std::cout << " --ssl" << std::endl;
+    std::cout << " --logo" << std::endl;
 }
 
 void initializeSsl( void ) {
@@ -138,4 +141,13 @@ void cleanupSsl( void ) {
 
 void cleanupLogger( void ) {
     Logger::cleanup();
+}
+
+void displayLogo( void ) {
+    std::cout << " __    ______    ______    " << std::endl;
+    std::cout << "/\\ \\  /\\  __ \\  /\\  ___\\   " << std::endl;
+    std::cout << "\\ \\ \\ \\ \\  __ \\ \\ \\___  \\  " << std::endl;
+    std::cout << " \\ \\_\\ \\ \\_\\ \\_\\ \\/\\_____\\ " << std::endl;
+    std::cout << "  \\/_/  \\/_/\\/_/  \\/_____/ " << std::endl;
+    std::cout << std::endl << std::endl;
 }

@@ -36,6 +36,7 @@ extern const char kFlagSsl[];
 extern const char kFlagSocks[];
 extern const char kFlagEventStream[];
 extern const char kFlagKey[];
+extern const char kFlagLogo[];
 
 extern const char kTrimCharacters[];
 

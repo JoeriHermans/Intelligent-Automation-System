@@ -51,4 +51,6 @@ void usage( void );
 
 void cleanupLogger( void );
 
+void displayLogo( void );
+
 #endif /* MAIN_H_ */
