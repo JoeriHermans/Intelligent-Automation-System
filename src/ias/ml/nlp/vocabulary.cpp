@@ -24,12 +24,11 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include "../../ml/nlp/vocabulary.h"
-
 #include <algorithm>
 #include <cassert>
 
 // Application dependencies.
+#include <ias/ml/nlp/vocabulary.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
