@@ -68,6 +68,9 @@ class Building : public Identifiable {
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    inline void setId( const std::size_t id );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -83,7 +86,7 @@ class Building : public Identifiable {
               const std::string & identifier,
               const std::string & name );
 
-    Building( const std::string id,
+    Building( const std::size_t id,
               const std::string & identifier,
               const std::string & name,
               const std::string & description );
@@ -92,7 +95,7 @@ class Building : public Identifiable {
 
     // BEGIN Destructor. /////////////////////////////////////////////
 
-    virtual ~Building( void );
+    virtual ~Building( void ) = default;
 
     // END Destructor. ///////////////////////////////////////////////
 
