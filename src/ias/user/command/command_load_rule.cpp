@@ -106,7 +106,7 @@ std::string CommandLoadRule::execute( User * user,
     assert( user != nullptr );
 
     success = false;
-    if( parameters.length() > 0 ) {
+    if( !parameters.empty() ) {
        ruleId = static_cast<std::size_t>(atol(parameters.c_str()));
        if( ruleId > 0 ) {
            rule = mRules->get(ruleId);

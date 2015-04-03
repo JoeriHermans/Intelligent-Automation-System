@@ -68,7 +68,7 @@ std::string CommandExecuteFeature::execute( User * user,
     // Checking the precondition.
     assert( user != nullptr );
 
-    if( parameters.length() > 0 ) {
+    if( !parameters.empty() ) {
         ss << parameters;
         ss >> deviceIdentifier;
         ss >> featureIdentifier;

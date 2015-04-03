@@ -217,3 +217,12 @@ Device * Controller::getDevice( const std::string & identifier ) const {
 
     return ( device );
 }
+
+const std::vector<const Device *> Controller::getDevices( void ) const {
+    std::vector<const Device *> devices;
+
+    for( auto it = mDevices.begin() ; it != mDevices.end() ; ++it )
+        devices.push_back(*it);
+
+    return ( devices );
+}

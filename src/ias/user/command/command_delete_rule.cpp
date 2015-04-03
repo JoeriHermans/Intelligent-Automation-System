@@ -74,7 +74,7 @@ std::string CommandDeleteRule::execute( User * user, const std::string & paramet
     assert( user != nullptr );
 
     success = false;
-    if( parameters.length() > 0 ) {
+    if( !parameters.empty() ) {
         std::size_t id = static_cast<std::size_t>(atol(parameters.c_str()));
         rule = mRules->get(id);
         if( rule != nullptr ) {

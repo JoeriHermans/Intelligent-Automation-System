@@ -65,7 +65,7 @@ std::string CommandState::execute( User * user,
     // Checking the precondition.
     assert( user != nullptr );
 
-    if( parameters.length() > 0 ) {
+    if( !parameters.empty() ) {
         device = mDevices->get(parameters);
         if( device != nullptr ) {
             const Technology * t = device->getTechnology();
@@ -86,7 +86,7 @@ std::string CommandState::execute( User * user,
             }
         }
     }
-    if( response.length() == 0 )
+    if( response.empty() )
         response = kProtocolNack;
 
     return ( response );

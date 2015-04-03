@@ -92,7 +92,7 @@ std::string CommandPasswd::execute( User * user,
     // Checking the precondition.
     assert( user != nullptr );
 
-    if( parameters.length() > 0 && parameters.length() <= 80 &&
+    if( !parameters.empty() && parameters.length() <= 80 &&
         updatePassword(user,parameters)) {
         response = kProtocolAck;
     } else {

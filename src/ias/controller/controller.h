@@ -266,6 +266,13 @@ class Controller : public Identifiable {
      */
     Device * getDevice( const std::string & identifier ) const;
 
+    /**
+     * Returns a list of all associated devices.
+     *
+     * @return  Returns a list of all associated devices.
+     */
+    const std::vector<const Device *> getDevices( void ) const;
+
     // END Public methods. ///////////////////////////////////////////
 
     // BEGIN Static methods. /////////////////////////////////////////
