@@ -23,7 +23,7 @@ gSocket.connect((gControllerAddress,gControllerPort))
 gRunning = True
 # Light state members.
 gState = False
-gTriggerDelay = 0.5
+gTriggerDelay = 1
 
 def updateState( stateIdentifier , newValue ):
     global gSocket
