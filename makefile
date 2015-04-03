@@ -60,6 +60,10 @@ configuration:
 	@mkdir -p /etc/ias/configuration
 	@cp -r configuration /etc/ias
 
+install_service_files:
+	@cp scripts/systemd/* /etc/systemd/system/
+
 install:
 	@make -s update_binary
 	@make -s configuration
+	@make -s install_service_files
