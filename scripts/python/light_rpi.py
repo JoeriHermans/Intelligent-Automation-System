@@ -52,21 +52,20 @@ def on():
     global gState
     global gPin
     gState = True
-    RPIO.output(gPin,True)
+    RPIO.setup(gPin, RPIO.OUT)
     updateState("state","1")
     sleep(0.1)
-    RPIO.input(gPin)
+    RPIO.setup(gPin, RPIO.IN)
 
 def off():
     global gCommandOff
     global gState
     global gPin
     gState = False
-    os.system(gCommandOff)
-    RPIO.output(gPin,True)
+    RPIO.setup(gPin, RPIO.OUT)
     updateState("state","0")
     sleep(0.1)
-    RPIO.input(gPin)
+    RPIO.setup(gPin, RPIO.IN)
 
 def processFeature(featureIdentifier,parameter):
     if( featureIdentifier == "toggle" ):
