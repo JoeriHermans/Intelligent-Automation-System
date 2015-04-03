@@ -23,6 +23,7 @@ gSocket.connect((gControllerAddress,gControllerPort))
 gRunning = True
 # Light state members.
 gState = False
+gTriggerDelay = 0.5
 
 def updateState( stateIdentifier , newValue ):
     global gSocket
@@ -51,20 +52,22 @@ def on():
     global gCommandOn
     global gState
     global gPin
+    global gTriggerDelay
     gState = True
     RPIO.setup(gPin, RPIO.OUT)
     updateState("state","1")
-    sleep(0.1)
+    sleep(gTriggerDelay)
     RPIO.setup(gPin, RPIO.IN)
 
 def off():
     global gCommandOff
     global gState
     global gPin
+    global gTriggerDelay
     gState = False
     RPIO.setup(gPin, RPIO.OUT)
     updateState("state","0")
-    sleep(0.1)
+    sleep(gTriggerDelay)
     RPIO.setup(gPin, RPIO.IN)
 
 def processFeature(featureIdentifier,parameter):
