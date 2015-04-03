@@ -23,7 +23,7 @@ gSocket.connect((gControllerAddress,gControllerPort))
 gRunning = True
 # Light state members.
 gState = False
-gTriggerDelay = 1
+gTriggerDelay = 0.1
 
 def updateState( stateIdentifier , newValue ):
     global gSocket
@@ -109,7 +109,6 @@ def processCommands():
 def main():
     global gPin
     authenticate()
-    RPIO.setmode(RPIO.BOARD)
     RPIO.setup(gPin, RPIO.IN)
     processCommands()
     RPIO.cleanup()
