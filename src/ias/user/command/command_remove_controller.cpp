@@ -26,6 +26,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <vector>
 
 // Application dependencies.
 #include <ias/application/constants.h>
@@ -38,6 +39,20 @@
 const char CommandRemoveController::kIdentifier[] = "removec";
 
 // END Constants. ////////////////////////////////////////////////////
+
+void CommandRemoveController::removeDevices( const Controller * controller ) {
+    // Checking the precondition.
+    assert( controller != nullptr );
+
+    mControllers = nullptr;
+}
+
+void CommandRemoveController::removeController( Controller * controller ) {
+    // Checking the precondition.
+    assert( controller != nullptr );
+
+    // TODO Implement.
+}
 
 CommandRemoveController::CommandRemoveController( void ) :
     Command(kIdentifier) {
@@ -55,7 +70,8 @@ std::string CommandRemoveController::execute( User * user,
     if( !parameters.empty() ) {
         controller = mControllers->get(parameters);
         if( controller != nullptr ) {
-            // TODO Implement.
+            removeDevices(controller);
+            response = kProtocolAck;
         }
     }
     if( response.empty() )

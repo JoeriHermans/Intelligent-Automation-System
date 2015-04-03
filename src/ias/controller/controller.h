@@ -78,6 +78,7 @@ class Controller : public Identifiable {
     mutable std::mutex mMutexDescription;
     mutable std::mutex mMutexSecurityCode;
     mutable std::mutex mMutexDevices;
+    mutable std::mutex mMutexSocket;
 
     /**
      * Contains the security code of the controller.
@@ -203,6 +204,16 @@ class Controller : public Identifiable {
      *          this function will be equal to the nullptr.
      */
     Socket * getSocket( void ) const;
+
+    /**
+     * Causes the remote controller to disconnect from IAS. This method will be
+     * executed when a socket is available, i.e., getSocket() != null.
+     * Furthermore, this statement is equivalent to getSocket()->close().
+     *
+     * @pre     The controller needs to be online.
+     * @post    The controller will be disconnected, getSocket() == nullptr.
+     */
+    void disconnect( void );
 
     /**
      * Returns the number of devices which are associated with the controller.

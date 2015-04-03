@@ -127,15 +127,31 @@ void Controller::setSecurityCode( const std::string & code ) {
 }
 
 bool Controller::isConnected( void ) const {
-    return ( mSocket != nullptr && mSocket->isConnected() );
+    mMutexSocket.lock();
+    bool connected = (mSocket != nullptr && mSocket->isConnected());
+    mMutexSocket.unlock();
+
+    return ( connected );
 }
 
 void Controller::setConnected( Socket * socket ) {
+    mMutexSocket.lock();
     mSocket = socket;
+    mMutexSocket.unlock();
 }
 
 Socket * Controller::getSocket( void ) const {
     return ( mSocket );
+}
+
+void Controller::disconnect( void ) {
+    // Checking the precondition.
+    assert( isConnected() );
+
+    mMutexSocket.lock();
+    mSocket->closeConnection();
+    mSocket = nullptr;
+    mMutexSocket.unlock();
 }
 
 std::size_t Controller::numDevices( void ) const {

@@ -68,6 +68,11 @@ class CommandRemoveController : public Command {
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    void removeDevices( const Controller * controller );
+
+    void removeController( Controller * controller );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
