@@ -1,0 +1,8 @@
+[Unit]
+Description=Intelligent Automation System Server
+
+[Service]
+ExecStart=/usr/bin/ias --logo --server --config /etc/ias/configuration/server
+
+[Install]
+WantedBy=multi-user.target

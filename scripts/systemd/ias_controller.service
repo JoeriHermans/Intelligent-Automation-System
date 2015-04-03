@@ -1,0 +1,8 @@
+[Unit]
+Description=Intelligent Automation System Controller
+
+[Service]
+ExecStart=/usr/bin/ias --logo --controller --config /etc/ias/configuration/controller
+
+[Install]
+WantedBy=multi-user.target
