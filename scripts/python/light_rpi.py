@@ -50,6 +50,7 @@ def toggle():
 def on():
     global gCommandOn
     global gState
+    global gPin
     gState = True
     RPIO.output(gPin,True)
     updateState("state","1")
@@ -59,6 +60,7 @@ def on():
 def off():
     global gCommandOff
     global gState
+    global gPin
     gState = False
     os.system(gCommandOff)
     RPIO.output(gPin,True)
@@ -103,7 +105,9 @@ def processCommands():
             gRunning = False
 
 def main():
+    global gPin
     authenticate()
+    RPIO.input(gPin)
     processCommands()
 
 if( __name__ == "__main__" ):
