@@ -10,6 +10,8 @@ import struct
 import os
 import RPIO
 
+from time import sleep
+
 # Global members, which are required for the communication
 # with the remote IAS controller.
 gDeviceIdentifier = sys.argv[1]
@@ -51,6 +53,7 @@ def on():
     gState = True
     RPIO.output(gPin,True)
     updateState("state","1")
+    sleep(0.1)
     RPIO.input(gPin)
 
 def off():
@@ -60,6 +63,7 @@ def off():
     os.system(gCommandOff)
     RPIO.output(gPin,True)
     updateState("state","0")
+    sleep(0.1)
     RPIO.input(gPin)
 
 def processFeature(featureIdentifier,parameter):
