@@ -107,8 +107,10 @@ def processCommands():
 def main():
     global gPin
     authenticate()
-    RPIO.input(gPin)
+    RPIO.setmode(RPIO.BOARD)
+    RPIO.setup(gPin, RPIO.IN)
     processCommands()
+    RPIO.cleanup()
 
 if( __name__ == "__main__" ):
     main()
