@@ -120,11 +120,50 @@ Eigen::VectorXd FeedforwardNeuralNetwork::propagate(
 void FeedforwardNeuralNetwork::backpropagate(
     const Eigen::VectorXd & input, const Eigen::VectorXd & expectedOutput ) {
     Eigen::VectorXd output;
+    Eigen::VectorXd errorOutput(mDimensionOutput);
+    Eigen::VectorXd errorHidden(mDimensionHidden);
+    Eigen::VectorXd hidden;
+    Eigen::VectorXd hiddenPreactivation;
 
     // Checking the precondition.
     assert( static_cast<std::size_t>(input.rows()) == mDimensionInput &&
             static_cast<std::size_t>(expectedOutput.rows()) == mDimensionOutput );
 
-    output = propagate(input);
-    // TODO Implement.
+    // Propagate the signal through the neurons.
+    hiddenPreactivation = (input.transpose() * mWeightMatrix_1);
+    hidden = hiddenPreactivation;
+    applyActivation(hidden);
+    output = (hidden.transpose() * mWeightMatrix_2);
+    applyActivation(output);
+    // Calculate the error at the output layer.
+    for( std::size_t i = 0 ; i < mDimensionOutput ; ++i ) {
+        double o_i = output(i);
+        double e_i = expectedOutput(i);
+        double delta = o_i * (1 - o_i) * (e_i - o_i);
+        errorOutput(i) = delta;
+    }
+    // Calculate the error at the hidden layer.
+    for( std::size_t i = 0 ; i < mDimensionHidden ; ++i ) {
+        double errorSum = 0;
+        // Calculate the error of the associated weights.
+        for( std::size_t j = 0 ; j < mDimensionOutput ; ++j )
+            errorSum += mWeightMatrix_2(i,j) * errorOutput(j);
+        double h_i = hidden(i);
+        double delta = h_i * (1 - h_i) * errorSum;
+        errorHidden(i) = delta;
+    }
+    // Adjust the weights from the hidden to the output layer.
+    for( std::size_t i = 0 ; i < mDimensionInput ; ++i ) {
+        for( std::size_t j = 0 ; j < mDimensionHidden ; ++j ) {
+            double delta = mLearningRate * errorHidden(j) * input(i);
+            mWeightMatrix_1(i,j) -= delta;
+        }
+    }
+    // Adjust the weights from the input to the hidden layer.
+    for( std::size_t i = 0 ; i < mDimensionHidden ; ++i ) {
+        for( std::size_t j = 0 ; j < mDimensionOutput ; ++j ) {
+            double delta = mLearningRate * errorOutput(j) * hiddenPreactivation(i);
+            mWeightMatrix_2(i,j) -= delta;
+        }
+    }
 }
