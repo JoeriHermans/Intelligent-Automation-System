@@ -54,6 +54,10 @@ std::size_t Vocabulary::get( const std::string & entity ) const {
     return ( index );
 }
 
+const std::string Vocabulary::get( const std::size_t index ) const {
+    return ( mStorage.at(index) );
+}
+
 std::size_t Vocabulary::size( void ) const {
     return ( mStorage.size() );
 }

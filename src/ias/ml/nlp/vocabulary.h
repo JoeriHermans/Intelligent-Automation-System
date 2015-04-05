@@ -80,6 +80,8 @@ class Vocabulary {
 
     std::size_t get( const std::string & entity ) const;
 
+    const std::string get( const std::size_t index ) const;
+
     std::size_t size( void ) const;
 
     // END Public methods. ///////////////////////////////////////////
