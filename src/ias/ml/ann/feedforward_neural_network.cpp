@@ -25,6 +25,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <cmath>
 
 // Application dependencies.
 #include <ias/ml/ann/feedforward_neural_network.h>
@@ -69,6 +70,21 @@ inline void FeedforwardNeuralNetwork::setDimensionOutput(
 void FeedforwardNeuralNetwork::initializeWeightMatrices( void ) {
     mWeightMatrix_1 = Eigen::MatrixXd::Random(mDimensionInput,mDimensionHidden);
     mWeightMatrix_2 = Eigen::MatrixXd::Random(mDimensionHidden,mDimensionOutput);
+    // Matrices are uniformly sampled between [-1.1], we want to initialize the
+    // weight between [-0.5,0.5], as a result, we do a scalar multiplication
+    // of the matrices with 0.5.
+    mWeightMatrix_1 *= 0.5;
+    mWeightMatrix_2 *= 0.5;
+}
+
+void FeedforwardNeuralNetwork::applyActivation( Eigen::VectorXd & layer ) const {
+    std::size_t nRows = layer.rows();
+    double x;
+
+    for( std::size_t i = 0 ; i < nRows ; ++i ) {
+        x = layer(i);
+        layer(i) = (1/(1 + exp(-x)));
+    }
 }
 
 FeedforwardNeuralNetwork::FeedforwardNeuralNetwork(
@@ -86,4 +102,29 @@ void FeedforwardNeuralNetwork::setLearningRate( const double learningRate ) {
     assert( learningRate > 0 );
 
     mLearningRate = learningRate;
+}
+
+Eigen::VectorXd FeedforwardNeuralNetwork::propagate(
+        const Eigen::VectorXd & input ) const {
+    Eigen::VectorXd output;
+    Eigen::VectorXd hidden;
+
+    hidden = (input.transpose() * mWeightMatrix_1);
+    applyActivation(hidden);
+    output = (hidden.transpose() * mWeightMatrix_2);
+    applyActivation(output);
+
+    return ( output );
+}
+
+void FeedforwardNeuralNetwork::backpropagate(
+    const Eigen::VectorXd & input, const Eigen::VectorXd & expectedOutput ) {
+    Eigen::VectorXd output;
+
+    // Checking the precondition.
+    assert( static_cast<std::size_t>(input.rows()) == mDimensionInput &&
+            static_cast<std::size_t>(expectedOutput.rows()) == mDimensionOutput );
+
+    output = propagate(input);
+    // TODO Implement.
 }

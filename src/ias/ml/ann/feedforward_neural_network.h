@@ -97,6 +97,8 @@ class FeedforwardNeuralNetwork {
 
     void initializeWeightMatrices( void );
 
+    void applyActivation( Eigen::VectorXd & layer ) const;
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -123,6 +125,11 @@ class FeedforwardNeuralNetwork {
     // BEGIN Public methods. /////////////////////////////////////////
 
     void setLearningRate( const double learningRate );
+
+    Eigen::VectorXd propagate( const Eigen::VectorXd & input ) const;
+
+    void backpropagate( const Eigen::VectorXd & input,
+                        const Eigen::VectorXd & expectedOutput );
 
     // END Public methods. ///////////////////////////////////////////
 

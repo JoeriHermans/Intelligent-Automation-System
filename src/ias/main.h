@@ -53,4 +53,6 @@ void cleanupLogger( void );
 
 void displayLogo( void );
 
+void initializeRandomGenerator( void );
+
 #endif /* MAIN_H_ */

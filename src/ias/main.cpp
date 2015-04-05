@@ -46,9 +46,14 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+void initializeRandomGenerator( void ) {
+    srand((unsigned int) time(0));
+}
+
 int main( const int argc , const char ** argv ) {
     if( flagSpecified(argc,argv,kFlagLogo) )
         displayLogo();
+    initializeRandomGenerator();
     initializeSsl();
     if( controllerRequested(argc,argv) )
         startController(argc,argv);
