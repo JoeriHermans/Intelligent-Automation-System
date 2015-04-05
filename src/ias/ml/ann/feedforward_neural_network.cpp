@@ -156,14 +156,14 @@ void FeedforwardNeuralNetwork::backpropagate(
     for( std::size_t i = 0 ; i < mDimensionInput ; ++i ) {
         for( std::size_t j = 0 ; j < mDimensionHidden ; ++j ) {
             double delta = mLearningRate * errorHidden(j) * input(i);
-            mWeightMatrix_1(i,j) -= delta;
+            mWeightMatrix_1(i,j) += delta;
         }
     }
     // Adjust the weights from the input to the hidden layer.
     for( std::size_t i = 0 ; i < mDimensionHidden ; ++i ) {
         for( std::size_t j = 0 ; j < mDimensionOutput ; ++j ) {
             double delta = mLearningRate * errorOutput(j) * hiddenPreactivation(i);
-            mWeightMatrix_2(i,j) -= delta;
+            mWeightMatrix_2(i,j) += delta;
         }
     }
 }
