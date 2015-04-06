@@ -53,22 +53,24 @@ def on():
     global gState
     global gPin
     global gTriggerDelay
-    gState = True
-    RPIO.setup(gPin, RPIO.OUT)
-    updateState("state","1")
-    sleep(gTriggerDelay)
-    RPIO.setup(gPin, RPIO.IN)
+    if not gState:
+        gState = True
+        RPIO.setup(gPin, RPIO.OUT)
+        updateState("state","1")
+        sleep(gTriggerDelay)
+        RPIO.setup(gPin, RPIO.IN)
 
 def off():
     global gCommandOff
     global gState
     global gPin
     global gTriggerDelay
-    gState = False
-    RPIO.setup(gPin, RPIO.OUT)
-    updateState("state","0")
-    sleep(gTriggerDelay)
-    RPIO.setup(gPin, RPIO.IN)
+    if gState:
+        gState = False
+        RPIO.setup(gPin, RPIO.OUT)
+        updateState("state","0")
+        sleep(gTriggerDelay)
+        RPIO.setup(gPin, RPIO.IN)
 
 def processFeature(featureIdentifier,parameter):
     if( featureIdentifier == "toggle" ):
