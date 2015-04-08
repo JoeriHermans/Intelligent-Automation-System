@@ -32,6 +32,34 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+Vocabulary::Vocabulary( const std::size_t id,
+                        const std::string & name ) {
+    setId(id);
+    setName(name);
+}
+
+void Vocabulary::setId( const std::size_t id ) {
+    // Checking the precondition.
+    assert( id > 0 );
+
+    mId = id;
+}
+
+std::size_t Vocabulary::getId( void ) const {
+    return ( mId );
+}
+
+void Vocabulary::setName( const std::string & name ) {
+    // Checking the precondition.
+    assert( !name.empty() );
+
+    mName = name;
+}
+
+const std::string & Vocabulary::getName( void ) const {
+    return ( mName );
+}
+
 void Vocabulary::add( const std::string & entity ) {
     // Checking the preconditions.
     assert( !entity.empty() && !contains(entity) );

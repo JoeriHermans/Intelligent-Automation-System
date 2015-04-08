@@ -51,6 +51,18 @@ class Vocabulary {
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    /**
+     * Unique identifier of the vocabulary.
+     */
+    std::size_t mId;
+
+    /**
+     * Name of the vocabulary, this will most probably be the name of the
+     * vocabulary.
+     */
+    std::string mName;
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -62,7 +74,8 @@ class Vocabulary {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    Vocabulary( void ) = default;
+    Vocabulary( const std::size_t id,
+                const std::string & name );
 
     // END Constructors. /////////////////////////////////////////////
 
@@ -73,6 +86,14 @@ class Vocabulary {
     // END Destructor. ///////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////
+
+    void setId( const std::size_t id );
+
+    std::size_t getId( void ) const;
+
+    void setName( const std::string & name );
+
+    const std::string & getName( void ) const;
 
     void add( const std::string & entity );
 
