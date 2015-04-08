@@ -71,10 +71,9 @@ std::vector<Vocabulary *> VocabularyDatabaseFactory::fetchAll( void ) {
     DatabaseStatement * statement;
     DatabaseResult * result;
     DatabaseResultRow * row;
-    std::size_t id;
 
     statement = getDbConnection()->createStatement(
-        "SELECT id "
+        "SELECT id, name"
         "FROM languages;"
     );
     if( statement != nullptr ) {
@@ -82,8 +81,10 @@ std::vector<Vocabulary *> VocabularyDatabaseFactory::fetchAll( void ) {
         if( result != nullptr ) {
             while( result->hasNext() ) {
                 row = result->next();
-                id = static_cast<std::size_t>(atol(row->getColumn(0).c_str()));
-                vocabulary = new Vocabulary();
+                std::size_t id =
+                      static_cast<std::size_t>(atol(row->getColumn(0).c_str()));
+                std::string name = row->getColumn(1);
+                vocabulary = new Vocabulary(id,name);
                 buildVocabulary(id,vocabulary);
                 delete row;
             }
