@@ -35,10 +35,28 @@
 
 void VocabularyDatabaseFactory::buildVocabulary( const std::size_t id,
                                                  Vocabulary * vocabulary ) {
+    DatabaseStatement * statement;
+    DatabaseResult * result;
+    DatabaseResultRow * row;
+
     // Checking the precondition.
     assert( id > 0 && vocabulary != nullptr );
 
-    // TODO Implement.
+    std::string sql = "SELECT entity FROM vocabularies WHERE language_id = " +
+            std::to_string(id);
+    statement = getDbConnection()->createStatement(sql);
+    if( statement != nullptr ) {
+        result = statement->execute();
+        if( result != nullptr ) {
+            while( result->hasNext() ) {
+                row = result->next();
+                vocabulary->add(row->getColumn(0));
+                delete row;
+            }
+            delete result;
+        }
+        delete statement;
+    }
 }
 
 VocabularyDatabaseFactory::VocabularyDatabaseFactory(
@@ -57,7 +75,7 @@ std::vector<Vocabulary *> VocabularyDatabaseFactory::fetchAll( void ) {
 
     statement = getDbConnection()->createStatement(
         "SELECT id "
-        "FROM vocabularies;"
+        "FROM languages;"
     );
     if( statement != nullptr ) {
         result = statement->execute();
