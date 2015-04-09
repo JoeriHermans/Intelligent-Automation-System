@@ -100,7 +100,9 @@ void Building::addArea( Area * area ) {
     // Checking the precondition.
     assert( area != nullptr );
 
+    mMutexArea.lock();
     mAreas.push_back(area);
+    mMutexArea.unlock();
 }
 
 bool Building::containsArea( const Area * area ) const {
@@ -109,11 +111,13 @@ bool Building::containsArea( const Area * area ) const {
     // Checking the precondition.
     assert( area != nullptr );
 
+    mMutexArea.lock();
     auto it = std::find(mAreas.begin(),mAreas.end(),area);
     if( it != mAreas.end() )
         contains = true;
     else
         contains = false;
+    mMutexArea.unlock();
 
     return ( contains );
 }
@@ -122,7 +126,9 @@ void Building::removeArea( const Area * area ) {
     // Checking the precondition.
     assert( area != nullptr );
 
+    mMutexArea.lock();
     auto it = std::find(mAreas.begin(),mAreas.end(),area);
     if( it != mAreas.end() )
         mAreas.erase(it);
+    mMutexArea.unlock();
 }

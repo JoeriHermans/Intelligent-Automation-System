@@ -73,6 +73,11 @@ class Building : public Identifiable {
      */
     std::vector<Area *> mAreas;
 
+    /**
+     * Mutexes which handle the access to the data.
+     */
+    mutable std::mutex mMutexArea;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
