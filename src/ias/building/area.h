@@ -76,6 +76,11 @@ class Area : public Identifiable {
      */
     std::vector<Area *> mAdjacentAreas;
 
+    /**
+     * Mutexes which prevent simultanaous access to the data.
+     */
+    mutable std::mutex mMutexArea;
+
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////

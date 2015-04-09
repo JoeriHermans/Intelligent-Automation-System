@@ -103,7 +103,13 @@ void Area::setDescription( const std::string & description ) {
 }
 
 std::size_t Area::numAdjacentAreas( void ) const {
-    return ( mAdjacentAreas.size() );
+    std::size_t n;
+
+    mMutexArea.lock();
+    n = mAdjacentAreas.size();
+    mMutexArea.unlock();
+
+    return ( n );
 }
 
 bool Area::isAdjacent( const Area * area ) const {
@@ -112,8 +118,10 @@ bool Area::isAdjacent( const Area * area ) const {
     // Checking the precondition.
     assert( area != nullptr );
 
+    mMutexArea.lock();
     adjacent = (std::find(mAdjacentAreas.begin(),mAdjacentAreas.end(),area)
         != mAdjacentAreas.end());
+    mMutexArea.unlock();
 
     return ( adjacent );
 }
@@ -124,7 +132,9 @@ Area * Area::getAdjacentArea( const std::size_t index ) const {
     // Checking the precondition.
     assert( index > 0 );
 
+    mMutexArea.lock();
     area = mAdjacentAreas.at(index);
+    mMutexArea.unlock();
 
     return ( area );
 }
@@ -133,17 +143,22 @@ void Area::removeAdjacentArea( const Area * area ) {
     // Checking the precondition.
     assert( area != nullptr );
 
+    mMutexArea.lock();
     auto it = std::find(mAdjacentAreas.begin(),mAdjacentAreas.end(),area);
     if( it != mAdjacentAreas.end() )
         mAdjacentAreas.erase(it);
+    mMutexArea.unlock();
 }
 
 void Area::connectArea( Area * area ) {
     // Checking the precondition.
     assert( area != nullptr );
 
-    if( !isAdjacent(area) )
+    if( !isAdjacent(area) ) {
+        mMutexArea.lock();
         mAdjacentAreas.push_back(area);
+        mMutexArea.unlock();
+    }
 }
 
 void Area::connectAreaBidirectionally( Area * area ) {
