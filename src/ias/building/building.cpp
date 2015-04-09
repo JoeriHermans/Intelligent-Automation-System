@@ -26,6 +26,7 @@
 // System dependencies.
 #include <cassert>
 #include <string>
+#include <algorithm>
 
 // Application dependencies.
 #include <ias/building/building.h>
@@ -93,4 +94,35 @@ bool Building::hasDescription( void ) const {
 
 void Building::setDescription( const std::string & description ) {
     mDescription = description;
+}
+
+void Building::addArea( Area * area ) {
+    // Checking the precondition.
+    assert( area != nullptr );
+
+    mAreas.push_back(area);
+}
+
+bool Building::containsArea( const Area * area ) const {
+    bool contains;
+
+    // Checking the precondition.
+    assert( area != nullptr );
+
+    auto it = std::find(mAreas.begin(),mAreas.end(),area);
+    if( it != mAreas.end() )
+        contains = true;
+    else
+        contains = false;
+
+    return ( contains );
+}
+
+void Building::removeArea( const Area * area ) {
+    // Checking the precondition.
+    assert( area != nullptr );
+
+    auto it = std::find(mAreas.begin(),mAreas.end(),area);
+    if( it != mAreas.end() )
+        mAreas.erase(it);
 }

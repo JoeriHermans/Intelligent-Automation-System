@@ -52,6 +52,7 @@
 #include <ias/user/command/command_users.h>
 #include <ias/user/command/command_device_detail.h>
 #include <ias/user/command/command_passwd.h>
+#include <ias/user/command/command_say.h>
 #include <ias/rule/factory/rule_database_factory.h>
 #include <ias/user/command/command_list_rules.h>
 #include <ias/user/command/command_load_rule.h>
@@ -461,6 +462,10 @@ void ServerApplication::initializeDispatcher( void ) {
     mDispatcher.registerCommand(
         CommandPasswd::kIdentifier,
         new CommandPasswd(mDbConnection)
+    );
+    mDispatcher.registerCommand(
+        CommandSay::kIdentifier,
+        new CommandSay()
     );
 }
 

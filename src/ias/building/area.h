@@ -7,7 +7,7 @@
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
- * Copyright 2013 Joeri HERMANS
+ * Copyright 2015 Joeri HERMANS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@
 // System dependencies.
 #include <string>
 #include <vector>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/util/identifiable.h>
@@ -78,6 +79,9 @@ class Area : public Identifiable {
     // END Private members. //////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////
+
+    void setId( const std::size_t id );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -129,6 +133,8 @@ class Area : public Identifiable {
     bool isAdjacent( const Area * area ) const;
 
     Area * getAdjacentArea( const std::size_t index ) const;
+
+    void removeAdjacentArea( const Area * area );
 
     void connectArea( Area * area );
 

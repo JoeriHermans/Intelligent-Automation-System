@@ -28,9 +28,12 @@
 
 // System dependencies.
 #include <string>
+#include <vector>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/util/identifiable.h>
+#include <ias/building/area.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -61,9 +64,14 @@ class Building : public Identifiable {
     std::string mName;
 
     /**
-     * Description of a bulding.
+     * Description of a building.
      */
     std::string mDescription;
+
+    /**
+     * Areas which are contained in this building.
+     */
+    std::vector<Area *> mAreas;
 
     // END Private members. //////////////////////////////////////////
 
@@ -116,6 +124,12 @@ class Building : public Identifiable {
     virtual bool hasDescription( void ) const;
 
     virtual void setDescription( const std::string & description );
+
+    void addArea( Area * area );
+
+    bool containsArea( const Area * area ) const;
+
+    void removeArea( const Area * area );
 
     // END Public methods. ///////////////////////////////////////////
 
