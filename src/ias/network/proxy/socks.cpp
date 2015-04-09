@@ -44,6 +44,7 @@
 
 // Application dependencies.
 #include <ias/network/proxy/socks.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -188,9 +189,12 @@ bool socksRequest( const std::string & clientAddress,
     write(fd,static_cast<unsigned char *>(message),messageLength);
     write(fd,reinterpret_cast<char *>(&port),2);
     std::size_t n = read(fd,reinterpret_cast<char *>(response),BUFSIZ);
-    // TODO Add logging.
-    if( n >= 2 && response[1] == 0 )
+    if( n >= 2 && response[1] == 0 ) {
         connected = true;
+        logi("Connected through SOCKS proxy.");
+    } else {
+        loge("Could not connect to SOCKS proxy.");
+    }
 
     return ( connected );
 }
