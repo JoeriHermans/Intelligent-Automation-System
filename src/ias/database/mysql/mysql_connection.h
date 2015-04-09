@@ -40,6 +40,12 @@ class MySqlConnection : public DatabaseConnection {
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////
+
+    /**
+     * The default port of a MySQL server.
+     */
+    const static std::size_t kDefaultPort;
+
     // END Class constants. //////////////////////////////////////////
 
     private:

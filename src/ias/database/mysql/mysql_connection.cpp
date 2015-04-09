@@ -36,6 +36,12 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+// BEGIN Constants. //////////////////////////////////////////////////
+
+const std::size_t MySqlConnection::kDefaultPort = 3306;
+
+// END Constants. ////////////////////////////////////////////////////
+
 inline void MySqlConnection::initialize( void ) {
     // Initialize the members of the class.
     mConnection = mysql_init( nullptr );
@@ -74,7 +80,7 @@ bool MySqlConnection::connect( void ) {
                                      getUsername().c_str(),
                                      getPassword().c_str(),
                                      getSchema().c_str(),
-                                     3306,nullptr,0) != nullptr );
+                                     kDefaultPort,nullptr,0) != nullptr );
 
     return ( connected );
 }
