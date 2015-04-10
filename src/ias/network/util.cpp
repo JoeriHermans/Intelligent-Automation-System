@@ -35,6 +35,7 @@
 #include <poll.h>
 #include <netdb.h>
 #include <errno.h>
+#include <iostream>
 
 // System dependencies.
 #include <ias/network/util.h>
@@ -58,8 +59,8 @@ int connect( const std::string & address, const std::size_t port ) {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
     portString = std::to_string(port);
-    getaddrinfo(address.c_str(),portString.c_str(),&hints,&results);
-    if( results != nullptr ) {
+    int rc = getaddrinfo(address.c_str(),portString.c_str(),&hints,&results);
+    if( results != nullptr && rc >= 0 ) {
         fd = socket(results->ai_family,results->ai_socktype,results->ai_protocol);
         if( fd >= 0 ) {
             if( connect(fd,results->ai_addr,results->ai_addrlen) == 0 )
