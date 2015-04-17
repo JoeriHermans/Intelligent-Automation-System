@@ -37,7 +37,7 @@ inline void Technology::initialize( void ) {
 void Technology::setId( const std::size_t id ) {
     // Checking the precondition.
     assert( id > 0 );
-    
+
     mId = id;
 }
 
