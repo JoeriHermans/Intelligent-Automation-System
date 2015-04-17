@@ -50,7 +50,7 @@ void ThreadPool::spawnThreads( const std::size_t numThreads ) {
 
     // Checking the precondition.
     assert( numThreads > 0 );
-    
+
     for( std::size_t i = 0 ; i < numThreads ; ++i ) {
         thread = new std::thread(ThreadPool::process,this);
         mThreads.push_back(thread);
@@ -60,7 +60,7 @@ void ThreadPool::spawnThreads( const std::size_t numThreads ) {
 void ThreadPool::join( void ) {
     std::thread * thread;
     std::size_t nThreads;
-    
+
     stop();
     nThreads = mThreads.size();
     mTaskLoad.notify_all();
@@ -74,22 +74,22 @@ void ThreadPool::join( void ) {
 std::size_t ThreadPool::numWorking( void ) const
 {
     std::size_t n;
-    
+
     mMutexWorkingThreads.lock();
     n = mNumWorkingThreads;
     mMutexWorkingThreads.unlock();
-    
+
     return ( n );
 }
 
 std::size_t ThreadPool::numSleeping( void ) const
 {
     std::size_t n;
-    
+
     mMutexSleepingThreads.lock();
     n = mNumSleepingThreads;
     mMutexSleepingThreads.unlock();
-    
+
     return ( n );
 }
 
@@ -99,13 +99,13 @@ bool ThreadPool::wakeupRequired( void ) const {
     std::size_t nTotal;
     std::size_t nNotWorking;
     bool wakeup;
-    
+
     nSleeping = numSleeping();
     nWorking = numWorking();
     nTotal = numThreads();
     nNotWorking = nTotal - nWorking - nSleeping;
     wakeup = ( nNotWorking == 0 );
-    
+
     return ( wakeup );
 }
 
@@ -135,17 +135,17 @@ void ThreadPool::decrementSleepingThread( void ) {
 
 std::size_t ThreadPool::numSleepingThreads( void ) const {
     std::size_t numSleepingThreads;
-    
+
     mMutexSleepingThreads.lock();
     numSleepingThreads = mNumSleepingThreads;
     mMutexSleepingThreads.unlock();
-    
+
     return ( numSleepingThreads );
 }
 
 Task * ThreadPool::nextTask( void ) {
     Task * task;
-    
+
     task = nullptr;
     lockQueue();
     if( mQueue.size() > 0 ) {
@@ -153,18 +153,18 @@ Task * ThreadPool::nextTask( void ) {
         mQueue.pop();
     }
     unlockQueue();
-    
+
     return ( task );
 }
 
 bool ThreadPool::tasksLeft( void ) const
 {
     std::size_t n;
-    
+
     mMutexQueue.lock();
     n = mQueue.size();
     mMutexQueue.unlock();
-    
+
     return ( n > 0 );
 }
 
@@ -200,7 +200,7 @@ void ThreadPool::stop( void ) {
 void ThreadPool::enqueue( Task * task ) {
     // Checking the precondition.
     assert( task != nullptr );
-    
+
     lockQueue();
     mQueue.push(task);
     unlockQueue();
