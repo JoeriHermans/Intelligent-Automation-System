@@ -71,7 +71,7 @@ const std::string & Technology::getIdentifier( void ) const {
 void Technology::setIdentifier( const std::string & identifier ) {
     // Checking the precondition.
     assert( !identifier.empty() );
-    
+
     mMutexIdentifier.lock();
     mIdentifier = identifier;
     mMutexIdentifier.unlock();
@@ -84,7 +84,7 @@ const std::string & Technology::getName( void ) const {
 void Technology::setName( const std::string & name ) {
     // Checking the precondition.
     assert( !name.empty() );
-    
+
     mMutexName.lock();
     mName = name;
     mMutexName.unlock();
@@ -119,7 +119,7 @@ const std::vector<Feature *> & Technology::getFeatures( void ) const {
 const Feature * Technology::getFeature( const std::string & identifier ) const {
     const Feature * f;
     Feature * feature;
-    
+
     f = nullptr;
     for( auto it = mFeatures.begin() ; it != mFeatures.end() ; ++it ) {
         feature = (*it);
@@ -128,14 +128,14 @@ const Feature * Technology::getFeature( const std::string & identifier ) const {
             break;
         }
     }
-    
+
     return ( f );
 }
 
 bool Technology::containsFeature( const std::string & identifier ) const {
     Feature * feature;
     bool contains;
-    
+
     contains = false;
     for( auto it = mFeatures.begin() ; it != mFeatures.end() ; ++it ) {
         feature = (*it);
@@ -144,7 +144,7 @@ bool Technology::containsFeature( const std::string & identifier ) const {
             break;
         }
     }
-    
+
     return ( contains );
 }
 
