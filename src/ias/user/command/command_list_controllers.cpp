@@ -72,7 +72,9 @@ std::string CommandListControllers::execute( User * user,
         c = controllers.at(i);
         output += "  {\n";
         output += "    \"identifier\":\"" + c->getIdentifier() + "\",\n";
-        output += "    \"state\":" + std::to_string(c->isConnected()) + "\n";
+        output += "    \"name\": \"" + c->getName() + "\"";
+		output += "    \"description\": \"" + c->getDescription() + "\"";
+		output += "    \"state\":" + std::to_string(c->isConnected()) + "\n";
         output += "  }";
         if( n > 1 && i < (n - 1) )
               output += ",";
