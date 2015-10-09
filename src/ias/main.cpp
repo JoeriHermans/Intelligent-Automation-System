@@ -57,6 +57,7 @@ int main( const int argc , const char ** argv ) {
         displayLogo();
     initializeRandomGenerator();
     initializeSsl();
+    // Not the most beautiful piece of initialization code :)
     if( controllerRequested(argc,argv) )
         startController(argc,argv);
     else
