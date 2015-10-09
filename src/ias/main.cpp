@@ -40,6 +40,8 @@
 #include <ias/application/controller_application.h>
 #include <ias/application/server_application.h>
 #include <ias/application/event_stream_application.h>
+#include <ias/application/add_controller/add_controller_application.h>
+#include <ias/application/hash_generation/hash_generation_application.h>
 #include <ias/main.h>
 #include <ias/util/util.h>
 #include <ias/logger/logger.h>
@@ -67,11 +69,17 @@ int main( const int argc , const char ** argv ) {
     if( eventStreamRequested(argc,argv) )
         startEventStream(argc,argv);
     else
+    if( generateHashRequested(argc,argv) )
+        startGenerateHash(argc,argv);
+    else
+    if( addControllerRequested(argc,argv) )
+        startAddController(argc,argv);
+    else
         usage();
     cleanupSsl();
     cleanupLogger();
 
-    return ( 0 );
+    return EXIT_SUCCESS;
 }
 
 void startController( const int argc , const char ** argv ) {
@@ -98,6 +106,18 @@ void startEventStream( const int argc , const char ** argv ) {
     application.run();
 }
 
+void startGenerateHash( const int argc , const char ** argv ) {
+    HashGenerationApplication application(argc,argv);
+
+    application.run();
+}
+
+void startAddController( const int argc , const char ** argv ) {
+    AddControllerApplication application(argc,argv);
+
+    application.run();
+}
+
 bool serverRequested( const int argc , const char ** argv ) {
     return ( flagSpecified(argc,argv,kFlagServer) );
 }
@@ -114,6 +134,14 @@ bool eventStreamRequested( const int argc , const char ** argv ) {
     return ( flagSpecified(argc,argv,kFlagEventStream) );
 }
 
+bool generateHashRequested( const int argc , const char ** argv ) {
+    return ( flagSpecified(argc,argv,kFlagGenerateHash) );
+}
+
+bool addControllerRequested( const int argc , const char ** argv ) {
+    return ( flagSpecified(argc,argv,kFlagAddController) );
+}
+
 void usage( void ) {
     std::cout << kVersion << std::endl;
     std::cout << "Basic usage: " << std::endl;
@@ -121,6 +149,8 @@ void usage( void ) {
     std::cout << "Run as controller: ias --controller --config <path>" << std::endl;
     std::cout << "Run as client: ias --client [options]" << std::endl;
     std::cout << "Run as eventstream: ias --eventstream --key <API key> [options]" << std::endl;
+    std::cout << "Generate hash: ias --hash <string>" << std::endl;
+    std::cout << "Add controller: ias --addc" << std::endl;
     std::cout << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << " --address [hostname]" << std::endl;

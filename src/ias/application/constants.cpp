@@ -38,6 +38,8 @@ const char kFlagSocks[] = "--socks";
 const char kFlagEventStream[] = "--eventstream";
 const char kFlagKey[] = "--key";
 const char kFlagLogo[] = "--logo";
+const char kFlagGenerateHash[] = "--hash";
+const char kFlagAddController[] = "--addc";
 
 const char kTrimCharacters[] = " \t\n\r";
 
