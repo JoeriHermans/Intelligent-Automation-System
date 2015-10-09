@@ -149,7 +149,7 @@ void usage( void ) {
     std::cout << "Run as controller: ias --controller --config <path>" << std::endl;
     std::cout << "Run as client: ias --client [options]" << std::endl;
     std::cout << "Run as eventstream: ias --eventstream --key <API key> [options]" << std::endl;
-    std::cout << "Generate hash: ias --hash <string>" << std::endl;
+    std::cout << "Generate hash: ias --hash <string> --config <path>" << std::endl;
     std::cout << "Add controller: ias --addc" << std::endl;
     std::cout << std::endl;
     std::cout << "Options:" << std::endl;
