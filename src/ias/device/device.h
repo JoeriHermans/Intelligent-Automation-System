@@ -93,7 +93,7 @@ class Device : public Identifiable, public Observable {
     /**
      * Contains the state of the device.
      */
-    std::map<std::string,std::pair<std::string,const ValueType *>> mState;
+    std::map<std::string,std::string> mState;
 
     // END Private members. //////////////////////////////////////////
 

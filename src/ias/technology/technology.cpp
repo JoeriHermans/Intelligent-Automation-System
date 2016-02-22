@@ -104,6 +104,22 @@ void Technology::setDescription( const std::string & description ) {
     mMutexDescription.unlock();
 }
 
+const Member * Technology::getMember( const std::string & identifier ) const {
+    Member * member;
+
+    // Initialize the result.
+    member = nullptr;
+    // Iterate through every member in order to get the desired member.
+    for( auto it = mMembers.begin() ; it != mMembers.end() ; ++it ) {
+        if( (*it)->getIdentifier().compare(identifier) == 0 ) {
+            member = (*it);
+            break;
+        }
+    }
+
+    return ( member );
+}
+
 const std::vector<Member *> & Technology::getMembers( void ) const {
     return ( mMembers );
 }

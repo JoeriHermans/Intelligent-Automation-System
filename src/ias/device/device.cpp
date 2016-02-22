@@ -56,9 +56,7 @@ void Device::setUpTechnology( void ) {
     const std::vector<Member *> & members = mTechnology->getMembers();
     for( it = members.begin() ; it != members.end() ; ++it ) {
         member = (*it);
-        mState[member->getIdentifier()] =
-            std::pair<std::string,const ValueType *>(member->getDefaultValue(),
-                                                     member->getValueType());
+        mState[member->getIdentifier()] = member->getDefaultValue();
     }
 }
 
@@ -128,9 +126,9 @@ void Device::setDescription( const std::string & description ) {
 }
 
 std::size_t Device::set( const std::string & key , const std::string & value ) {
-    std::map<std::string,std::pair<std::string,const ValueType *>>::iterator it;
+    std::map<std::string,std::string>::iterator it;
     struct device_update dUpdate;
-    const ValueType * type;
+    const Member * member;
     std::size_t result;
 
     // Checking the preconditions.
@@ -140,11 +138,13 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
     mMutexTechnology.lock();
     it = mState.find(key);
     if( it != mState.end() ) {
-        type = it->second.second;
+        // Fetch the member from the technology.
+        member = mTechnology->getMember(key);
         result = 2;
-        if( type->matches(value) ) {
+        if( member->getValueType()->matches(value) ) {
             logi("Updating state of " + mIdentifier + " => " + key + " = " + value);
-            mState[key] = std::pair<std::string,const ValueType *>(value,type);
+            mState[key] = value;
+            dUpdate.mMemberId = member->getId();
             dUpdate.mDevice = this;
             dUpdate.mStateIdentifier = key;
             dUpdate.mValue = value;
@@ -165,7 +165,7 @@ std::string Device::get( const std::string & key ) const {
     mMutexTechnology.lock();
     auto it = mState.find(key);
     if( it != mState.end() )
-        result = it->second.first;
+        result = it->second;
     mMutexTechnology.unlock();
 
     return ( result );

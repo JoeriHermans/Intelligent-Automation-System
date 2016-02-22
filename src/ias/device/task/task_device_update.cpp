@@ -25,6 +25,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <string>
 
 // Application dependencies.
 #include <ias/device/task/task_device_update.h>
@@ -65,10 +66,10 @@ void TaskDeviceUpdate::execute( void ) {
 
     query =
         "INSERT INTO device_history_states "
-        "(device_id,technology_member,timestamp,value) "
+        "(device_id,technology_member_id,timestamp,value) "
         "VALUES (" +
             std::to_string(mData.mDevice->getId()) + "," +
-            "\"" + mData.mStateIdentifier + "\"," +
+            "\"" + std::to_string(mData.mMemberId) + "\"," +
             std::to_string(mData.mTimestamp) + "," +
             "\"" + mData.mValue + "\")";
     statement = mDbConnection->createStatement(query);

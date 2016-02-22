@@ -28,6 +28,7 @@
 // System dependencies.
 #include <ctime>
 #include <string>
+#include <cstddef>
 
 // Application dependencies.
 #include <ias/device/device.h>
@@ -40,6 +41,11 @@ struct device_update {
      * Contains a pointer to the device which has been updated.
      */
     Device * mDevice;
+
+    /**
+     * Contains the unique technology member ID of the state.
+     */
+    std::size_t mMemberId;
 
     /**
      * Contains the identifier of the state member which has been updated.

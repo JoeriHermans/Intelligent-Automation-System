@@ -137,6 +137,8 @@ class Technology : public Identifiable {
     
     virtual void setDescription( const std::string & description );
     
+    const Member * getMember( const std::string & identifier ) const;
+
     const std::vector<Member *> & getMembers( void ) const;
     
     std::size_t numMembers( void ) const;
