@@ -151,7 +151,7 @@ void UserSession::validateApiKey( const std::string & key ) {
     // Checking the precondition.
     assert( key.length() > 0 );
 
-    if( mDbConnection->isConnected() && key.length() <= 50 ) {
+    if( mDbConnection->isConnected() && key.length() == 64 ) {
         // Query is safe, because it has been hashed.
         std::string sql = "SELECT user_id, expires "
                           "FROM api_keys "
