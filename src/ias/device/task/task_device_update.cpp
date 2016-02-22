@@ -69,7 +69,7 @@ void TaskDeviceUpdate::execute( void ) {
         "(device_id,technology_member_id,timestamp,value) "
         "VALUES (" +
             std::to_string(mData.mDevice->getId()) + "," +
-            "\"" + std::to_string(mData.mMemberId) + "\"," +
+            "" + std::to_string(mData.mMemberId) + "," +
             std::to_string(mData.mTimestamp) + "," +
             "\"" + mData.mValue + "\")";
     statement = mDbConnection->createStatement(query);
