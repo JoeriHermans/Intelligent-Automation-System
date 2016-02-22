@@ -21,6 +21,7 @@ gControllerPort = int(sys.argv[3])
 gSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 gSocket.connect((gControllerAddress,gControllerPort))
 gRunning = True
+gApiKey = "f421576838ed1036cfd564e8bd06c53b"
 
 # Begin state members.
 gSunsetTimestamp = str(0)
@@ -40,10 +41,12 @@ gApiUrl = ""
 
 def setApiUrl():
     global gApiUrl
+    global gApiKey
     global gLocation
     gApiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + gLocation
     if( gMetrics != 0 ):
         gApiUrl +=  "&units=metric"
+    gApiUrl += "&APPID=" + gApiKey
 
 def updateState( stateIdentifier , newValue ):
     global gSocket

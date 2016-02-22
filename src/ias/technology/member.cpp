@@ -24,6 +24,8 @@
 
 // System dependencies.
 #include <cassert>
+#include <string>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/technology/member.h>

@@ -44,6 +44,7 @@ void TaskDeviceUpdate::setDeviceUpdateData( const struct device_update * d ) {
     assert( d != nullptr );
 
     mData.mDevice = d->mDevice;
+    mData.mMemberId = d->mMemberId;
     mData.mStateIdentifier = d->mStateIdentifier;
     mData.mValue = d->mValue;
     mData.mTimestamp = d->mTimestamp;
@@ -72,7 +73,6 @@ void TaskDeviceUpdate::execute( void ) {
             "" + std::to_string(mData.mMemberId) + "," +
             std::to_string(mData.mTimestamp) + "," +
             "\"" + mData.mValue + "\")";
-    std::cout << "Query: " << query << std::endl;
     statement = mDbConnection->createStatement(query);
     if( statement != nullptr ) {
         result = statement->execute();
