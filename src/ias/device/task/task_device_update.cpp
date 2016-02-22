@@ -72,6 +72,7 @@ void TaskDeviceUpdate::execute( void ) {
             "" + std::to_string(mData.mMemberId) + "," +
             std::to_string(mData.mTimestamp) + "," +
             "\"" + mData.mValue + "\")";
+    std::cout << "Query: " << query << std::endl;
     statement = mDbConnection->createStatement(query);
     if( statement != nullptr ) {
         result = statement->execute();
