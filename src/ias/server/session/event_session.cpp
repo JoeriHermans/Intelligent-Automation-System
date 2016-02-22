@@ -128,11 +128,14 @@ void EventSession::validateApiKey( const std::string & key ) {
     // Checking the precondition.
     assert( key.length() > 0 );
 
-    if( mDbConnection->isConnected() ) {
+    if( mDbConnection->isConnected() && key.length() <= 50 ) {
         // Query is safe, because it has been hashed.
         std::string sql = "SELECT user_id, expires "
                           "FROM api_keys "
-                          "WHERE api_keys.key = '" + key + "';";
+                          "WHERE api_keys.key = '" + key + "' "
+                          "AND api_keys.expires <= NOW() "
+                          "OR api_keys.key = '" + key + "' "
+                          "AND api_keys.expires = 0;";
         statement = mDbConnection->createStatement(sql);
         if( statement != nullptr ) {
             result = statement->execute();
