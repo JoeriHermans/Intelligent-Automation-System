@@ -144,7 +144,7 @@ std::size_t Device::set( const std::string & key , const std::string & value ) {
         if( member->getValueType()->matches(value) ) {
             logi("Updating state of " + mIdentifier + " => " + key + " = " + value);
             mState[key] = value;
-            dUpdate.mMemberId = static_cast<std::size_t>(member->getId());
+            dUpdate.mMemberId = member->getId();
             dUpdate.mDevice = this;
             dUpdate.mStateIdentifier = key;
             dUpdate.mValue = value;
