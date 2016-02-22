@@ -28,7 +28,7 @@
 // System dependencies.
 #include <ctime>
 #include <string>
-#include <cstddef>
+#include <cassert>
 
 // Application dependencies.
 #include <ias/device/device.h>
