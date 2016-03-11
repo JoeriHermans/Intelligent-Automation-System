@@ -95,14 +95,17 @@ std::string CommandDeviceDetail::execute( User * user, const std::string & param
     // Checking the precondition.
     assert( user != nullptr );
 
-    if( isNumber(parameters) ) {
-        std::size_t id = std::stoull(parameters,nullptr,0);
-        d = mDevices->get(id);
-    } else {
-        d = mDevices->get(parameters);
+    // Check if a parameter is available.
+    if( !parameters.empty() && parameters.size() <= 80 ) {
+        if( isNumber(parameters) ) {
+            std::size_t id = std::stoull(parameters,nullptr,0);
+            d = mDevices->get(id);
+        } else {
+            d = mDevices->get(parameters);
+        }
+        if( d != nullptr )
+            buildResponse(d,response);
     }
-    if( d != nullptr )
-        buildResponse(d,response);
     if( response.empty() )
         response = kProtocolNack;
 
