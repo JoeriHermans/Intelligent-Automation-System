@@ -191,6 +191,12 @@ void Controller::removeDevice( Device * device ) {
     mMutexDevices.unlock();
 }
 
+void Controller::removeDevices( void ) {
+    mMutexDevices.lock();
+    mDevices.clear();
+    mMutexDevices.unlock();
+}
+
 bool Controller::containsDevice( const Device * device ) const {
     bool contains;
 

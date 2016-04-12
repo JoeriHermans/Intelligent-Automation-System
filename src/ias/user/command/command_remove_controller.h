@@ -73,6 +73,12 @@ class CommandRemoveController : public Command {
 
     void removeController( Controller * controller );
 
+    inline void setControllers( Container<Controller *> * controllers );
+
+    inline void setDevices( Container<Device *> * devices );
+
+    inline void setRules( Container<Rule *> * rules );
+
     // END Private methods. //////////////////////////////////////////
 
     protected:
@@ -84,7 +90,9 @@ class CommandRemoveController : public Command {
 
     // BEGIN Constructors. ///////////////////////////////////////////
 
-    CommandRemoveController( void );
+    CommandRemoveController( Container<Controller *> * controllers,
+                             Container<Device *> * devices,
+                             Container<Rule *> * rules );
 
     // END Constructors. /////////////////////////////////////////////
 

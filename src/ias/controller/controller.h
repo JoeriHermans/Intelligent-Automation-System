@@ -248,6 +248,16 @@ class Controller : public Identifiable {
     void removeDevice( Device * device );
 
     /**
+     * Removes all devices associated with this controller.
+     *
+     * @post    The device list which this controller holds will be empty.
+     * @note    This method will not remove the rules associated with the
+     *          contained devices and it will not remove them from any device
+     *          container.
+     */
+    void removeDevices( void );
+
+    /**
      * Checks if the specified device is associated with the controller.
      *
      * @param   device

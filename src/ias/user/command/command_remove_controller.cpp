@@ -44,19 +44,57 @@ void CommandRemoveController::removeDevices( const Controller * controller ) {
     // Checking the precondition.
     assert( controller != nullptr );
 
-    mControllers = nullptr;
+    // Fetch all devices from the controller.
+    const std::vector<const Device *> devices = controller->getDevices();
+    // Remove every associated device from the container.
 }
 
 void CommandRemoveController::removeController( Controller * controller ) {
+    Socket * socket;
+
     // Checking the precondition.
     assert( controller != nullptr );
 
-    // TODO Implement.
+    // Remove the controller from the container.
+    mControllers->remove(controller);
+    // Check if a remote connection with the controller has been established.
+    if( controller->isConnected() ) {
+        socket = controller->getSocket();
+        socket->closeConnection();
+    }
 }
 
-CommandRemoveController::CommandRemoveController( void ) :
+inline void CommandRemoveController::setControllers(
+        Container<Controller *> * controllers ) {
+    // Checking the precondition.
+    assert( controllers != nullptr );
+
+    mControllers = controllers;
+}
+
+inline void CommandRemoveController::setDevices(
+        Container<Device *> * devices ) {
+    // Checking the precondition.
+    assert( devices != nullptr );
+
+    mDevices = devices;
+}
+
+inline void CommandRemoveController::setRules( Container<Rule *> * rules ) {
+    // Checking the precondition.
+    assert( rules != nullptr );
+
+    mRules = rules;
+}
+
+CommandRemoveController::CommandRemoveController(
+        Container<Controller *> * controllers,
+        Container<Device *> * devices,
+        Container<Rule *> * rules ) :
     Command(kIdentifier) {
-    // TODO Implement.
+    setControllers(controllers);
+    setDevices(devices);
+    setRules(rules);
 }
 
 std::string CommandRemoveController::execute( User * user,
