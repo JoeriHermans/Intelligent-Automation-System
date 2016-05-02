@@ -1,5 +1,5 @@
-CC = g++
-LD = g++
+CC = clang
+LD = clang
 
 SHELL = bash
 MODULES = ai application building controller d
