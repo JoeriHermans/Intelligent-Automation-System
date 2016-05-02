@@ -58,7 +58,7 @@ namespace ias {
 
     console_logger::console_logger(void) {
         initialize();
-        spawn_threadpool(2);
+        spawn_threadpool(1);
     }
 
     console_logger::console_logger(const std::size_t numThreads) {
