@@ -51,32 +51,60 @@ namespace ias {
     }
 
     std::size_t posix_tcp_socket_writer::write_byte(const char byte) {
-        std::size_t n;
+        int nBytes;
         int fd;
 
+        nBytes = 0;
         if(mSocket->is_connected()) {
             fd = mSocket->get_file_descriptor();
-            n = static_cast<std::size_t>(write(fd, &byte, 1));
-        } else {
-            n = 0;
+            nBytes = write(fd, &byte, 1);
+            if(nBytes < 0) {
+                mSocket->close_connection();
+                nBytes = 0;
+            }
         }
 
-        return n;
+        return static_cast<std::size_t>(nBytes);
     }
 
     std::size_t posix_tcp_socket_writer::write_bytes(const char * bytes,
                                                      const std::size_t bufferSize) {
-        std::size_t n;
+        int nBytes;
         int fd;
 
+        nBytes = 0;
         if(mSocket->is_connected()) {
             fd = mSocket->get_file_descriptor();
-            n = static_cast<std::size_t>(write(fd, bytes, bufferSize));
-        } else {
-            n = 0;
+            nBytes = write(fd, bytes, bufferSize);
+            if(nBytes < 0) {
+                mSocket->close_connection();
+                nBytes = 0;
+            }
         }
 
-        return n;
+        return static_cast<std::size_t>(nBytes);
+    }
+
+    std::size_t posix_tcp_socket_writer::write_all(const char * buffer,
+                                                   const std::size_t bufferSize) {
+        int nBytes;
+        int writtenSum;
+        int fd;
+
+        writtenSum = 0;
+        if(mSocket->is_connected()) {
+            fd = mSocket->get_file_descriptor();
+            while(writtenSum != bufferSize && mSocket->is_connected()) {
+                nBytes = write(fd, buffer + writtenSum, bufferSize - writtenSum);
+                if(nBytes < 0) {
+                    mSocket->close_connection();
+                } else {
+                    writtenSum += nBytes;
+                }
+            }
+        }
+
+        return static_cast<std::size_t>(writtenSum);
     }
 
 };

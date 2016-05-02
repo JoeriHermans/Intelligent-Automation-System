@@ -84,6 +84,8 @@ class reader {
     virtual std::size_t read_bytes(char * buffer,
                                    const std::size_t bufferSize) = 0;
 
+    virtual std::size_t read_all(char * buffer, const std::size_t bufferSize) = 0;
+
     virtual void lock(void) {
         mLock.lock();
     }

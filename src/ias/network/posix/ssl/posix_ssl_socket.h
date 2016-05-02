@@ -1,8 +1,8 @@
 /**
- * An abstract of a writer which is responsible for reading bytes
- * from a more specific implementation.
+ * A class which describes the properties and actions of a
+ * POSIX SSL socket.
  *
- * @date                    28 04 2016
+ * @date                    02 05 2016
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -24,16 +24,22 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <mutex>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+// Application dependencies.
+#include <ias/io/reader/reader.h>
+#include <ias/io/writer/writer.h>
+#include <ias/network/socket.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-#ifndef IAS_WRITER_H_
-#define IAS_WRITER_H_
+#ifndef IAS_POSIX_SSL_SOCKET_H_
+#define IAS_POSIX_SSL_SOCKET_H_
 
 namespace ias {
 
-class writer {
+class posix_ssl_socket : public socket {
 
     public:
 
@@ -45,14 +51,45 @@ class writer {
     // BEGIN Private members. ////////////////////////////////////////////////
 
     /**
-     * Hold the mutex which allows the writer to do async I/O an behalf of
-     * a thread which requested it.
+     * Holds the SSL objects which is associated with this socket.
+     *
+     * @note By default, this object will be equal to the null reference.
      */
-    std::mutex mLock;
+    mutable SSL * mSsl;
+
+    /**
+     * Holds the SSL context of the socket.
+     *
+     * @note By default, this object will be equal to the null reference.
+     */
+    SSL_CTX * mSslContext;
+
+    /**
+     * Holds a pointer to the writer and reader which are responsible for
+     * reading and writing bytes to or from the socket.
+     *
+     * @note By default, these members will be equal to the null reference.
+     */
+    ias::reader * mReader;
+    ias::writer * mWriter;
 
     // END Private members. //////////////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////////////
+
+    inline void initialize(void);
+
+    void set_ssl_environment(SSL * ssl);
+
+    void set_ssl_context(SSL_CTX * context);
+
+    bool initialize_connection(const std::string & address,
+                               const std::size_t port);
+
+    void poll_socket(void) const;
+
+    void shutdown_connection(void) const;
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:
@@ -64,35 +101,34 @@ class writer {
 
     // BEGIN Constructor. ////////////////////////////////////////////////////
 
-    writer(void) = default;
+    posix_ssl_socket(SSL_CTX * sslContext);
+
+    posix_ssl_socket(SSL * ssl);
 
     // END Constructor. //////////////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////////////
 
-    virtual ~writer(void) = default;
+    virtual ~posix_ssl_socket(void);
 
     // END Destructor. ///////////////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual void close_writer(void) = 0;
+    virtual void close_connection(void);
 
-    virtual std::size_t write_byte(const char byte) = 0;
+    virtual bool is_connected(void) const;
 
-    virtual std::size_t write_bytes(const char * buffer,
-                                    const std::size_t bufferSize) = 0;
+    virtual bool create_connection(const std::string & address,
+                                   const std::size_t port);
 
-    virtual std::size_t write_all(const char * buffer,
-                                  const std::size_t bufferSize) = 0;
+    virtual ias::reader * get_reader(void) const;
 
-    virtual void lock(void) {
-        mLock.lock();
-    }
+    virtual ias::writer * get_writer(void) const;
 
-    virtual void unlock(void) {
-        mLock.unlock();
-    }
+    virtual void set_receive_timeout(const struct timeval & tv);
+
+    virtual void set_send_timeout(const struct timeval & tv);
 
     // END Public methods. ///////////////////////////////////////////////////
 

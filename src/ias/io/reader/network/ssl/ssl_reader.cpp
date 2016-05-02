@@ -1,7 +1,9 @@
 /**
- * A reader which is able to read bytes from a POSIX TCP socket.
+ * A class which describes the properties and actions of an SSL
+ * reader. Furthermore, this class' main objective is to read
+ * encrypted bytes from the SSL socket.
  *
- * @date                    28 04 2016
+ * @date                    02 05 2016
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -24,41 +26,47 @@
 
 // System dependencies.
 #include <cassert>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <cerrno>
 
 // Application dependencies.
-#include <ias/network/posix/posix_tcp_socket.h>
-#include <ias/io/reader/network/posix/posix_tcp_socket_reader.h>
+#include <ias/io/reader/network/ssl/ssl_reader.h>
+#include <ias/io/reader/reader.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 namespace ias {
 
-    void posix_tcp_socket_reader::set_socket(ias::posix_tcp_socket * socket) {
+    void ssl_reader::set_socket(ias::socket * socket) {
         // Checking the precondition.
         assert(socket != nullptr);
 
         mSocket = socket;
     }
 
-    posix_tcp_socket_reader::posix_tcp_socket_reader(ias::posix_tcp_socket * socket) {
-        set_socket(socket);
+    void ssl_reader::set_ssl_environment(SSL * ssl) {
+        // Checking the precondition.
+        assert(ssl != nullptr);
+
+        mSsl = ssl;
     }
 
-    void posix_tcp_socket_reader::close_reader(void) {
+    ssl_reader::ssl_reader(ias::socket * socket, SSL * ssl) {
+        set_socket(socket);
+        set_ssl_environment(ssl);
+    }
+
+    void ssl_reader::close_reader(void) {
         mSocket->close_connection();
     }
 
-    std::size_t posix_tcp_socket_reader::read_byte(char * byte) {
+    std::size_t ssl_reader::read_byte(char * byte) {
         int nBytes;
-        int fd;
+
+        // Checking the precondition.
+        assert(byte != nullptr);
 
         nBytes = 0;
         if(mSocket->is_connected()) {
-            fd = mSocket->get_file_descriptor();
-            nBytes = read(fd, byte, 1);
+            nBytes = SSL_read(mSsl, byte, 1);
             if(nBytes < 0) {
                 mSocket->close_connection();
                 nBytes = 0;
@@ -68,15 +76,16 @@ namespace ias {
         return static_cast<std::size_t>(nBytes);
     }
 
-    std::size_t posix_tcp_socket_reader::read_bytes(char * buffer,
-                                                    const std::size_t bufferSize) {
+    std::size_t ssl_reader::read_bytes(char * buffer,
+                                       const std::size_t bufferSize) {
         int nBytes;
-        int fd;
+
+        // Checking the precondition.
+        assert(buffer != nullptr && bufferSize > 0);
 
         nBytes = 0;
         if(mSocket->is_connected()) {
-            fd = mSocket->get_file_descriptor();
-            nBytes = read(fd, buffer, bufferSize);
+            nBytes = SSL_read(mSsl, buffer, bufferSize);
             if(nBytes < 0) {
                 mSocket->close_connection();
                 nBytes = 0;
@@ -86,26 +95,24 @@ namespace ias {
         return static_cast<std::size_t>(nBytes);
     }
 
-    std::size_t posix_tcp_socket_reader::read_all(char * buffer,
-                                                  const std::size_t bufferSize) {
+    std::size_t ssl_reader::read_all(char * buffer,
+                                     const std::size_t bufferSize) {
         int writtenSum;
         int nBytes;
-        int fd;
+
+        // Checking the precondition.
+        assert(buffer != nullptr && bufferSize > 0);
 
         writtenSum = 0;
-        if(mSocket->is_connected()) {
-            fd = mSocket->get_file_descriptor();
-            while(writtenSum != bufferSize && mSocket->is_connected()) {
-                nBytes = read(fd, buffer + writtenSum, bufferSize - writtenSum);
-                if(nBytes < 0) {
-                    mSocket->close_connection();
-                } else {
-                    writtenSum += nBytes;
-                }
-            }
+        while(writtenSum != bufferSize && mSocket->is_connected()) {
+            nBytes = SSL_read(mSsl, buffer + writtenSum, bufferSize - writtenSum);
+            if(nBytes < 0)
+                mSocket->close_connection();
+            else
+                writtenSum += nBytes;
         }
 
-        return static_cast<std::size_t>(writtenSum);
+        return static_cast<std::size_t>(nBytes);
     }
 
 };

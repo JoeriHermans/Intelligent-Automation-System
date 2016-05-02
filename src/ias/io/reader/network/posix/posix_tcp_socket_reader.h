@@ -85,6 +85,9 @@ class posix_tcp_socket_reader : public reader {
     virtual std::size_t read_bytes(char * buffer,
                                    const std::size_t bufferSize);
 
+    virtual std::size_t read_all(char * buffer,
+                                 const std::size_t bufferSize);
+
     // END Public methods. ///////////////////////////////////////////////////
 
     // BEGIN Public static methods. //////////////////////////////////////////

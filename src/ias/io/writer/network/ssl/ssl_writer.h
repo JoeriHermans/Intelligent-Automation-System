@@ -1,8 +1,8 @@
 /**
- * An abstract of a writer which is responsible for reading bytes
- * from a more specific implementation.
+ * Describes the properties and actions of a class which is
+ * responsible for reading bytes from an SSL socket.
  *
- * @date                    28 04 2016
+ * @date                    02 05 2016
  * @author                  Joeri HERMANS
  * @version                 0.1
  *
@@ -24,16 +24,21 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <mutex>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+// Application dependencies.
+#include <ias/network/socket.h>
+#include <ias/io/writer/writer.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-#ifndef IAS_WRITER_H_
-#define IAS_WRITER_H_
+#ifndef IAS_SSL_WRITER_H_
+#define IAS_SSL_WRITER_H_
 
 namespace ias {
 
-class writer {
+class ssl_writer : public writer {
 
     public:
 
@@ -45,14 +50,23 @@ class writer {
     // BEGIN Private members. ////////////////////////////////////////////////
 
     /**
-     * Hold the mutex which allows the writer to do async I/O an behalf of
-     * a thread which requested it.
+     * Holds the socket to which we will be writing.
      */
-    std::mutex mLock;
+    ias::socket * mSocket;
+
+    /**
+     * Holds the SSL object to which we will be writing raw, unencrypted bytes.
+     */
+    SSL * mSsl;
 
     // END Private members. //////////////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////////////
+
+    void set_socket(ias::socket * socket);
+
+    void set_ssl_environment(SSL * ssl);
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:
@@ -64,35 +78,27 @@ class writer {
 
     // BEGIN Constructor. ////////////////////////////////////////////////////
 
-    writer(void) = default;
+    ssl_writer(ias::socket * socket, SSL * ssl);
 
     // END Constructor. //////////////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////////////
 
-    virtual ~writer(void) = default;
+    virtual ~ssl_writer(void) = default;
 
     // END Destructor. ///////////////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual void close_writer(void) = 0;
+    virtual void close_writer(void);
 
-    virtual std::size_t write_byte(const char byte) = 0;
+    virtual std::size_t write_byte(const char byte);
 
     virtual std::size_t write_bytes(const char * buffer,
-                                    const std::size_t bufferSize) = 0;
+                                    const std::size_t bufferSize);
 
     virtual std::size_t write_all(const char * buffer,
-                                  const std::size_t bufferSize) = 0;
-
-    virtual void lock(void) {
-        mLock.lock();
-    }
-
-    virtual void unlock(void) {
-        mLock.unlock();
-    }
+                                  const std::size_t bufferSize);
 
     // END Public methods. ///////////////////////////////////////////////////
 

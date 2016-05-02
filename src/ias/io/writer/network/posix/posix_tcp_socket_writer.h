@@ -84,7 +84,10 @@ class posix_tcp_socket_writer : public writer {
     virtual std::size_t write_byte(const char byte);
 
     virtual std::size_t write_bytes(const char * buffer,
-                             const std::size_t bufferSize);
+                                    const std::size_t bufferSize);
+
+    virtual std::size_t write_all(const char * buffer,
+                                  const std::size_t bufferSize);
 
     // END Public methods. ///////////////////////////////////////////////////
 

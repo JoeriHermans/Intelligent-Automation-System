@@ -128,11 +128,25 @@ namespace ias {
     }
 
     ias::reader * posix_tcp_socket::get_reader(void) const {
-        return mReader;
+        ias::reader * reader;
+
+        if(is_connected())
+            reader = mReader;
+        else
+            reader = nullptr;
+
+        return reader;
     }
 
     ias::writer * posix_tcp_socket::get_writer(void) const {
-        return mWriter;
+        ias::writer * writer;
+
+        if(is_connected())
+            writer = mWriter;
+        else
+            writer = nullptr;
+
+        return writer;
     }
 
     void posix_tcp_socket::set_send_timeout(const struct timeval & tv) {
