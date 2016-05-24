@@ -68,6 +68,7 @@ extern const char kConfigSocksPort[];
 
 extern const char kDefaultServerAddress[];
 extern const std::size_t kDefaultControllerServerPort;
+extern const std::size_t kDefaultControllerServerSslPort;
 extern const std::size_t kDefaultDeviceServerPort;
 extern const std::size_t kDefaultUserServerPort;
 extern const std::size_t kDefaultUserServerPortSsl;
@@ -91,6 +92,7 @@ extern const char kFlagPort[];
 extern const char kFlagServer[];
 extern const char kFlagSocks[];
 extern const char kFlagSsl[];
+extern const char kFlagVersion[];
 
 // END Flags. ////////////////////////////////////////////////////////
 
@@ -98,8 +100,6 @@ extern const char kFlagSsl[];
 
 extern const char kOffline[];
 extern const char kOnline[];
-extern const char kProtocolAck[];
-extern const char kProtocolNack[];
 extern const char kVersion[];
 
 // END Others. ///////////////////////////////////////////////////////

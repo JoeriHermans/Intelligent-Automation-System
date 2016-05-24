@@ -37,6 +37,8 @@ namespace ias {
 
     int flag_index(const int argc, const char ** argv, const char * flag);
 
+    std::string get_ias_version(void);
+
     std::string sha256(const std::string & str,
                        const std::string & preSalt,
                        const std::string & postSalt);

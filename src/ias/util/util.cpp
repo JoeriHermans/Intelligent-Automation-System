@@ -37,6 +37,7 @@
 #include <openssl/sha.h>
 
 // Application dependencies.
+#include <ias/application/constants.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -65,6 +66,10 @@ namespace ias {
         }
 
         return specified;
+    }
+
+    std::string get_ias_version(void) {
+        return kVersion;
     }
 
     int flag_index(const int argc, const char ** argv, const char * flag) {

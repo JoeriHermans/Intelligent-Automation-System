@@ -27,12 +27,40 @@
 
 int main(const int argc, const char ** argv);
 
+bool requested_client(const int argc, const char ** argv);
+
+bool requested_controller(const int argc, const char ** argv);
+
+bool requested_eventstream(const int argc, const char ** argv);
+
+bool requested_generate_hash(const int argc, const char ** argv);
+
+bool requested_server(const int argc, const char ** argv);
+
+bool requested_version(const int argc, const char ** argv);
+
+void cleanup_logger(void);
+
+void cleanup_ssl(void);
+
+void display_logo(void);
+
 void initialize_random_number_generator(void);
 
 void initialize_ssl(void);
 
-void cleanup_logger(void);
+void run_application(const int argc, const char ** argv);
 
-void display_logo(void);
+void show_version(void);
+
+void start_client(const int argc, const char ** argv);
+
+void start_controller(const int argc, const char ** argv);
+
+void start_eventstream(const int argc, const char ** argv);
+
+void start_generate_hash(const int argc, const char ** argv);
+
+void start_server(const int argc, const char ** argv);
 
 void usage(void);
