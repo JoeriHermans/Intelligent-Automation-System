@@ -24,17 +24,36 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// Application dependencies.
-#include <ias/main.h>
-
 // System dependencies.
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
+#include <openssl/conf.h>
+#include <openssl/engine.h>
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+// Application dependencies.
+#include <ias/main.h>
+#include <ias/application/constants.h>
+#include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 int main(const int argc, const char ** argv) {
-    // TODO Implement.
+    // Initialize dependencies.
+    initiailze_rnadom_number_generator();
+    initialize_ssl();
 
     return EXIT_SUCCESS;
+}
+
+void initialize_random_number_generator(void) {
+    srand(static_cast<unsigned int>(time(0)));
+}
+
+void initialize_ssl(void) {
+
 }

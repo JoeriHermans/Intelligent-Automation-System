@@ -95,7 +95,7 @@ class controller {
 
     void set_id(const std::size_t id);
 
-    void set_devices(const std::vector<ias::device *> & devices);
+    void set_devices(const std::vector<ias::device *> & devices);f
 
     // END Private methods. //////////////////////////////////////////////////
 

@@ -27,4 +27,12 @@
 
 int main(const int argc, const char ** argv);
 
+void initialize_random_number_generator(void);
+
+void initialize_ssl(void);
+
+void cleanup_logger(void);
+
+void display_logo(void);
+
 void usage(void);
