@@ -159,7 +159,7 @@ void usage(void) {
     std::cout << std::endl;
     std::cout << "Basic usage: ias [mode] [options]" << std::endl << std::endl;
     std::cout << "  ias --server                         Run IAS in server mode." << std::endl;
-    std::cout << "  ias --client --server <server>       Command the remote IAS server." << std::endl;
+    std::cout << "  ias --client --address <server>      Command the remote IAS server." << std::endl;
     std::cout << "  ias --controller --config <path>     Run IAS in controller mode." << std::endl;
     std::cout << "  ias --eventstream --key <API key>    Display an eventstream." << std::endl;
     std::cout << std::endl;
