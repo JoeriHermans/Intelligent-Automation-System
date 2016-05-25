@@ -5,7 +5,7 @@ SHELL = bash
 MODULES = ai application building controller d
 LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx -o ias
 CCFLAGS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L -I"src/" \
- 		 -I/usr/include/eigen3 -I/usr/local/include/mysql \
+ 		 -I/usr/local/include/mysql \
 		 -I/usr/include/mysql -O3 -Wno-vla-extension -Wno-vla -Wno-sign-conversion \
 		 -Wno-global-constructors -Wno-float-equal -Wno-unused-parameter \
 		 -Wno-padded -Wno-weak-vtables -Wno-c++98-compat -emit-llvm -Werror \
