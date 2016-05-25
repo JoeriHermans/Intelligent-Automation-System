@@ -38,6 +38,7 @@
 // Application dependencies.
 #include <ias/main.h>
 #include <ias/application/constants.h>
+#include <ias/application/client/client_application.h>
 #include <ias/logger/logger.h>
 #include <ias/util/util.h>
 
@@ -108,8 +109,11 @@ bool requested_version(const int argc, const char ** argv) {
 }
 
 void start_client(const int argc, const char ** argv) {
-    // TODO Add client-startup.
+    ias::client_application app(argc, argv);
+
     display_logo();
+    std::cout << std::endl << std::flush;
+    app.run();
 }
 
 void start_controller(const int argc, const char ** argv) {

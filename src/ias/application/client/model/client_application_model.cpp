@@ -276,6 +276,10 @@ namespace ias {
         return mSocket != nullptr && mSocket->is_connected();
     }
 
+    bool client_application_model::logged_in(void) const {
+        return mLoggedIn;
+    }
+
     void client_application_model::create_connection(const std::string & host,
                                                      const std::size_t port) {
         int fd;
