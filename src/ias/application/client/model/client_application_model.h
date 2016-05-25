@@ -36,6 +36,7 @@
 
 // Application dependencies.
 #include <ias/network/socket.h>
+#include <ias/network/network_util.h>
 #include <ias/util/observable.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -78,6 +79,13 @@ class client_application_model : public observable {
     bool mLoggedIn;
 
     /**
+     * SSL context of the client application.
+     *
+     * @note By default, this flag will be equal to the null reference.
+     */
+    SSL_CTX * mSslContext;
+
+    /**
      * Threads which are responsible for handling the client / server
      * communication. I've chosen for this type of handling because the IAS
      * server software regurally sends heartbeats in order to check if the
@@ -114,7 +122,25 @@ class client_application_model : public observable {
 
     inline void initialize(void);
 
+    void initialize_connection(const int fd);
+
+    void process_receive_thread(void);
+
+    void process_send_thread(void);
+
+    void read_response(void);
+
+    void read_responses(void);
+
+    void send_command(const std::string & command);
+
+    void send_heartbeat(void);
+
     void set_socket_timeouts(void);
+
+    void start_communication_threads(void);
+
+    void stop_communication_threads(void);
 
     // END Private methods. //////////////////////////////////////////////////
 
@@ -138,6 +164,25 @@ class client_application_model : public observable {
     // END Destructor. ///////////////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////////////
+
+    void request_ssl(const bool flag);
+
+    bool ssl_requested(void) const;
+
+    void close_connection(void);
+
+    bool is_connected(void) const;
+
+    void create_connection(const std::string & host, const std::size_t port);
+
+    void create_connection(const std::string & host, const std::size_t port,
+                           const std::string & socksHost, const std::size_t socksPort);
+
+    void execute(const std::string & command);
+
+    void authorize(const std::string & username,
+                   const std::string & password);
+
     // END Public methods. ///////////////////////////////////////////////////
 
     // BEGIN Public static methods. //////////////////////////////////////////

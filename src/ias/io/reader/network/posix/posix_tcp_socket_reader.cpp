@@ -88,24 +88,25 @@ namespace ias {
 
     std::size_t posix_tcp_socket_reader::read_all(char * buffer,
                                                   const std::size_t bufferSize) {
-        int writtenSum;
+        std::size_t readSum;
         int nBytes;
         int fd;
 
-        writtenSum = 0;
+        readSum = 0;
+        nBytes = 0;
         if(mSocket->is_connected()) {
             fd = mSocket->get_file_descriptor();
-            while(writtenSum != bufferSize && mSocket->is_connected()) {
-                nBytes = read(fd, buffer + writtenSum, bufferSize - writtenSum);
+            while(readSum != bufferSize && mSocket->is_connected()) {
+                nBytes = read(fd, buffer + readSum, bufferSize - readSum);
                 if(nBytes < 0) {
                     mSocket->close_connection();
                 } else {
-                    writtenSum += nBytes;
+                    readSum += static_cast<std::size_t>(nBytes);
                 }
             }
         }
 
-        return static_cast<std::size_t>(writtenSum);
+        return readSum;
     }
 
 };

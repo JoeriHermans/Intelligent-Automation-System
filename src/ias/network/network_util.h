@@ -36,9 +36,9 @@ namespace ias {
 int connect(const std::string & address, const std::size_t port);
 
 int connect_to_socks(const std::string & proxyAddress,
-                     const std::size_t & proxyPort,
+                     const std::size_t proxyPort,
                      const std::string & address,
-                     const std::size_t & port);
+                     const std::size_t port);
 
 bool enable_keep_alive(const int fd);
 

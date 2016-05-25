@@ -109,6 +109,7 @@ bool requested_version(const int argc, const char ** argv) {
 
 void start_client(const int argc, const char ** argv) {
     // TODO Add client-startup.
+    display_logo();
 }
 
 void start_controller(const int argc, const char ** argv) {

@@ -97,22 +97,23 @@ namespace ias {
 
     std::size_t ssl_reader::read_all(char * buffer,
                                      const std::size_t bufferSize) {
-        int writtenSum;
+        std::size_t readSum;
         int nBytes;
 
         // Checking the precondition.
         assert(buffer != nullptr && bufferSize > 0);
 
-        writtenSum = 0;
-        while(writtenSum != bufferSize && mSocket->is_connected()) {
-            nBytes = SSL_read(mSsl, buffer + writtenSum, bufferSize - writtenSum);
+        readSum = 0;
+        nBytes = 0;
+        while(readSum != bufferSize && mSocket->is_connected()) {
+            nBytes = SSL_read(mSsl, buffer + readSum, bufferSize - readSum);
             if(nBytes < 0)
                 mSocket->close_connection();
             else
-                writtenSum += nBytes;
+                readSum += static_cast<std::size_t>(nBytes);
         }
 
-        return static_cast<std::size_t>(nBytes);
+        return readSum;
     }
 
 };

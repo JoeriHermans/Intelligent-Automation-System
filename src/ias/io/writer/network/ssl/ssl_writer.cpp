@@ -89,7 +89,7 @@ namespace ias {
 
     std::size_t ssl_writer::write_all(const char * buffer,
                                      const std::size_t bufferSize) {
-        int writtenSum;
+        std::size_t writtenSum;
         int nBytes;
 
         writtenSum = 0;
@@ -99,10 +99,10 @@ namespace ias {
             if(nBytes < 0)
                 mSocket->close_connection();
             else
-                writtenSum += nBytes;
+                writtenSum += static_cast<std::size_t>(nBytes);
         }
 
-        return static_cast<std::size_t>(writtenSum);
+        return writtenSum;
     }
 
 };
