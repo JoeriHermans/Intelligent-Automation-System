@@ -75,12 +75,12 @@ namespace ias {
         std::cout << "> " << message << std::endl << std::flush;
     }
 
-    void console_client_application_view::connect_and_authorize(const std::string & username,
-                                                                const std::string & password) {
-        // Checking the precondition.
-        assert(!username.empty() && !password.empty());
-
-        // TODO Implement.
+    void console_client_application_view::connect(void) {
+        // Check if a SOCKS connection is requested.
+        if(mSocksPort != 0)
+            mModel->create_connection(mHost, mPort, mSocksHost, mSocksPort);
+        else
+            mModel->create_connection(mHost, mPort);
     }
 
     void console_client_application_view::set_host(const int argc, const char ** argv) {
@@ -88,8 +88,8 @@ namespace ias {
         assert(argc > 1 && argv != nullptr);
 
         int index = ias::flag_index(argc, argv, kFlagAddress);
-        if(index != -1)
-            mHost = argv[index];
+        if(index != -1 && (index + 1) < argc)
+            mHost = argv[index + 1];
     }
 
     void console_client_application_view::set_port(const int argc, const char ** argv) {
@@ -97,8 +97,8 @@ namespace ias {
         assert(argc > 1 && argv != nullptr);
 
         int index = ias::flag_index(argc, argv, kFlagPort);
-        if(index != -1)
-            mPort = static_cast<std::size_t>(std::stoi(argv[index]));
+        if(index != -1 && (index + 1) < argc)
+            mPort = static_cast<std::size_t>(std::stoi(argv[index + 1]));
     }
 
     void console_client_application_view::set_ssl(const int argc, const char ** argv) {
@@ -117,10 +117,10 @@ namespace ias {
         assert(argc > 1 && argv != nullptr);
 
         int index = ias::flag_index(argc, argv, kFlagSocks);
-        if(index == -1)
+        if(index == -1 || index == argc)
             return;
 
-        std::istringstream iss(argv[index]);
+        std::istringstream iss(argv[index + 1]);
         std::string address;
         std::string strPort;
         std::size_t port;
@@ -149,6 +149,13 @@ namespace ias {
 
     void console_client_application_view::paint(void) {
         print_message(kMessageConnecting);
+        connect();
+        if(mModel->is_connected()) {
+            print_message(kMessageConnected);
+            // TODO Implement.
+        } else {
+            print_message(kMessageNotConnected);
+        }
     }
 
     void console_client_application_view::update(void) {

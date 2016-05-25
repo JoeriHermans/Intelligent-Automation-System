@@ -107,8 +107,7 @@ class console_client_application_view : public view {
 
     void print_message(const std::string & message) const;
 
-    void connect_and_authorize(const std::string & username,
-                               const std::string & password);
+    void connect(void);
 
     void set_host(const int argc, const char ** argv);
 
