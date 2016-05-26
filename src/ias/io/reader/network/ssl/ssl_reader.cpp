@@ -68,7 +68,6 @@ namespace ias {
         if(mSocket->is_connected()) {
             nBytes = SSL_read(mSsl, byte, 1);
             if(nBytes < 0) {
-                mSocket->close_connection();
                 nBytes = 0;
             }
         }
@@ -87,7 +86,6 @@ namespace ias {
         if(mSocket->is_connected()) {
             nBytes = SSL_read(mSsl, buffer, bufferSize);
             if(nBytes < 0) {
-                mSocket->close_connection();
                 nBytes = 0;
             }
         }

@@ -109,12 +109,13 @@ namespace ias {
         // Checking the precondition.
         assert(mModel->is_connected());
 
+        print(kMessageShell);
         while(mModel->is_connected()) {
-            print(kMessageShell);
             std::getline(std::cin, command);
             if(mModel->is_connected() && !command.empty()) {
-                mModel->execute(command);
-                if(command == ias::client_application_model::kCommandQuit)
+                if(command != ias::client_application_model::kCommandQuit)
+                    mModel->execute(command);
+                else
                     break;
             }
         }
@@ -240,9 +241,11 @@ namespace ias {
     }
 
     void console_client_application_view::update(void * argument) {
-        std::cout << "response" << std::endl;
+        const char * message = static_cast<const char *>(argument);
 
-        print(kMessageShell);
+        std::cout << message << std::endl << std::endl << std::flush;
+        std::cout << kMessageShell << std::flush;
+
     }
 
 };

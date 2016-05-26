@@ -31,6 +31,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <iostream>
 #include <poll.h>
 #include <netdb.h>
 #include <errno.h>

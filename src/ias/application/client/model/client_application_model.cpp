@@ -78,8 +78,9 @@ namespace ias {
     }
 
     void client_application_model::process_receive_thread(void) {
-        while(mSocket->is_connected())
+        while(mSocket->is_connected()) {
             read_responses();
+        }
     }
 
     void client_application_model::process_send_thread(void) {
@@ -141,17 +142,16 @@ namespace ias {
         reader = mSocket->get_reader();
         // Declare the undefined message type.
         type = 0xff;
-        if(reader->read_byte(reinterpret_cast<char *>(&type)) == 1) {
+        if(reader->read_bytes(reinterpret_cast<char *>(&type), 1) == 1) {
             switch(type) {
             case 0x00:
-                std::cout << "heartbeat received" << std::endl;
                 send_heartbeat();
                 break;
             case 0x01:
                 read_response();
                 break;
-            default:
-                close_connection();
+            case 0xff:
+                mSocket->close_connection();
                 break;
             }
         }
@@ -189,7 +189,7 @@ namespace ias {
 
         writer = mSocket->get_writer();
         writer->lock();
-        writer->write_bytes(reinterpret_cast<const char *>(beat_type), 1);
+        writer->write_bytes(reinterpret_cast<const char *>(&beat_type), 1);
         writer->unlock();
     }
 

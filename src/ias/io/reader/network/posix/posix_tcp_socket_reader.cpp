@@ -1,3 +1,4 @@
+
 /**
  * A reader which is able to read bytes from a POSIX TCP socket.
  *
@@ -25,6 +26,8 @@
 // System dependencies.
 #include <cassert>
 #include <unistd.h>
+#include <iostream>
+#include <cstring>
 #include <sys/socket.h>
 #include <cerrno>
 
@@ -60,7 +63,6 @@ namespace ias {
             fd = mSocket->get_file_descriptor();
             nBytes = read(fd, byte, 1);
             if(nBytes < 0) {
-                mSocket->close_connection();
                 nBytes = 0;
             }
         }
@@ -78,7 +80,6 @@ namespace ias {
             fd = mSocket->get_file_descriptor();
             nBytes = read(fd, buffer, bufferSize);
             if(nBytes < 0) {
-                mSocket->close_connection();
                 nBytes = 0;
             }
         }
