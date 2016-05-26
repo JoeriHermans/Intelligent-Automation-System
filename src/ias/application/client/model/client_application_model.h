@@ -173,7 +173,7 @@ class client_application_model : public observable {
 
     bool is_connected(void) const;
 
-    bool logged_in(void) const;
+    bool is_logged_in(void) const;
 
     void create_connection(const std::string & host, const std::size_t port);
 

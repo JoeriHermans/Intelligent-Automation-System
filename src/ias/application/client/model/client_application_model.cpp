@@ -27,6 +27,7 @@
 #include <cassert>
 #include <unistd.h>
 #include <string>
+#include <iostream>
 #include <netinet/in.h>
 
 // Application dependencies.
@@ -143,6 +144,7 @@ namespace ias {
         if(reader->read_byte(reinterpret_cast<char *>(&type)) == 1) {
             switch(type) {
             case 0x00:
+                std::cout << "heartbeat received" << std::endl;
                 send_heartbeat();
                 break;
             case 0x01:
@@ -276,7 +278,7 @@ namespace ias {
         return mSocket != nullptr && mSocket->is_connected();
     }
 
-    bool client_application_model::logged_in(void) const {
+    bool client_application_model::is_logged_in(void) const {
         return mLoggedIn;
     }
 

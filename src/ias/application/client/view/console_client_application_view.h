@@ -105,17 +105,29 @@ class console_client_application_view : public view {
 
     inline void set_model(ias::client_application_model * model);
 
-    void print_message(const std::string & message) const;
+    inline void stopping(void);
 
     void connect(void);
+
+    void execute_commands(void);
+
+    void login(void);
+
+    void disable_terminal_echo(void) const;
+
+    void enable_terminal_echo(void) const;
+
+    void print_message(const std::string & message) const;
 
     void set_host(const int argc, const char ** argv);
 
     void set_port(const int argc, const char ** argv);
 
+    void set_proxy(const int argc, const char ** argv);
+
     void set_ssl(const int argc, const char ** argv);
 
-    void set_proxy(const int argc, const char ** argv);
+    void print(const std::string & message) const;
 
     // END Private methods. //////////////////////////////////////////////////
 
