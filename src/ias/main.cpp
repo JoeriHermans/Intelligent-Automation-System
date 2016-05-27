@@ -153,9 +153,9 @@ void cleanup_ssl(void) {
 void display_logo(void) {
     std::cout << std::endl << std::endl;
     std::cout << "    777   7777777777   7777777777" << std::endl;
-    std::cout << "    777   777    777   777       " << std::endl;
+    std::cout << "    777   777    777   777               Intelligent Automation System" << std::endl;
     std::cout << "    777   7777777777   7777777777" << std::endl;
-    std::cout << "    777   777    777          777" << std::endl;
+    std::cout << "    777   777    777          777            ias.joerihermans.com" << std::endl;
     std::cout << "    777   777    777   7777777777" << std::endl;
     std::cout << "                   " << ias::get_ias_version()  << std::endl;
 }
