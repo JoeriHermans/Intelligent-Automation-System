@@ -2,14 +2,23 @@ CC = clang
 LD = clang
 
 SHELL = bash
+
+# Database drivers which need to be compiled
+# Available drivers:
+# - all
+# - mysql
+# - postgresql
+DATABASE_DRIVER = mysql
+
 MODULES = ai application building controller d
 LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx -o ias
 CCFLAGS = -D__GXX_EXPERIMENTAL_CXX0X__ -D__cplusplus=201103L -I"src/" \
+		 -D IAS_DATABASE_DRIVER=$(DATABASE_DRIVER) \
  		 -I/usr/local/include/mysql \
 		 -I/usr/include/mysql -O3 -Wno-vla-extension -Wno-vla -Wno-sign-conversion \
 		 -Wno-global-constructors -Wno-float-equal -Wno-unused-parameter \
 		 -Wno-padded -Wno-weak-vtables -Wno-c++98-compat -emit-llvm -Werror \
-		 -Wno-exit-time-destructors -Wno-error-deprecated\
+		 -Wno-exit-time-destructors -Wno-error-deprecated \
 		 -Wall -c -fmessage-length=0 -std=c++11
 
 SOURCEDIR = src/
@@ -25,9 +34,6 @@ BOLD = \033[1m
 NO_BOLD = \033[0m
 OK_STRING = $(BOLD)$(GREEN_COLOR)[OK]$(NO_COLOR)$(NO_BOLD)
 ARROW = $(YELLOW_COLOR)=>$(NO_COLOR)
-
-# Currently IAS only supports only the MySQL driver.
-DATABASE_DRIVER = mysql
 
 .PHONY: all configuration update_binary
 .DEFAULT: all
