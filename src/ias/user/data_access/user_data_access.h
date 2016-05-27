@@ -41,7 +41,7 @@
 
 namespace ias {
 
-class mysql_user_data_access : public data_access<ias::user *> {
+class user_data_access : public data_access<ias::user *> {
 
     public:
 
