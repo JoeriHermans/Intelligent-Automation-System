@@ -5,10 +5,10 @@ SHELL = bash
 
 # Database drivers which need to be compiled
 # Available drivers:
-# - all
-# - mysql
-# - postgresql
-DATABASE_DRIVER = mysql
+# - all (A)
+# - mysql (M)
+# - postgresql (P)
+DATABASE_DRIVER = "'A'"
 
 MODULES = ai application building controller d
 LDFLAGS = -lm -lz -lssl -lcrypto -lmysqlclient -lpthread -lstdc++ -ldl -lpqxx -o ias
