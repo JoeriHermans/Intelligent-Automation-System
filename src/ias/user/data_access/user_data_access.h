@@ -20,7 +20,15 @@
  * limitations under the License.
  */
 
+#ifdef IAS_DATABASE_DRIVER
+#if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+
 // BEGIN Includes. ///////////////////////////////////////////////////
+
+// System dependencies.
+#include <mysql/mysql.h>
+#include <mysql/my_global.h>
+#include <mutex>
 
 // Application dependencies.
 #include <ias/data_access/data_access.h>
@@ -69,17 +77,17 @@ class mysql_user_data_access : public data_access<ias::user *> {
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual std::vector<ias::user *> get_all(void) const;
+    virtual std::vector<ias::user *> get_all(void) const = 0;
 
-    virtual ias::user * get(const std::size_t id) const;
+    virtual ias::user * get(const std::size_t id) const = 0;
 
-    virtual void add(ias::user * user);
+    virtual void add(ias::user * user) = 0;
 
-    virtual void remove(ias::user * user);
+    virtual void remove(ias::user * user) = 0;
 
-    virtual void remove(const std::size_t id);
+    virtual void remove(const std::size_t id) = 0;
 
-    virtual void update(ias::user * user);
+    virtual void update(ias::user * user) = 0;
 
     // END Public methods. ///////////////////////////////////////////////////
 
@@ -90,4 +98,6 @@ class mysql_user_data_access : public data_access<ias::user *> {
 
 };
 
+#endif
+#endif
 #endif
