@@ -65,13 +65,13 @@ class user_data_access : public data_access<ias::user *> {
 
     // BEGIN Constructor. ////////////////////////////////////////////////////
 
-    mysql_user_data_access(void);
+    user_data_access(void);
 
     // END Constructor. //////////////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////////////
 
-    virtual ~mysql_user_data_access(void);
+    virtual user_data_access(void);
 
     // END Destructor. ///////////////////////////////////////////////////////
 
