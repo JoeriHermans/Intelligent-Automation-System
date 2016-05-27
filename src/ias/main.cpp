@@ -151,12 +151,13 @@ void cleanup_ssl(void) {
 }
 
 void display_logo(void) {
-    std::cout << " __    ______    ______    " << std::endl;
-    std::cout << "/\\ \\  /\\  __ \\  /\\  ___\\   " << std::endl;
-    std::cout << "\\ \\ \\ \\ \\  __ \\ \\ \\___  \\  " << std::endl;
-    std::cout << " \\ \\_\\ \\ \\_\\ \\_\\ \\/\\_____\\ " << std::endl;
-    std::cout << "  \\/_/  \\/_/\\/_/  \\/_____/ " << std::endl;
-    std::cout << "            " << ias::get_ias_version()  << std::endl;
+    std::cout << std::endl << std::endl;
+    std::cout << "    777   7777777777   7777777777" << std::endl;
+    std::cout << "    777   777    777   777       " << std::endl;
+    std::cout << "    777   7777777777   7777777777" << std::endl;
+    std::cout << "    777   777    777          777" << std::endl;
+    std::cout << "    777   777    777   7777777777" << std::endl;
+    std::cout << "                   " << ias::get_ias_version()  << std::endl;
 }
 
 void usage(void) {
