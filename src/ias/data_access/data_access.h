@@ -68,24 +68,51 @@ class data_access {
 
     // BEGIN Protected methods. //////////////////////////////////////////////
 
-    void cache_clear(void) {
+    bool cache_contains(T element) {
+        bool contains;
 
+        mCacheMutex.lock();
+        auto it = mCache.find(element->get_id());
+        contains = (it != mCache.end());
+        mCacheMutex.unlock();
+
+        return contains;
+    }
+
+    void cache_clear(void) {
+        mCacheMutex.lock();
+        mCache.clear();
+        mCacheMutex.unlock();
     }
 
     void cache_remove(T element) {
+        std::size_t id;
 
+        id = element->get_id();
+        mCacheMutex.lock();
+        mCache.erase(id);
+        mCacheMutex.unlock();
     }
 
     void cache_remove(const std::size_t id) {
-
+        mCacheMutex.lock();
+        mCache.erase(id);
+        mCacheMutex.unlock();
     }
 
     void cache_store(T element) {
-
+        mCacheMutex.lock();
+        mCache[element->get_id()] = element;
+        mCacheMutex.unlock();
     }
 
-    void cache_update(T element) {
-
+    void cache_store_fast(const std::vector<T> & elements) {
+        mCacheMutex.lock();
+        // Store all elements in a fast way.
+        for(auto it = elements.begin(); it != elements.end(); ++it) {
+            // TODO Implement.
+        }
+        mCacheMutex.unlock();
     }
 
     // END Protected methods. ////////////////////////////////////////////////
