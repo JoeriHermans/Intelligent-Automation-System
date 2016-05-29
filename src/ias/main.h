@@ -43,6 +43,8 @@ void cleanup_logger(void);
 
 void cleanup_ssl(void);
 
+void cleanup_databases(void);
+
 void display_logo(void);
 
 void initialize_random_number_generator(void);

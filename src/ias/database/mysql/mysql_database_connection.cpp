@@ -31,6 +31,7 @@
 
 // Application dependencies.
 #include <ias/database/mysql/mysql_database_connection.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -43,7 +44,11 @@ namespace ias {
     // END Constants. ////////////////////////////////////////////////
 
     inline void mysql_database_connection::initialize(void) {
-        // TODO Implement.
+        initialize_connection_structure();
+    }
+
+    inline void mysql_database_connection::initialize_connection_structure(void) {
+        mDbConnection = nullptr;
     }
 
     mysql_database_connection::mysql_database_connection(const std::string & host,
@@ -68,19 +73,61 @@ namespace ias {
     }
 
     bool mysql_database_connection::open_connection(void) {
-        bool opened = false;
+        const static int argument = 1;
+        bool connected = false;
 
-        // TODO Implement.
+        if(mDbConnection == nullptr) {
+            mDbConnection = mysql_init(nullptr);
+            if(mDbConnection != nullptr) {
+                // Set automatic reconnect.
+                mysql_options(mDbConnection, MYSQL_OPT_RECONNECT, &argument);
+                // Create a connection with the remote MySQL database.
+                connected =
+                    (mysql_real_connect(mDbConnection, get_host().c_str(),
+                                        get_username().c_str(), get_password().c_str(),
+                                        get_schema().c_str(), std::stoi(get_port()),
+                                        nullptr, 0) != nullptr);
+                // Check if a connection could be established.
+                if(!connected) {
+                    // Log the error.
+                    loge(mysql_error(mDbConnection));
+                    mysql_close(mDbConnection);
+                    mDbConnection = nullptr;
+                }
+            } else {
+                loge(mysql_error(mDbConnection));
+            }
+        } else {
+            // We are already connected.
+            connected = true;
+        }
 
-        return opened;
+        return connected;
     }
 
     bool mysql_database_connection::close_connection(void) {
         bool closed = false;
 
-        // TODO Implement.
+        // Check if a connection is opened.
+        if(mDbConnection != nullptr) {
+            mysql_close(mDbConnection);
+            mDbConnection = nullptr;
+            logi("Remote database connection with " + get_host() + " closed.");
+        }
 
         return closed;
+    }
+
+    bool mysql_database_connection::is_connected(void) const {
+        return mDbConnection != nullptr;
+    }
+
+    void * mysql_database_connection::get_link(void) const {
+        return static_cast<void *>(mDbConnection);
+    }
+
+    void mysql_database_connection::cleanup(void) {
+        mysql_library_end();
     }
 
 };

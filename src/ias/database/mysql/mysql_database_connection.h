@@ -26,6 +26,10 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
+// System dependencies.
+#include <mysql/mysql.h>
+#include <mysql/my_global.h>
+
 // Application dependencies.
 #include <ias/database/database_connection.h>
 
@@ -54,11 +58,20 @@ class mysql_database_connection : public database_connection {
 
     // BEGIN Private members. ////////////////////////////////////////////////
 
-    inline void initialize(void);
+    /**
+     * Structure which is responsible for maintaining the state of the
+     * connection with the remote MySQL database.
+     */
+    MYSQL * mDbConnection;
 
     // END Private members. //////////////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////////////
+
+    inline void initialize(void);
+
+    inline void initialize_connection_structure(void);
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:
@@ -95,9 +108,16 @@ class mysql_database_connection : public database_connection {
 
     virtual bool close_connection(void);
 
+    virtual bool is_connected(void) const;
+
+    virtual void * get_link(void) const;
+
     // END Public methods. ///////////////////////////////////////////////////
 
     // BEGIN Public static methods. //////////////////////////////////////////
+
+    static void cleanup(void);
+
     // END Public static methods. ////////////////////////////////////////////
 
 };

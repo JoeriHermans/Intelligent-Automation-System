@@ -42,6 +42,9 @@ namespace ias {
         // Checking the precondition.
         assert(logger != nullptr);
 
+        // Cleanup the old logger.
+        cleanup();
+        // Set the new logger.
         mLogger = logger;
     }
 

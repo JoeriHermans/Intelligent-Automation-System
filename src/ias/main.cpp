@@ -39,7 +39,9 @@
 #include <ias/main.h>
 #include <ias/application/constants.h>
 #include <ias/application/client/client_application.h>
+#include <ias/database/mysql/mysql_database_connection.h>
 #include <ias/logger/logger.h>
+#include <ias/logger/console/console_logger.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -53,6 +55,7 @@ int main(const int argc, const char ** argv) {
     // Do some cleanup.
     cleanup_logger();
     cleanup_ssl();
+    cleanup_databases();
 
     return EXIT_SUCCESS;
 }
@@ -134,6 +137,14 @@ void start_server(const int argc, const char ** argv) {
 
 void show_version(void) {
     std::cout << ias::get_ias_version() << std::endl;
+}
+
+void cleanup_databases(void) {
+    #ifdef IAS_DATABASE_DRIVER
+    #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+    ias::mysql_database_connection::cleanup();
+    #endif
+    #endif
 }
 
 void cleanup_logger(void) {

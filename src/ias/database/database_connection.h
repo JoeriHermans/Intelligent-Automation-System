@@ -157,6 +157,10 @@ class database_connection {
 
     virtual bool close_connection(void) = 0;
 
+    virtual bool is_connected(void) const = 0;
+
+    virtual void * get_link(void) const = 0;
+
     // END Public methods. ///////////////////////////////////////////////////
 
     // BEGIN Public static methods. //////////////////////////////////////////
