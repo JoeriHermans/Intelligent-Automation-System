@@ -81,6 +81,9 @@ class data_access {
 
     void cache_clear(void) {
         mCacheMutex.lock();
+        // Free the allocated memory as well.
+        for(auto it = mCache.begin(); it != mCache.end(); ++it)
+            delete it->second;
         mCache.clear();
         mCacheMutex.unlock();
     }
@@ -110,9 +113,22 @@ class data_access {
         mCacheMutex.lock();
         // Store all elements in a fast way.
         for(auto it = elements.begin(); it != elements.end(); ++it) {
-            // TODO Implement.
+            T element = (*it);
+            mCache[element->get_id()] = element;
         }
         mCacheMutex.unlock();
+    }
+
+    T cache_get(const std::size_t id) {
+        T element = nullptr;
+
+        mCacheMutex.lock();
+        auto it = mCache.find(id);
+        if(it != mCache.end())
+            element = it->second;
+        mCacheMutex.unlock();
+
+        return element;
     }
 
     // END Protected methods. ////////////////////////////////////////////////
