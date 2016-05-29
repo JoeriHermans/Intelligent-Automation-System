@@ -26,6 +26,8 @@
 
 // System dependencies.
 #include <vector>
+#include <unordered_map>
+#include <mutex>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -45,6 +47,18 @@ class data_access {
     private:
 
     // BEGIN Private members. ////////////////////////////////////////////////
+
+    /**
+     * An unordered map which provides fast caching access for the objects
+     * the user wants to store. This cache provides an id -> object mapping.
+     */
+    std::unordered_map<std::size_t, T> mCache;
+
+    /**
+     * Mutex which synchronizes the access to the cache.
+     */
+    std::mutex mCacheMutex;
+
     // END Private members. //////////////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////////////
@@ -53,6 +67,27 @@ class data_access {
     protected:
 
     // BEGIN Protected methods. //////////////////////////////////////////////
+
+    void cache_clear(void) {
+
+    }
+
+    void cache_remove(T element) {
+
+    }
+
+    void cache_remove(const std::size_t id) {
+
+    }
+
+    void cache_store(T element) {
+
+    }
+
+    void cache_update(T element) {
+
+    }
+
     // END Protected methods. ////////////////////////////////////////////////
 
     public:
