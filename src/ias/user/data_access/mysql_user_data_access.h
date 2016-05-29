@@ -1,5 +1,6 @@
 /**
- *
+ * A class which will act as a data access layer through a MySQL
+ * database connection.
  *
  * @date                    27 05 2016
  * @author                  Joeri HERMANS
@@ -25,23 +26,17 @@
 
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <mysql/mysql.h>
-#include <mysql/my_global.h>
-#include <mutex>
-
 // Application dependencies.
-#include <ias/data_access/data_access.h>
-#include <ias/user/user.h>
+#include <ias/user/data_access/user_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-#ifndef IAS_USER_DATA_ACCESS_H_
-#define IAS_USER_DATA_ACCESS_H_
+#ifndef IAS_MYSQL_USER_DATA_ACCESS_H_
+#define IAS_MYSQL_USER_DATA_ACCESS_H_
 
 namespace ias {
 
-class user_data_access : public data_access<ias::user *> {
+class mysql_user_data_access : public user_data_access {
 
     public:
 
@@ -65,29 +60,29 @@ class user_data_access : public data_access<ias::user *> {
 
     // BEGIN Constructor. ////////////////////////////////////////////////////
 
-    user_data_access(void) = default;
+    mysql_user_data_access(void);
 
     // END Constructor. //////////////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////////////
 
-    virtual ~user_data_access(void) = default;
+    virtual ~mysql_user_data_access(void);
 
     // END Destructor. ///////////////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual std::vector<ias::user *> get_all(void) const = 0;
+    virtual std::vector<ias::user *> get_all(void) const;
 
-    virtual ias::user * get(const std::size_t id) const = 0;
+    virtual ias::user * get(const std::size_t id) const;
 
-    virtual void add(ias::user * user) = 0;
+    virtual void add(ias::user * user);
 
-    virtual void remove(ias::user * user) = 0;
+    virtual void remove(ias::user * user);
 
-    virtual void remove(const std::size_t id) = 0;
+    virtual void remove(const std::size_t id);
 
-    virtual void update(ias::user * user) = 0;
+    virtual void update(ias::user * user);
 
     // END Public methods. ///////////////////////////////////////////////////
 
