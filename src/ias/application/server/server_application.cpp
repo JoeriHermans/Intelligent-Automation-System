@@ -156,7 +156,8 @@ namespace ias {
 
 
         // Read the configuration file with the provided path.
-        ias::read_configuration_file(configPath, mConfig);
+        if(!ias::read_configuration_file(configPath, mConfig))
+            stop();
     }
 
     void server_application::cleanup_database_connection(void) {
@@ -187,6 +188,10 @@ namespace ias {
     }
 
     void server_application::run(void) {
+        // Check if the initialization process encountered some errors.
+        if(!mFlagRunning)
+            return;
+
         allocate_database_connection();
         // Check if a database connection could be opened.
         if(mDbConnection != nullptr) {
