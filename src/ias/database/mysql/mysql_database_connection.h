@@ -52,6 +52,11 @@ class mysql_database_connection : public database_connection {
      */
     static const char kDefaultPort[];
 
+    /**
+     * Holds the driver identifier specific to MySQL.
+     */
+    static const char kIdentifier[];
+
     // END Class constants. //////////////////////////////////////////////////
 
     private:

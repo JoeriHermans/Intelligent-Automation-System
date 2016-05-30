@@ -41,6 +41,8 @@ namespace ias {
 
     const char mysql_database_connection::kDefaultPort[] = "3306";
 
+    const char mysql_database_connection::kIdentifier[] = "mysql";
+
     // END Constants. ////////////////////////////////////////////////
 
     inline void mysql_database_connection::initialize(void) {

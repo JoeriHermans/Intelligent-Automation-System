@@ -1,8 +1,6 @@
 /**
- * A class which describes the properties and actions of the server
- * application. This application will handle the main functionality
- * of IAS, applying rules, dispatching commands, setting up the
- * servers.
+ * A class which represents the properties and actions of a PostgreSQL
+ * database connection.
  *
  * @date                    30 05 2016
  * @author                  Joeri HERMANS
@@ -23,77 +21,48 @@
  * limitations under the License.
  */
 
+#ifdef IAS_DATABASE_DRIVER
+#if IAS_DATABASE_DRIVER == 'P' || IAS_DATABASE_DRIVER == 'A'
+
 // BEGIN Includes. ///////////////////////////////////////////////////
 
-// System dependencies.
-#include <string>
-#include <unordered_map>
-
 // Application dependencies.
-#include <ias/application/application.h>
-#include <ias/data_access/data_access.h>
 #include <ias/database/database_connection.h>
-#include <ias/user/data_access/user_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
-#ifndef IAS_SERVER_APPLICATION_H_
-#define IAS_SERVER_APPLICATION_H_
+#ifndef IAS_POSTGRESQL_DATABASE_CONNECTION_H_
+#define IAS_POSTGRESQL_DATABASE_CONNECTION_H_
 
 namespace ias {
 
-class server_application : public application {
+class postgresql_database_connection : public database_connection {
 
     public:
 
     // BEGIN Class constants. ////////////////////////////////////////////////
 
     /**
-     * Holds the default absolute path to the IAS server configuration
-     * file.
+     * Holds the default for PostgreSQL database connection as a string
+     * representation.
      */
-    static const char kDefaultConfigPath[];
+    static const char kDefaultPort[];
+
+    /**
+     * Holds the unique identifier for the PostgreSQL driver.
+     */
+    static const char kIdentifier[];
 
     // END Class constants. //////////////////////////////////////////////////
 
     private:
 
     // BEGIN Private members. ////////////////////////////////////////////////
-
-    /**
-     * Data access members for IAS objects.
-     *
-     * @note By default, this will be equal to the null reference.
-     */
-    ias::user_data_access * mStorageUsers;
-
-    /**
-     * Holds the properties which have been read from the configuration file.
-     *
-     * @note By default, this map will be initialized with default values.
-     */
-    std::unordered_map<std::string, std::string> mConfig;
-
-    /**
-     * Holds the database connection with the remote database server.
-     *
-     * @note By default, this member will be equal to the null reference.
-     */
-    ias::database_connection * mDbConnection;
-
     // END Private members. //////////////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////////////
 
     inline void initialize(void);
-
-    void initialize_logger(void);
-
-    void analyze_arguments(const int argc, const char ** argv);
-
-    void allocate_storage(void);
-
-    void cleanup_storage(void);
 
     // END Private methods. //////////////////////////////////////////////////
 
@@ -106,29 +75,47 @@ class server_application : public application {
 
     // BEGIN Constructor. ////////////////////////////////////////////////////
 
-    server_application(const int argc, const char ** argv);
+    postgresql_database_connection(const std::string & host,
+                                   const std::string & schema,
+                                   const std::string & username,
+                                   const std::string & password);
+
+    postgresql_database_connection(const std::string & host,
+                                   const std::string & port,
+                                   const std::string & schema,
+                                   const std::string & username,
+                                   const std::string & password);
 
     // END Constructor. //////////////////////////////////////////////////////
 
     // BEGIN Destructor. /////////////////////////////////////////////////////
 
-    virtual ~server_application(void);
+    virtual ~postgresql_database_connection(void);
 
     // END Destructor. ///////////////////////////////////////////////////////
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual void stop(void);
+    virtual bool close_connection(void);
 
-    virtual void run(void);
+    virtual bool is_connected(void) const;
+
+    virtual bool open_connection(void);
+
+    virtual void * get_link(void) const;
 
     // END Public methods. ///////////////////////////////////////////////////
 
     // BEGIN Public static methods. //////////////////////////////////////////
+
+    static void cleanup(void);
+
     // END Public static methods. ////////////////////////////////////////////
 
 };
 
 };
 
+#endif
+#endif
 #endif

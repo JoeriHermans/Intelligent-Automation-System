@@ -35,6 +35,7 @@
 #include <locale>
 #include <openssl/sha.h>
 #include <sstream>
+#include <sys/stat.h>
 #include <vector>
 
 // Application dependencies.
@@ -74,6 +75,15 @@ namespace ias {
         return kVersion;
     }
 
+    bool file_exists(const std::string & path) {
+        struct stat buffer;
+
+        if(stat(path.c_str(), &buffer) != -1)
+            return true;
+
+        return false;
+    }
+
     int flag_index(const int argc, const char ** argv, const char * flag) {
         int index;
 
@@ -91,8 +101,8 @@ namespace ias {
         return index;
     }
 
-    void process_configuration_file(const std::string & path,
-                                    std::unordered_map<std::string, std::string> & c) {
+    bool read_configuration_file(const std::string & path,
+                                 std::unordered_map<std::string, std::string> & c) {
         std::ifstream file(path);
         std::string line;
         std::string key;
@@ -102,6 +112,11 @@ namespace ias {
         // Checking the precondition.
         assert(!path.empty());
 
+        if(!ias::file_exists(path)) {
+            loge("Could not open configuration file at " + path);
+            return false;
+        }
+        logi("Reading configuration file at " + path);
         while(std::getline(file, line)) {
             ias::trim(line);
             if(line.empty() || line.at(0) == '#')
@@ -113,6 +128,10 @@ namespace ias {
             if(!key.empty() && !value.empty())
                 c[key] = value;
         }
+        file.close();
+        logi("Configuration file has been read.");
+
+        return true;
     }
 
     void trim(std::string & s) {

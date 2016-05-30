@@ -30,10 +30,12 @@
 #include <cassert>
 #include <string>
 #include <cstring>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/application/server/server_application.h>
 #include <ias/application/constants.h>
+#include <ias/logger/console/console_logger.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -49,7 +51,12 @@ namespace ias {
     inline void server_application::initialize(void) {
         // Reset the default values of the members.
         mStorageUsers = nullptr;
-        initialize_default_configuration();
+        mDbConnection = nullptr;
+        initialize_logger();
+    }
+
+    void server_application::initialize_logger(void) {
+        ias::logger::set_logger(new ias::console_logger());
     }
 
     void server_application::analyze_arguments(const int argc, const char ** argv) {
@@ -72,10 +79,14 @@ namespace ias {
 
 
         // Read the configuration file with the provided path.
-        ias::process_configuration_file(configPath, mConfig);
+        ias::read_configuration_file(configPath, mConfig);
     }
 
-    void server_application::initialize_default_configuration(void) {
+    void server_application::allocate_storage(void) {
+        // TODO Implement.
+    }
+
+    void server_application::cleanup_storage(void) {
         // TODO Implement.
     }
 
@@ -85,7 +96,7 @@ namespace ias {
     }
 
     server_application::~server_application(void) {
-        // TODO Implement.
+        cleanup_storage();
     }
 
     void server_application::stop(void) {

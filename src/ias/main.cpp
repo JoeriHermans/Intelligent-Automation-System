@@ -41,6 +41,7 @@
 #include <ias/application/client/client_application.h>
 #include <ias/application/server/server_application.h>
 #include <ias/database/mysql/mysql_database_connection.h>
+#include <ias/database/postgresql/postgresql_database_connection.h>
 #include <ias/logger/logger.h>
 #include <ias/logger/console/console_logger.h>
 #include <ias/util/util.h>
@@ -133,10 +134,9 @@ void start_generate_hash(const int argc, const char ** argv) {
 }
 
 void start_server(const int argc, const char ** argv) {
-    ias::server_application app(argc, argv);
-
     display_logo();
     std::cout << std::endl << std::flush;
+    ias::server_application app(argc, argv);
     app.run();
 }
 
@@ -148,6 +148,11 @@ void cleanup_databases(void) {
     #ifdef IAS_DATABASE_DRIVER
     #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
     ias::mysql_database_connection::cleanup();
+    #endif
+    #endif
+    #ifdef IAS_DATABASE_DRIVER
+    #if IAS_DATABASE_DRIVER == 'P' || IAS_DATABASE_DRIVER == 'A'
+    ias::postgresql_database_connection::cleanup();
     #endif
     #endif
 }

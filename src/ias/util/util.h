@@ -40,14 +40,16 @@ namespace ias {
 
     std::string get_ias_version(void);
 
-    void process_configuration_file(const std::string & path,
-                                    std::unordered_map<std::string, std::string> & c);
+    bool read_configuration_file(const std::string & path,
+                                 std::unordered_map<std::string, std::string> & c);
 
     void trim(std::string & str);
 
     std::string sha256(const std::string & str,
                        const std::string & preSalt,
                        const std::string & postSalt);
+
+    bool file_exists(const std::string & path);
 
     /**
      * Generates a SHA256 string based on the global salts.
