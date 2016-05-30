@@ -56,7 +56,7 @@ namespace ias {
     const char server_application::kMessageDatabaseConnectionOpening[] = "Opening a connection with the database.";
     const char server_application::kMessageDatabaseConnectionSetup[] = "Settting up a database connection.";
     const char server_application::kMessageDatabaseConnectionSuccessful[] = "Connection established with remote database.";
-    const char server_application::kMessageDatabaseMysqlDriver[] = "Select MySQL database driver.";
+    const char server_application::kMessageDatabaseMysqlDriver[] = "Selecting MySQL database driver.";
     const char server_application::kMessageDatabasePostgresqlDriver[] = "Select PostgreSQL database driver.";
 
     // END Constants. ////////////////////////////////////////////////
@@ -227,8 +227,6 @@ namespace ias {
     }
 
     void server_application::run(void) {
-        std::cout << "What is happening." << std::endl << std::flush;
-
         // Check if the initialization process encountered some errors.
         if(!mFlagRunning)
             return;
