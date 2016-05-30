@@ -100,6 +100,7 @@ extern const char kFlagVersion[];
 
 extern const char kOffline[];
 extern const char kOnline[];
+extern const char kTrimCharacters[];
 extern const char kVersion[];
 
 // END Others. ///////////////////////////////////////////////////////

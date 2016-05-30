@@ -39,6 +39,7 @@
 #include <ias/main.h>
 #include <ias/application/constants.h>
 #include <ias/application/client/client_application.h>
+#include <ias/application/server/server_application.h>
 #include <ias/database/mysql/mysql_database_connection.h>
 #include <ias/logger/logger.h>
 #include <ias/logger/console/console_logger.h>
@@ -132,7 +133,11 @@ void start_generate_hash(const int argc, const char ** argv) {
 }
 
 void start_server(const int argc, const char ** argv) {
-    // TODO Add server startup.
+    ias::server_application app(argc, argv);
+
+    display_logo();
+    std::cout << std::endl << std::flush;
+    app.run();
 }
 
 void show_version(void) {
@@ -190,7 +195,7 @@ void usage(void) {
     std::cout << "Options:" << std::endl;
     std::cout << "  --version           Displays the current version of IAS." << std::endl;
     std::cout << "  --config [path]     Specifies the path of the configuration file to use." << std::endl;
-    std::cout << "  --address [addr]     Remote address of the IAS server." << std::endl;
+    std::cout << "  --address [addr]    Remote address of the IAS server." << std::endl;
     std::cout << "  --ssl               Enables the usage of SSL when using eventstream or client mode." << std::endl;
     std::cout << "  --key [api key]     Specifies API key to use when in eventstream mode." << std::endl;
 }

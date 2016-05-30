@@ -175,8 +175,46 @@ namespace ias {
 
     std::vector<ias::user *> mysql_user_data_access::get_all(void) const {
         std::vector<ias::user *> users;
+        MYSQL_BIND result[8];
 
-        // TODO Implement.
+        // Buffer variables.
+        std::size_t bufferId;
+        char bufferName[81];
+        char bufferSurName[81];
+        char bufferEmail[81];
+        char bufferUsername[81];
+        char bufferPassword[81];
+        std::size_t bufferGender;
+        bool bufferDisabled;
+
+        // Clear the parameter structures.
+        memset(result, 0, sizeof result);
+        // Prepare the result types.
+        // id
+        result[0].buffer_type  = MYSQL_TYPE_LONG;
+        result[0].buffer       = static_cast<void *>(&bufferId);
+        result[0].is_unsigned  = 1;
+        // name
+        result[1].buffer_type  = MYSQL_TYPE_VAR_STRING;
+        result[1].buffer       = static_cast<void *>(bufferName);
+        // surname
+        result[2].buffer_type  = MYSQL_TYPE_VAR_STRING;
+        result[2].buffer       = static_cast<void *>(bufferSurName);
+        // email
+        result[3].buffer_type  = MYSQL_TYPE_VAR_STRING;
+        result[3].buffer       = static_cast<void *>(bufferEmail);
+        // username
+        result[4].buffer_type  = MYSQL_TYPE_VAR_STRING;
+        result[4].buffer       = static_cast<void *>(bufferUsername);
+        // password
+        result[5].buffer_type  = MYSQL_TYPE_VAR_STRING;
+        result[5].buffer       = static_cast<void *>(bufferPassword);
+        // gender
+        result[6].buffer_type  = MYSQL_TYPE_TINY;
+        result[6].buffer       = static_cast<void *>(&bufferGender);
+        // disabled
+        result[7].buffer_type  = MYSQL_TYPE_TINY;
+        result[7].buffer       = static_cast<void *>(&bufferDisabled);
 
         return users;
     }

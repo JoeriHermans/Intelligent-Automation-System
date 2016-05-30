@@ -24,20 +24,22 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
-#include <cassert>
-#include <cstring>
 #include <algorithm>
-#include <functional>
+#include <cassert>
 #include <cctype>
-#include <vector>
-#include <locale>
+#include <cstring>
+#include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
-#include <sstream>
+#include <locale>
 #include <openssl/sha.h>
+#include <sstream>
+#include <vector>
 
 // Application dependencies.
 #include <ias/application/constants.h>
+#include <ias/logger/logger.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -87,6 +89,35 @@ namespace ias {
         }
 
         return index;
+    }
+
+    void process_configuration_file(const std::string & path,
+                                    std::unordered_map<std::string, std::string> & c) {
+        std::ifstream file(path);
+        std::string line;
+        std::string key;
+        std::string value;
+        std::size_t i;
+
+        // Checking the precondition.
+        assert(!path.empty());
+
+        while(std::getline(file, line)) {
+            ias::trim(line);
+            if(line.empty() || line.at(0) == '#')
+                continue;
+            i = line.find('=');
+            key = line.substr(0, i);
+            value = line.substr(i + 1, line.length());
+            trim(key); trim(value);
+            if(!key.empty() && !value.empty())
+                c[key] = value;
+        }
+    }
+
+    void trim(std::string & s) {
+        s.erase(0, s.find_first_not_of(kTrimCharacters));
+        s.erase(s.find_last_not_of(kTrimCharacters) + 1);
     }
 
     std::string sha256(const std::string & str,

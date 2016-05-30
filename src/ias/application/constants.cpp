@@ -104,6 +104,7 @@ const char kFlagVersion[] = "--version";
 
 const char kOffline[] = "Offline";
 const char kOnline[] = "Online";
+const char kTrimCharacters[] = " \t\n\r";
 const char kVersion[] = "IAS 0.2.0 beta";
 
 // END Others. ///////////////////////////////////////////////////////
