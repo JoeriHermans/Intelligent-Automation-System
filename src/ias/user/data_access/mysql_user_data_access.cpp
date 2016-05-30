@@ -28,13 +28,150 @@
 
 // System dependencies.
 #include <cassert>
+#include <cstring>
 
 // Application dependencies.
 #include <ias/user/data_access/mysql_user_data_access.h>
+#include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
 
 namespace ias {
+
+    // BEGIN Constants. //////////////////////////////////////////////
+
+    const char mysql_user_data_access::kStmtAdd[] =
+        "";
+
+    const char mysql_user_data_access::kStmtGetAll[] =
+        "SELECT * \
+         FROM users;";
+
+    const char mysql_user_data_access::kStmtGetId[] =
+        "SELECT * \
+         FROM users \
+         WHERE id = ?;";
+
+    const char mysql_user_data_access::kStmtRemove[] =
+        "DELETE FROM users \
+         WHERE id = ?;";
+
+    const char mysql_user_data_access::kStmtUpdate[] =
+        "";
+
+    // END Constants. ////////////////////////////////////////////////
+
+    inline void mysql_user_data_access::initialize(void) {
+        mDbConnection = nullptr;
+        mStmtAdd = nullptr;
+        mStmtGetAll = nullptr;
+        mStmtGetId = nullptr;
+        mStmtRemove = nullptr;
+        mStmtUpdate = nullptr;
+    }
+
+    void mysql_user_data_access::set_database_connection(ias::database_connection * dbConn) {
+        // Checking the precondition.
+        assert(dbConn != nullptr && dbConn->is_connected());
+
+        mDbConnection = static_cast<MYSQL *>(dbConn->get_link());
+    }
+
+    void mysql_user_data_access::initialize_statements(void) {
+        mStmtAdd = mysql_stmt_init(mDbConnection);
+        prepare_statement_add();
+        mStmtGetAll = mysql_stmt_init(mDbConnection);
+        prepare_statement_get_all();
+        mStmtGetId = mysql_stmt_init(mDbConnection);
+        prepare_statement_get_id();
+        mStmtRemove = mysql_stmt_init(mDbConnection);
+        prepare_statement_remove();
+        mStmtUpdate = mysql_stmt_init(mDbConnection);
+        prepare_statement_update();
+    }
+
+    void mysql_user_data_access::prepare_statement_add(void) {
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtAdd != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtAdd, kStmtAdd,
+                                strlen(kStmtAdd));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtAdd));
+    }
+
+    void mysql_user_data_access::prepare_statement_get_all(void) {
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtGetAll != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtGetAll, kStmtGetAll,
+                                strlen(kStmtGetAll));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtGetAll));
+    }
+
+    void mysql_user_data_access::prepare_statement_get_id(void) {
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtGetId != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtGetId, kStmtGetId,
+                                strlen(kStmtGetId));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtGetId));
+    }
+
+    void mysql_user_data_access::prepare_statement_remove(void) {
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtRemove != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtRemove, kStmtRemove,
+                                strlen(kStmtRemove));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtRemove));
+    }
+
+    void mysql_user_data_access::prepare_statement_update(void) {
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtUpdate != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtUpdate, kStmtUpdate,
+                                strlen(kStmtUpdate));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtUpdate));
+    }
+
+    void mysql_user_data_access::close_statements(void) {
+        mysql_stmt_close(mStmtAdd);
+        mysql_stmt_close(mStmtGetAll);
+        mysql_stmt_close(mStmtGetId);
+        mysql_stmt_close(mStmtRemove);
+        mysql_stmt_close(mStmtUpdate);
+    }
+
+    mysql_user_data_access::mysql_user_data_access(ias::database_connection * dbConn) {
+        initialize();
+        set_database_connection(dbConn);
+    }
+
+    mysql_user_data_access::~mysql_user_data_access(void) {
+        cache_clear();
+        close_statements();
+    }
 
     std::vector<ias::user *> mysql_user_data_access::get_all(void) const {
         std::vector<ias::user *> users;
