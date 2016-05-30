@@ -26,6 +26,7 @@
 // BEGIN Includes. ///////////////////////////////////////////////////
 
 // System dependencies.
+#include <algorithm>
 #include <unordered_map>
 #include <cassert>
 #include <string>
@@ -55,6 +56,12 @@ namespace ias {
     const char server_application::kErrorUnknowDatabaseDriver[] =
         "An unknown database driver has been specified.";
 
+    const char server_application::kErrorNoDatabasePort[] =
+        "No database port has been specified.";
+
+    const char server_application::kMessageDatabaseConnectionSetup[] =
+        "Settting up a database connection.";
+
     // END Constants. ////////////////////////////////////////////////
 
     inline void server_application::initialize(void) {
@@ -73,6 +80,7 @@ namespace ias {
         std::string username;
         std::string password;
 
+        logi(kMessageDatabaseConnectionSetup);
         // Select the driver that has been specified by the user.
         driver = mConfig[kConfigDatabaseDriver];
         // Check if a driver has been specified.
@@ -83,7 +91,13 @@ namespace ias {
             return;
         }
         // Check if a known database driver has been specified.
+        std::vector<std::string> drivers = ias::get_database_drivers();
+        if(std::find(drivers.begin(), drivers.end(), driver) == drivers.end()) {
+            loge(kErrorUnknowDatabaseDriver);
+            stop();
 
+            return;
+        }
         // Fetch the database parameters and credentials from the
         // configuration file.
         host = mConfig[kConfigDatabaseHost];
@@ -94,6 +108,27 @@ namespace ias {
         // Check if the default port is specified.
         if(port.empty()) {
             // Check which database driver has been specified.
+            // MySQL
+            #ifdef IAS_DATABASE_DRIVER
+            #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+            if(std::find(drivers.begin(), drivers.end(), driver) != drivers.end())
+                port = ias::mysql_database_connection::kDefaultPort;
+            #endif
+            #endif
+            // PostgreSQL
+            #ifdef IAS_DATABASE_DRIVER
+            #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+            if(std::find(drivers.begin(), drivers.end(), driver) != drivers.end())
+                port = ias::postgresql_database_connection::kDefaultPort;
+            #endif
+            #endif
+            // Check if the port is still empty.
+            if(port.empty()) {
+                loge(kErrorNoDatabasePort);
+                stop();
+
+                return;
+            }
         }
     }
 

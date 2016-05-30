@@ -59,6 +59,12 @@ class server_application : public application {
      */
     static const char kErrorNoDatabaseDriver[];
     static const char kErrorUnknowDatabaseDriver[];
+    static const char kErrorNoDatabasePort[];
+
+    /**
+     * General purpose messages for logging purposes in the server application.
+     */
+    static const char kMessageDatabaseConnectionSetup[];
 
     // END Class constants. //////////////////////////////////////////////////
 
