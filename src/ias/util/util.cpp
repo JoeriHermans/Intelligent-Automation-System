@@ -40,6 +40,8 @@
 
 // Application dependencies.
 #include <ias/application/constants.h>
+#include <ias/database/mysql/mysql_database_connection.h>
+#include <ias/database/postgresql/postgresql_database_connection.h>
 #include <ias/logger/logger.h>
 #include <ias/util/util.h>
 
@@ -99,6 +101,26 @@ namespace ias {
         }
 
         return index;
+    }
+
+    std::vector<std::string> get_database_drivers(void) {
+        std::vector<std::string> drivers;
+
+        // MySQL
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+        drivers.push_back(ias::mysql_database_connection::kIdentifier);
+        #endif
+        #endif
+
+        // PostgreSQL
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'P' || IAS_DATABASE_DRIVER == 'A'
+        drivers.push_back(ias::postgresql_database_connection::kIdentifier);
+        #endif
+        #endif
+
+        return drivers;
     }
 
     bool read_configuration_file(const std::string & path,

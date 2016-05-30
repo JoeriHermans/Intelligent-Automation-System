@@ -33,8 +33,10 @@
 #include <iostream>
 
 // Application dependencies.
-#include <ias/application/server/server_application.h>
 #include <ias/application/constants.h>
+#include <ias/application/server/server_application.h>
+#include <ias/database/mysql/mysql_database_connection.h>
+#include <ias/database/postgresql/postgresql_database_connection.h>
 #include <ias/logger/console/console_logger.h>
 #include <ias/util/util.h>
 
@@ -44,7 +46,14 @@ namespace ias {
 
     // BEGIN Constants. //////////////////////////////////////////////
 
-    const char server_application::kDefaultConfigPath[] = "/etc/ias/configuration/server.conf";
+    const char server_application::kDefaultConfigPath[] =
+        "/etc/ias/configuration/server.conf";
+
+    const char server_application::kErrorNoDatabaseDriver[] =
+        "No database driver has been specified.";
+
+    const char server_application::kErrorUnknowDatabaseDriver[] =
+        "An unknown database driver has been specified.";
 
     // END Constants. ////////////////////////////////////////////////
 
@@ -52,11 +61,44 @@ namespace ias {
         // Reset the default values of the members.
         mStorageUsers = nullptr;
         mDbConnection = nullptr;
+        mFlagRunning = true;
         initialize_logger();
     }
 
-    void server_application::initialize_logger(void) {
-        ias::logger::set_logger(new ias::console_logger());
+    void server_application::allocate_database_connection(void) {
+        std::string driver;
+        std::string host;
+        std::string port;
+        std::string schema;
+        std::string username;
+        std::string password;
+
+        // Select the driver that has been specified by the user.
+        driver = mConfig[kConfigDatabaseDriver];
+        // Check if a driver has been specified.
+        if(driver.empty()) {
+            loge(kErrorNoDatabaseDriver);
+            stop();
+
+            return;
+        }
+        // Check if a known database driver has been specified.
+
+        // Fetch the database parameters and credentials from the
+        // configuration file.
+        host = mConfig[kConfigDatabaseHost];
+        port = mConfig[kConfigDatabasePort];
+        schema = mConfig[kConfigDatabaseSchema];
+        username = mConfig[kConfigDatabaseUser];
+        password = mConfig[kConfigDatabasePassword];
+        // Check if the default port is specified.
+        if(port.empty()) {
+            // Check which database driver has been specified.
+        }
+    }
+
+    void server_application::allocate_storage(void) {
+        // TODO Implement.
     }
 
     void server_application::analyze_arguments(const int argc, const char ** argv) {
@@ -82,12 +124,17 @@ namespace ias {
         ias::read_configuration_file(configPath, mConfig);
     }
 
-    void server_application::allocate_storage(void) {
-        // TODO Implement.
+    void server_application::cleanup_database_connection(void) {
+        delete mDbConnection;
+        mDbConnection = nullptr;
     }
 
     void server_application::cleanup_storage(void) {
         // TODO Implement.
+    }
+
+    void server_application::initialize_logger(void) {
+        ias::logger::set_logger(new ias::console_logger());
     }
 
     server_application::server_application(const int argc, const char ** argv) {
@@ -97,14 +144,19 @@ namespace ias {
 
     server_application::~server_application(void) {
         cleanup_storage();
+        cleanup_database_connection();
     }
 
     void server_application::stop(void) {
-        // TODO Implement.
+        mFlagRunning = false;
     }
 
     void server_application::run(void) {
-        // TODO Implement.
+        allocate_database_connection();
+        // Check if a database connection could be opened.
+        if(mDbConnection != nullptr) {
+            // TODO Implement.
+        }
     }
 
 };

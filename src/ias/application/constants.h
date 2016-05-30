@@ -33,6 +33,7 @@ extern const char kConfigControllerSecurityCode[];
 extern const char kConfigDatabaseDriver[];
 extern const char kConfigDatabaseHost[];
 extern const char kConfigDatabasePassword[];
+extern const char kConfigDatabasePort[];
 extern const char kConfigDatabaseSchema[];
 extern const char kConfigDatabaseUser[];
 extern const char kConfigDeviceList[];

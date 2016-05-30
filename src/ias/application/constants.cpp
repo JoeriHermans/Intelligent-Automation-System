@@ -37,6 +37,7 @@ const char kConfigControllerSecurityCode[] = "controller_security_code";
 const char kConfigDatabaseDriver[] = "database_driver";
 const char kConfigDatabaseHost[] = "database_host";
 const char kConfigDatabasePassword[] = "database_password";
+const char kConfigDatabasePort[] = "database_port";
 const char kConfigDatabaseSchema[] = "database_schema";
 const char kConfigDatabaseUser[] = "database_user";
 const char kConfigDeviceList[] = "devices";

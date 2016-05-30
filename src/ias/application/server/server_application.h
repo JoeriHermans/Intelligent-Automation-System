@@ -54,6 +54,12 @@ class server_application : public application {
      */
     static const char kDefaultConfigPath[];
 
+    /**
+     * Error messages used in the server application.
+     */
+    static const char kErrorNoDatabaseDriver[];
+    static const char kErrorUnknowDatabaseDriver[];
+
     // END Class constants. //////////////////////////////////////////////////
 
     private:
@@ -81,19 +87,30 @@ class server_application : public application {
      */
     ias::database_connection * mDbConnection;
 
+    /**
+     * A flag which indicates if the server is allowed to continue.
+     *
+     * @note By default, this member will be equal to true.
+     */
+    bool mFlagRunning;
+
     // END Private members. //////////////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////////////
 
     inline void initialize(void);
 
-    void initialize_logger(void);
-
-    void analyze_arguments(const int argc, const char ** argv);
+    void allocate_database_connection(void);
 
     void allocate_storage(void);
 
+    void analyze_arguments(const int argc, const char ** argv);
+
+    void cleanup_database_connection(void);
+
     void cleanup_storage(void);
+
+    void initialize_logger(void);
 
     // END Private methods. //////////////////////////////////////////////////
 
@@ -126,6 +143,11 @@ class server_application : public application {
 
     // BEGIN Public static methods. //////////////////////////////////////////
     // END Public static methods. ////////////////////////////////////////////
+
+    private:
+
+    // BEGIN Private static methods. /////////////////////////////////////////
+    // END Private static methods. ///////////////////////////////////////////
 
 };
 

@@ -26,6 +26,7 @@
 // System dependencies.
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 // END Includes. /////////////////////////////////////////////////////
 
@@ -39,6 +40,8 @@ namespace ias {
     int flag_index(const int argc, const char ** argv, const char * flag);
 
     std::string get_ias_version(void);
+
+    std::vector<std::string> get_database_drivers(void);
 
     bool read_configuration_file(const std::string & path,
                                  std::unordered_map<std::string, std::string> & c);
