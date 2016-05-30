@@ -108,14 +108,14 @@ namespace ias {
             // MySQL
             #ifdef IAS_DATABASE_DRIVER
             #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
-            if(std::find(drivers.begin(), drivers.end(), driver) != drivers.end())
+            if(driver == ias::mysql_database_connection::kIdentifier)
                 port = ias::mysql_database_connection::kDefaultPort;
             #endif
             #endif
             // PostgreSQL
             #ifdef IAS_DATABASE_DRIVER
             #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
-            if(std::find(drivers.begin(), drivers.end(), driver) != drivers.end())
+            if(driver == ias::postgresql_database_connection::kIdentifier)
                 port = ias::postgresql_database_connection::kDefaultPort;
             #endif
             #endif

@@ -93,7 +93,7 @@ namespace ias {
     }
 
     void logger::flush(void) {
-        usleep(1000);
+        usleep(10000);
     }
 
     void logd(const std::string & message) {

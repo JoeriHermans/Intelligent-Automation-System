@@ -81,6 +81,7 @@ namespace ias {
         if(mDbConnection == nullptr) {
             mDbConnection = mysql_init(nullptr);
             if(mDbConnection != nullptr) {
+                logi("Connecting to MySQL database at " + get_host() + " on port " + get_port() + ".");
                 // Set automatic reconnect.
                 mysql_options(mDbConnection, MYSQL_OPT_RECONNECT, &argument);
                 // Create a connection with the remote MySQL database.
