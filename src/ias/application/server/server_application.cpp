@@ -227,6 +227,8 @@ namespace ias {
     }
 
     void server_application::run(void) {
+        std::cout << "What is happening." << std::endl << std::flush;
+
         // Check if the initialization process encountered some errors.
         if(!mFlagRunning)
             return;
