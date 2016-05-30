@@ -47,20 +47,17 @@ namespace ias {
 
     // BEGIN Constants. //////////////////////////////////////////////
 
-    const char server_application::kDefaultConfigPath[] =
-        "/etc/ias/configuration/server.conf";
-
-    const char server_application::kErrorNoDatabaseDriver[] =
-        "No database driver has been specified.";
-
-    const char server_application::kErrorUnknowDatabaseDriver[] =
-        "An unknown database driver has been specified.";
-
-    const char server_application::kErrorNoDatabasePort[] =
-        "No database port has been specified.";
-
-    const char server_application::kMessageDatabaseConnectionSetup[] =
-        "Settting up a database connection.";
+    const char server_application::kDefaultConfigPath[] = "/etc/ias/configuration/server.conf";
+    const char server_application::kErrorCouldNotOpenDatabase[] = "Could not establish a connection with the database.";
+    const char server_application::kErrorNoDatabaseDriver[] = "No database driver has been specified.";
+    const char server_application::kErrorNoDatabasePort[] = "No database port has been specified.";
+    const char server_application::kErrorUnknowDatabaseDriver[] = "An unknown database driver has been specified.";
+    const char server_application::kErrorVerifyDatabaseParameters[] = "Not all required database parameters (host, schema, username, password) have been specified.";
+    const char server_application::kMessageDatabaseConnectionOpening[] = "Opening a connection with the database.";
+    const char server_application::kMessageDatabaseConnectionSetup[] = "Settting up a database connection.";
+    const char server_application::kMessageDatabaseConnectionSuccessful[] = "Connection established with remote database.";
+    const char server_application::kMessageDatabaseMysqlDriver[] = "Select MySQL database driver.";
+    const char server_application::kMessageDatabasePostgresqlDriver[] = "Select PostgreSQL database driver.";
 
     // END Constants. ////////////////////////////////////////////////
 
@@ -130,6 +127,48 @@ namespace ias {
                 return;
             }
         }
+        // Verify credentials and other parameters.
+        if(host.empty() || schema.empty() || username.empty() || password.empty()) {
+            loge(kErrorVerifyDatabaseParameters);
+            logi("Database host: " + host);
+            logi("Database schema: " + schema);
+            logi("Database username: " + username);
+            // Check if the password is empty.
+            if(password.empty())
+                logi("Database password is empty.");
+            else
+                logi("Database password is not empty.");
+            stop();
+
+            return;
+        }
+        // Allocate the requisted database driver.
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+        if(driver == ias::mysql_database_connection::kIdentifier) {
+            logi(kMessageDatabaseMysqlDriver);
+            mDbConnection = new ias::mysql_database_connection(host, port, schema,
+                                                               username, password);
+        }
+        #endif
+        #endif
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'P' || IAS_DATABASE_DRIVER == 'A'
+        if(driver == ias::postgresql_database_connection::kIdentifier) {
+            logi(kMessageDatabasePostgresqlDriver);
+            mDbConnection = new ias::postgresql_database_connection(host, port, schema,
+                                                                    username, password);
+        }
+        #endif
+        #endif
+        // Open the connection with the remote database.
+        logi(kMessageDatabaseConnectionOpening);
+        if(mDbConnection->open_connection()) {
+            logi(kMessageDatabaseConnectionSuccessful);
+        } else {
+            loge(kErrorCouldNotOpenDatabase);
+            stop();
+        }
     }
 
     void server_application::allocate_storage(void) {
@@ -197,6 +236,8 @@ namespace ias {
         if(mDbConnection != nullptr) {
             // TODO Implement.
         }
+        // Flush the logger.
+        ias::logger::flush();
     }
 
 };

@@ -24,6 +24,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <unistd.h>
 
 // Application dependencies.
 #include <ias/logger/logger.h>
@@ -89,6 +90,10 @@ namespace ias {
         logger = logger::get_logger();
         if(logger != nullptr)
             logger->critical(message);
+    }
+
+    void logger::flush(void) {
+        usleep(1000);
     }
 
     void logd(const std::string & message) {

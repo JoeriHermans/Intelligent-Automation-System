@@ -60,11 +60,17 @@ class server_application : public application {
     static const char kErrorNoDatabaseDriver[];
     static const char kErrorUnknowDatabaseDriver[];
     static const char kErrorNoDatabasePort[];
+    static const char kErrorVerifyDatabaseParameters[];
+    static const char kErrorCouldNotOpenDatabase[];
 
     /**
      * General purpose messages for logging purposes in the server application.
      */
     static const char kMessageDatabaseConnectionSetup[];
+    static const char kMessageDatabaseConnectionOpening[];
+    static const char kMessageDatabaseConnectionSuccessful[];
+    static const char kMessageDatabaseMysqlDriver[];
+    static const char kMessageDatabasePostgresqlDriver[];
 
     // END Class constants. //////////////////////////////////////////////////
 

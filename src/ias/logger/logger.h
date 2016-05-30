@@ -106,6 +106,8 @@ class logger {
 
     static void c(const std::string & message);
 
+    static void flush(void);
+
     // END Public static methods. ////////////////////////////////////////////
 
 };
