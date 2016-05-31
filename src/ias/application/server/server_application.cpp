@@ -39,6 +39,8 @@
 #include <ias/database/mysql/mysql_database_connection.h>
 #include <ias/database/postgresql/postgresql_database_connection.h>
 #include <ias/logger/console/console_logger.h>
+#include <ias/user/data_access/mysql_user_data_access.h>
+#include <ias/user/data_access/postgresql_user_data_access.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -175,7 +177,10 @@ namespace ias {
     }
 
     void server_application::allocate_storage(void) {
-        // TODO Implement.
+        // Checking the precondition.
+        assert(mDbConnection != nullptr);
+
+        allocate_user_storage();
     }
 
     void server_application::analyze_arguments(const int argc, const char ** argv) {
@@ -208,11 +213,36 @@ namespace ias {
     }
 
     void server_application::cleanup_storage(void) {
-        // TODO Implement.
+        cleanup_user_storage();
     }
 
     void server_application::initialize_logger(void) {
         ias::logger::set_logger(new ias::console_logger());
+    }
+
+    void server_application::allocate_user_storage(void) {
+        std::string driver = mConfig[kConfigDatabaseDriver];
+
+        // MySQL
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+        if(driver == ias::mysql_database_connection::kIdentifier)
+            mStorageUsers = new ias::mysql_user_data_access(mDbConnection);
+        #endif
+        #endif
+
+        // PostgreSQL
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'P' || IAS_DATABASE_DRIVER == 'A'
+        if(driver == ias::postgresql_database_connection::kIdentifier)
+            mStorageUsers = new ias::postgresql_user_data_access(mDbConnection);
+        #endif
+        #endif
+    }
+
+    void server_application::cleanup_user_storage(void) {
+        delete mStorageUsers;
+        mStorageUsers = nullptr;
     }
 
     server_application::server_application(const int argc, const char ** argv) {
@@ -241,6 +271,7 @@ namespace ias {
         allocate_database_connection();
         // Check if a database connection could be opened.
         if(mDbConnection != nullptr) {
+            allocate_storage();
             // TODO Implement.
         }
     }

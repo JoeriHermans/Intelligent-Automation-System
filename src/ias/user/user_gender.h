@@ -29,6 +29,9 @@
 
 // END Includes. /////////////////////////////////////////////////////
 
+#ifndef IAS_USER_GENDER_H_
+#define IAS_USER_GENDER_H_
+
 namespace ias {
 
     enum class user_gender : std::uint8_t {
@@ -39,3 +42,5 @@ namespace ias {
     };
 
 };
+
+#endif

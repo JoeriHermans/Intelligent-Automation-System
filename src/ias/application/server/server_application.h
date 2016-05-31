@@ -125,6 +125,10 @@ class server_application : public application {
 
     void initialize_logger(void);
 
+    void allocate_user_storage(void);
+
+    void cleanup_user_storage(void);
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:
