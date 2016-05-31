@@ -48,16 +48,19 @@ namespace ias {
     // BEGIN Constants. //////////////////////////////////////////////
 
     const char server_application::kDefaultConfigPath[] = "/etc/ias/configuration/server.conf";
+
     const char server_application::kErrorCouldNotOpenDatabase[] = "Could not establish a connection with the database.";
     const char server_application::kErrorNoDatabaseDriver[] = "No database driver has been specified.";
     const char server_application::kErrorNoDatabasePort[] = "No database port has been specified.";
     const char server_application::kErrorUnknowDatabaseDriver[] = "An unknown database driver has been specified.";
     const char server_application::kErrorVerifyDatabaseParameters[] = "Not all required database parameters (host, schema, username, password) have been specified.";
+
     const char server_application::kMessageDatabaseConnectionOpening[] = "Opening a connection with the database.";
     const char server_application::kMessageDatabaseConnectionSetup[] = "Settting up a database connection.";
     const char server_application::kMessageDatabaseConnectionSuccessful[] = "Connection established with remote database.";
     const char server_application::kMessageDatabaseMysqlDriver[] = "Selecting MySQL database driver.";
     const char server_application::kMessageDatabasePostgresqlDriver[] = "Select PostgreSQL database driver.";
+    const char server_application::kMessageStoppingServer[] = "Stopping IAS server.";
 
     // END Constants. ////////////////////////////////////////////////
 
@@ -223,7 +226,11 @@ namespace ias {
     }
 
     void server_application::stop(void) {
-        mFlagRunning = false;
+        // Check if the server flag is already turned off.
+        if(mFlagRunning) {
+            mFlagRunning = false;
+            logi(kMessageStoppingServer);
+        }
     }
 
     void server_application::run(void) {
