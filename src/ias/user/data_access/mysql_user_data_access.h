@@ -53,6 +53,8 @@ class mysql_user_data_access : public user_data_access {
     static const char kStmtRemove[];
     static const char kStmtUpdate[];
 
+    static const std::size_t kDefaultStringSize = 80;
+
     // END Class constants. //////////////////////////////////////////////////
 
     private:
@@ -123,9 +125,9 @@ class mysql_user_data_access : public user_data_access {
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual std::vector<ias::user *> get_all(void) const;
+    virtual std::vector<ias::user *> get_all(void);
 
-    virtual ias::user * get(const std::size_t id) const;
+    virtual ias::user * get(const std::size_t id);
 
     virtual void add(ias::user * user);
 

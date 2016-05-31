@@ -48,7 +48,7 @@ namespace ias {
         // TODO Implement.
     }
 
-    std::vector<ias::user *> postgresql_user_data_access::get_all(void) const {
+    std::vector<ias::user *> postgresql_user_data_access::get_all(void) {
         std::vector<ias::user *> users;
 
         // TODO Implement.
@@ -56,7 +56,7 @@ namespace ias {
         return users;
     }
 
-    ias::user * postgresql_user_data_access::get(const std::size_t id) const {
+    ias::user * postgresql_user_data_access::get(const std::size_t id) {
         ias::user * user = nullptr;
 
         // TODO Implement.

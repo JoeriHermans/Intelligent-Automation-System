@@ -149,9 +149,9 @@ class data_access {
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual std::vector<T> get_all(void) const = 0;
+    virtual std::vector<T> get_all(void) = 0;
 
-    virtual T get(const std::size_t id) const = 0;
+    virtual T get(const std::size_t id) = 0;
 
     virtual void add(T element) = 0;
 

@@ -117,6 +117,14 @@ namespace ias {
         return mUsername;
     }
 
+    const std::string & user::get_name(void) const {
+        return mName;
+    }
+
+    const std::string & user::get_surname(void) const {
+        return mSurname;
+    }
+
     void user::set_disabled(const bool flag) {
         mDisabled = flag;
     }

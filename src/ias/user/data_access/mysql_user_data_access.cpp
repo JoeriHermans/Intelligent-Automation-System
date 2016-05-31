@@ -32,6 +32,7 @@
 
 // Application dependencies.
 #include <ias/user/data_access/mysql_user_data_access.h>
+#include <ias/user/user.h>
 #include <ias/logger/logger.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -44,11 +45,11 @@ namespace ias {
         "";
 
     const char mysql_user_data_access::kStmtGetAll[] =
-        "SELECT * \
+        "SELECT id, name, surname, email, username, password, gender, disabled \
          FROM users;";
 
     const char mysql_user_data_access::kStmtGetId[] =
-        "SELECT * \
+        "SELECT id, name, surname, email, username, password, gender, disabled \
          FROM users \
          WHERE id = ?;";
 
@@ -166,6 +167,7 @@ namespace ias {
     mysql_user_data_access::mysql_user_data_access(ias::database_connection * dbConn) {
         initialize();
         set_database_connection(dbConn);
+        initialize_statements();
     }
 
     mysql_user_data_access::~mysql_user_data_access(void) {
@@ -173,53 +175,99 @@ namespace ias {
         close_statements();
     }
 
-    std::vector<ias::user *> mysql_user_data_access::get_all(void) const {
+    std::vector<ias::user *> mysql_user_data_access::get_all(void) {
         std::vector<ias::user *> users;
         MYSQL_BIND result[8];
+        std::size_t length[5];
 
         // Buffer variables.
-        std::size_t bufferId;
-        char bufferName[81];
-        char bufferSurName[81];
-        char bufferEmail[81];
-        char bufferUsername[81];
-        char bufferPassword[81];
+        int bufferId;
+        char bufferName[kDefaultStringSize + 1];
+        char bufferSurName[kDefaultStringSize + 1];
+        char bufferEmail[kDefaultStringSize + 1];
+        char bufferUsername[kDefaultStringSize + 1];
+        char bufferPassword[kDefaultStringSize + 1];
         std::size_t bufferGender;
         bool bufferDisabled;
 
         // Clear the parameter structures.
         memset(result, 0, sizeof result);
+        memset(length, 0, sizeof length);
         // Prepare the result types.
         // id
-        result[0].buffer_type  = MYSQL_TYPE_LONG;
-        result[0].buffer       = static_cast<void *>(&bufferId);
-        result[0].is_unsigned  = 1;
+        result[0].buffer_type    = MYSQL_TYPE_LONG;
+        result[0].buffer         = static_cast<void *>(&bufferId);
+        result[0].is_unsigned    = 1;
         // name
-        result[1].buffer_type  = MYSQL_TYPE_VAR_STRING;
-        result[1].buffer       = static_cast<void *>(bufferName);
+        result[1].buffer_type    = MYSQL_TYPE_VAR_STRING;
+        result[1].buffer         = static_cast<void *>(bufferName);
+        result[1].buffer_length  = kDefaultStringSize;
         // surname
-        result[2].buffer_type  = MYSQL_TYPE_VAR_STRING;
-        result[2].buffer       = static_cast<void *>(bufferSurName);
+        result[2].buffer_type    = MYSQL_TYPE_VAR_STRING;
+        result[2].buffer         = static_cast<void *>(bufferSurName);
+        result[2].buffer_length  = kDefaultStringSize;
         // email
-        result[3].buffer_type  = MYSQL_TYPE_VAR_STRING;
-        result[3].buffer       = static_cast<void *>(bufferEmail);
+        result[3].buffer_type    = MYSQL_TYPE_VAR_STRING;
+        result[3].buffer         = static_cast<void *>(bufferEmail);
+        result[3].buffer_length  = kDefaultStringSize;
         // username
-        result[4].buffer_type  = MYSQL_TYPE_VAR_STRING;
-        result[4].buffer       = static_cast<void *>(bufferUsername);
+        result[4].buffer_type    = MYSQL_TYPE_VAR_STRING;
+        result[4].buffer         = static_cast<void *>(bufferUsername);
+        result[4].buffer_length  = kDefaultStringSize;
         // password
-        result[5].buffer_type  = MYSQL_TYPE_VAR_STRING;
-        result[5].buffer       = static_cast<void *>(bufferPassword);
+        result[5].buffer_type    = MYSQL_TYPE_VAR_STRING;
+        result[5].buffer         = static_cast<void *>(bufferPassword);
+        result[5].buffer_length  = kDefaultStringSize;
         // gender
-        result[6].buffer_type  = MYSQL_TYPE_TINY;
-        result[6].buffer       = static_cast<void *>(&bufferGender);
+        result[6].buffer_type    = MYSQL_TYPE_TINY;
+        result[6].buffer         = static_cast<void *>(&bufferGender);
         // disabled
-        result[7].buffer_type  = MYSQL_TYPE_TINY;
-        result[7].buffer       = static_cast<void *>(&bufferDisabled);
+        result[7].buffer_type    = MYSQL_TYPE_TINY;
+        result[7].buffer         = static_cast<void *>(&bufferDisabled);
+
+        // Bind the result buffers.
+        if(mysql_stmt_bind_result(mStmtGetAll, result) == 0) {
+            if(mysql_stmt_execute(mStmtGetAll) == 0) {
+                if(mysql_stmt_store_result(mStmtGetAll) == 0){
+                    // Retrieve all elements.
+                    while(!mysql_stmt_fetch(mStmtGetAll)) {
+                        ias::user * user;
+
+                        // Type conversions to match class constructor.
+                        std::size_t id           = static_cast<std::size_t>(bufferId);
+                        std::string username     = bufferUsername;
+                        std::string password     = bufferPassword;
+                        std::string email        = bufferEmail;
+                        std::string name         = bufferName;
+                        std::string surname      = bufferSurName;
+                        ias::user_gender gender  = static_cast<ias::user_gender>(bufferGender);
+                        bool disabled            = static_cast<bool>(bufferDisabled);
+
+                        // Allocate a new user instance.
+                        user = new ias::user(id, username, password, email, name,
+                                             surname, gender, disabled);
+                        // Store the users in the vector.
+                        users.push_back(user);
+                    }
+                    // Store all elements in cache.
+                    cache_store_fast(users);
+                } else {
+                    loge("mysql_stmt_store_result() failed.");
+                    loge(mysql_stmt_error(mStmtGetAll));
+                }
+            } else {
+                loge("mysql_stmt_execute() failed.");
+                loge(mysql_stmt_error(mStmtGetAll));
+            }
+        } else {
+            loge("mysql_stmt_bind_result() failed.");
+            loge(mysql_stmt_error(mStmtGetAll));
+        }
 
         return users;
     }
 
-    ias::user * mysql_user_data_access::get(const std::size_t id) const {
+    ias::user * mysql_user_data_access::get(const std::size_t id) {
         ias::user * user = nullptr;
 
         // TODO Implement.

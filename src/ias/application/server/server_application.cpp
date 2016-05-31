@@ -238,6 +238,11 @@ namespace ias {
             mStorageUsers = new ias::postgresql_user_data_access(mDbConnection);
         #endif
         #endif
+
+        // Fetch all users from the database and store the in the
+        // storage cache.
+        auto v = mStorageUsers->get_all();
+        std::cout << v.size() << std::endl;
     }
 
     void server_application::cleanup_user_storage(void) {

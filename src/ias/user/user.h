@@ -130,6 +130,10 @@ class user {
 
     const std::string & get_username(void) const;
 
+    const std::string & get_surname(void) const;
+
+    const std::string & get_name(void) const;
+
     void set_disabled(const bool flag);
 
     void set_email(const std::string & email);

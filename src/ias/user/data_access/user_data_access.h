@@ -77,9 +77,9 @@ class user_data_access : public data_access<ias::user *> {
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual std::vector<ias::user *> get_all(void) const = 0;
+    virtual std::vector<ias::user *> get_all(void) = 0;
 
-    virtual ias::user * get(const std::size_t id) const = 0;
+    virtual ias::user * get(const std::size_t id) = 0;
 
     virtual void add(ias::user * user) = 0;
 
