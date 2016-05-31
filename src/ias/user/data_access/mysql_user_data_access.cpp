@@ -59,13 +59,15 @@ namespace ias {
          WHERE id = ?;";
 
     const char mysql_user_data_access::kStmtUpdate[] =
-        "";
+        "UPDATE users \
+         SET name=?, surname=?, email=?, password=?, gender=?, disabled=? \
+         WHERE id = ?";
 
     // END Constants. ////////////////////////////////////////////////
 
     inline void mysql_user_data_access::initialize(void) {
         mDbConnection = nullptr;
-        mStmtAdd = nullptr;
+        // mStmtAdd = nullptr;
         mStmtGetAll = nullptr;
         mStmtGetId = nullptr;
         mStmtRemove = nullptr;
@@ -80,8 +82,8 @@ namespace ias {
     }
 
     void mysql_user_data_access::initialize_statements(void) {
-        mStmtAdd = mysql_stmt_init(mDbConnection);
-        prepare_statement_add();
+        // mStmtAdd = mysql_stmt_init(mDbConnection);
+        // prepare_statement_add();
         mStmtGetAll = mysql_stmt_init(mDbConnection);
         prepare_statement_get_all();
         mStmtGetId = mysql_stmt_init(mDbConnection);
@@ -158,7 +160,7 @@ namespace ias {
     }
 
     void mysql_user_data_access::close_statements(void) {
-        mysql_stmt_close(mStmtAdd);
+        // mysql_stmt_close(mStmtAdd);
         mysql_stmt_close(mStmtGetAll);
         mysql_stmt_close(mStmtGetId);
         mysql_stmt_close(mStmtRemove);
@@ -254,6 +256,13 @@ namespace ias {
         }
 
         return user;
+    }
+
+    void mysql_user_data_access::update_user_in_db(const ias::user * user) {
+        // Checking the precondition.
+        assert(user != nullptr);
+
+        // TODO Implement.
     }
 
     mysql_user_data_access::mysql_user_data_access(ias::database_connection * dbConn) {
@@ -405,7 +414,10 @@ namespace ias {
         // Checking the precondition.
         assert(user != nullptr);
 
-        // TODO Implement.
+        // Check if the user is in the cache.
+        if(cache_contains(user))
+            // Update the user on the storage.
+            update_user_in_db(user);
     }
 
 };

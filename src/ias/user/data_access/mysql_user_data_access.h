@@ -104,6 +104,8 @@ class mysql_user_data_access : public user_data_access {
 
     ias::user * fetch_user_from_db(const std::size_t id);
 
+    void update_user_in_db(const ias::user * user);
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:
