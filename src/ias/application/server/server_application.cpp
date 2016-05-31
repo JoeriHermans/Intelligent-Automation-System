@@ -242,6 +242,9 @@ namespace ias {
         // Fetch all users from the database and store the in the
         // storage cache.
         mStorageUsers->get_all();
+        ias::user * user = mStorageUsers->get(1);
+        user->set_name("Jos");
+        mStorageUsers->update(user);
     }
 
     void server_application::cleanup_user_storage(void) {

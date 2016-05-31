@@ -29,7 +29,6 @@
 // System dependencies.
 #include <cassert>
 #include <cstring>
-#include <iostream>
 
 // Application dependencies.
 #include <ias/user/data_access/mysql_user_data_access.h>
@@ -419,11 +418,8 @@ namespace ias {
         // Check if we can get a cache hit.
         ias::user * user = cache_get(id);
         if(user == nullptr) {
-            std::cout << "Fetching from database." << std::endl;
             // No cache hit, fetch user from database.
             user = fetch_user_from_db(id);
-        } else {
-            std::cout << "Fetching from cache." << std::endl;
         }
 
         return user;
