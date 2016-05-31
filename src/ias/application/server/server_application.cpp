@@ -241,8 +241,7 @@ namespace ias {
 
         // Fetch all users from the database and store the in the
         // storage cache.
-        auto v = mStorageUsers->get_all();
-        std::cout << v.size() << std::endl;
+        mStorageUsers->get_all();
     }
 
     void server_application::cleanup_user_storage(void) {
