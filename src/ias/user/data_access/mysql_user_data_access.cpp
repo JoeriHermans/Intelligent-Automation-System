@@ -60,7 +60,7 @@ namespace ias {
 
     const char mysql_user_data_access::kStmtUpdate[] =
         "UPDATE users \
-         SET name=?, surname=?, email=?, password=?, gender=?, disabled=? \
+         SET name=?, surname=?, username=?, email=?, password=?, gender=?, disabled=? \
          WHERE id = ?";
 
     // END Constants. ////////////////////////////////////////////////
@@ -259,10 +259,61 @@ namespace ias {
     }
 
     void mysql_user_data_access::update_user_in_db(const ias::user * user) {
+        std::size_t bufferId = user->get_id();
+        char bufferName[kDefaultStringSize + 1];
+        char bufferSurName[kDefaultStringSize + 1];
+        char bufferUsername[kDefaultStringSize + 1];
+        char bufferEmail[kDefaultStringSize + 1];
+        char bufferPassword[kDefaultStringSize + 1];
+        std::size_t bufferGender = static_cast<std::size_t>(user->get_gender());
+        bool bufferDisabled = user->is_disabled();
+        MYSQL_BIND param[8];
+
         // Checking the precondition.
         assert(user != nullptr);
 
-        // TODO Implement.
+        memset(param, 0, sizeof param);
+        // Copy the data into the buffers.
+        strcpy(bufferName, user->get_name().c_str());
+        strcpy(bufferSurName, user->get_surname().c_str());
+        strcpy(bufferUsername, user->get_username().c_str());
+        strcpy(bufferEmail, user->get_email().c_str());
+        strcpy(bufferPassword, user->get_email().c_str());
+        // Prepare the parameters of the query.
+        // Name
+        param[0].buffer_type   = MYSQL_TYPE_VAR_STRING;
+        param[0].buffer        = static_cast<void *>(bufferName);
+        param[0].buffer_length = user->get_name().size();
+        // Surname
+        param[1].buffer_type   = MYSQL_TYPE_VAR_STRING;
+        param[1].buffer        = static_cast<void *>(bufferSurName);
+        param[1].buffer_length = user->get_surname().size();
+        // Username
+        param[2].buffer_type   = MYSQL_TYPE_VAR_STRING;
+        param[2].buffer        = static_cast<void *>(bufferUsername);
+        param[2].buffer_length = user->get_username().size();
+        // E-mail
+        param[3].buffer_type   = MYSQL_TYPE_VAR_STRING;
+        param[3].buffer        = static_cast<void *>(bufferEmail);
+        param[3].buffer_length = user->get_email().size();
+        // Password
+        param[4].buffer_type   = MYSQL_TYPE_VAR_STRING;
+        param[4].buffer        = static_cast<void *>(bufferPassword);
+        param[4].buffer_length = user->get_password().size();
+        // Gender
+        param[5].buffer_type   = MYSQL_TYPE_LONG;
+        param[5].buffer        = static_cast<void *>(&bufferGender);
+        param[5].is_unsigned   = 1;
+        // Disabled
+        param[6].buffer_type   = MYSQL_TYPE_LONG;
+        param[6].buffer        = static_cast<void *>(&bufferDisabled);
+        param[6].is_unsigned   = 1;
+        // Id
+        param[7].buffer_type   = MYSQL_TYPE_LONG;
+        param[7].buffer        = static_cast<void *>(&bufferId);
+        param[7].is_unsigned   = 1;
+        mysql_stmt_bind_param(mStmtRemove, param);
+        mysql_stmt_execute(mStmtRemove);
     }
 
     mysql_user_data_access::mysql_user_data_access(ias::database_connection * dbConn) {
