@@ -236,8 +236,6 @@ namespace ias {
         if(mDbConnection != nullptr) {
             // TODO Implement.
         }
-        // Flush the logger.
-        ias::logger::flush();
     }
 
 };

@@ -28,6 +28,7 @@
 
 // System dependencies.
 #include <cassert>
+#include <iostream>
 
 // Application dependencies.
 #include <ias/database/mysql/mysql_database_connection.h>

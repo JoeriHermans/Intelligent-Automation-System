@@ -158,6 +158,7 @@ void cleanup_databases(void) {
 }
 
 void cleanup_logger(void) {
+    ias::logger::flush();
     ias::logger::cleanup();
 }
 
