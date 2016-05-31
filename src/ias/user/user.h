@@ -74,6 +74,8 @@ class user {
 
     void set_id(const std::size_t id);
 
+    void set_password_no_hash(const std::string & hashed);
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:

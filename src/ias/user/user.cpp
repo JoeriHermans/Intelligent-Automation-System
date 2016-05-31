@@ -44,6 +44,13 @@ namespace ias {
         mId = id;
     }
 
+    void user::set_password_no_hash(const std::string & hash) {
+        // Checking the precondition.
+        assert(!hash.empty());
+
+        mPassword = hash;
+    }
+
     user::user(const std::size_t id,
                const std::string & username,
                const std::string & password,
@@ -54,7 +61,7 @@ namespace ias {
         initialize();
         set_id(id);
         set_username(username);
-        set_password(password);
+        set_password_no_hash(password);
         set_email(email);
         set_name(name);
         set_surname(surname);

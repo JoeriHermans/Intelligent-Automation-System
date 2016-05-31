@@ -265,7 +265,7 @@ namespace ias {
         char bufferEmail[kDefaultStringSize + 1];
         char bufferPassword[kDefaultStringSize + 1];
         std::size_t bufferGender = static_cast<std::size_t>(user->get_gender());
-        bool bufferDisabled = user->is_disabled();
+        std::size_t bufferDisabled = static_cast<std::size_t>(user->is_disabled());
         MYSQL_BIND param[8];
 
         // Checking the precondition.
@@ -277,7 +277,7 @@ namespace ias {
         strcpy(bufferSurName, user->get_surname().c_str());
         strcpy(bufferUsername, user->get_username().c_str());
         strcpy(bufferEmail, user->get_email().c_str());
-        strcpy(bufferPassword, user->get_email().c_str());
+        strcpy(bufferPassword, user->get_password().c_str());
         // Prepare the parameters of the query.
         // Name
         param[0].buffer_type   = MYSQL_TYPE_VAR_STRING;
@@ -311,8 +311,8 @@ namespace ias {
         param[7].buffer_type   = MYSQL_TYPE_LONG;
         param[7].buffer        = static_cast<void *>(&bufferId);
         param[7].is_unsigned   = 1;
-        mysql_stmt_bind_param(mStmtRemove, param);
-        mysql_stmt_execute(mStmtRemove);
+        mysql_stmt_bind_param(mStmtUpdate, param);
+        mysql_stmt_execute(mStmtUpdate);
     }
 
     mysql_user_data_access::mysql_user_data_access(ias::database_connection * dbConn) {
@@ -403,11 +403,9 @@ namespace ias {
                 // Store all elements in cache.
                 cache_store_fast(users);
             } else {
-                loge("mysql_stmt_store_result() failed.");
                 loge(mysql_stmt_error(mStmtGetAll));
             }
         } else {
-            loge("mysql_stmt_execute() failed.");
             loge(mysql_stmt_error(mStmtGetAll));
         }
 

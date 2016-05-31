@@ -243,7 +243,7 @@ namespace ias {
         // storage cache.
         mStorageUsers->get_all();
         ias::user * user = mStorageUsers->get(1);
-        user->set_name("Jos");
+        std::cout << "Password: " << user->get_password() << std::endl;
         mStorageUsers->update(user);
     }
 
