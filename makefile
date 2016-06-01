@@ -8,6 +8,7 @@ SHELL = bash
 # - all (A)
 # - mysql (M)
 # - postgresql (P)
+# - none (N)
 DATABASE_DRIVER = "'A'"
 
 MODULES = ai application building controller d
