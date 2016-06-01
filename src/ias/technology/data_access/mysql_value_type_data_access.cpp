@@ -265,10 +265,10 @@ namespace ias {
         MYSQL_BIND param[1];
 
         // Preparing the parameters.
+        memset(param, 0, sizeof param);
         param[0].buffer_type    = MYSQL_TYPE_LONG;
         param[0].buffer         = static_cast<void *>(&copyId);
         param[0].is_unsigned    = 1;
-        memset(param, 0, sizeof param);
         mysql_stmt_bind_param(mStmtRemove, param);
         if(mysql_stmt_execute(mStmtRemove) == 0)
             cache_remove(id);
