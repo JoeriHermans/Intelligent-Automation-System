@@ -63,6 +63,8 @@ namespace ias {
     const char server_application::kMessageDatabaseConnectionSuccessful[] = "Connection established with remote database.";
     const char server_application::kMessageDatabaseMysqlDriver[] = "Selecting MySQL database driver.";
     const char server_application::kMessageDatabasePostgresqlDriver[] = "Select PostgreSQL database driver.";
+    const char server_application::kMessageFetchingUsers[] = "Fetching users from the database.";
+    const char server_application::kMessageFetchingValueTypes[] = "Fetching value types form the database.";
     const char server_application::kMessageStoppingServer[] = "Stopping IAS server.";
 
     // END Constants. ////////////////////////////////////////////////
@@ -226,6 +228,7 @@ namespace ias {
     void server_application::allocate_user_storage(void) {
         const std::string driver = mConfig[kConfigDatabaseDriver];
 
+        logi(kMessageFetchingUsers);
         // MySQL
         #ifdef IAS_DATABASE_DRIVER
         #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
@@ -255,6 +258,7 @@ namespace ias {
     void server_application::allocate_value_type_storage(void) {
         const std::string driver = mConfig[kConfigDatabaseDriver];
 
+        logi(kMessageFetchingValueTypes);
         // MySQL
         #ifdef IAS_DATABASE_DRIVER
         #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
