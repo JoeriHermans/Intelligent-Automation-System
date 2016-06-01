@@ -334,10 +334,9 @@ namespace ias {
     std::vector<ias::user *> mysql_user_data_access::get_all(void) {
         std::vector<ias::user *> users;
         MYSQL_BIND result[8];
-        std::size_t length[5];
 
         // Buffer variables.
-        int bufferId;
+        std::size_t bufferId;
         char bufferName[kDefaultStringSize + 1];
         char bufferSurName[kDefaultStringSize + 1];
         char bufferEmail[kDefaultStringSize + 1];
@@ -348,7 +347,6 @@ namespace ias {
 
         // Clear the parameter structures.
         memset(result, 0, sizeof result);
-        memset(length, 0, sizeof length);
         // Prepare the result types.
         // id
         result[0].buffer_type    = MYSQL_TYPE_LONG;
@@ -384,13 +382,13 @@ namespace ias {
         // Bind the result buffers.
         mysql_stmt_bind_result(mStmtGetAll, result);
         if(mysql_stmt_execute(mStmtGetAll) == 0) {
-            if(mysql_stmt_store_result(mStmtGetAll) == 0){
+            if(mysql_stmt_store_result(mStmtGetAll) == 0) {
                 // Retrieve all elements.
                 while(!mysql_stmt_fetch(mStmtGetAll)) {
                     ias::user * user;
 
                     // Type conversions to match class constructor.
-                    std::size_t id           = static_cast<std::size_t>(bufferId);
+                    std::size_t id           = bufferId;
                     std::string username     = bufferUsername;
                     std::string password     = bufferPassword;
                     std::string email        = bufferEmail;

@@ -29,6 +29,7 @@
 // System dependencies.
 #include <cassert>
 #include <cstring>
+#include <unistd.h>
 
 // Application dependencies.
 #include <ias/database/database_connection.h>
@@ -42,17 +43,13 @@ namespace ias {
     // BEGIN Constants. //////////////////////////////////////////////
 
     const char mysql_value_type_data_access::kStmtGetAll[] =
-        "SELECT id, identifier, pattern, name, description \
-         FROM value_types;";
+        "SELECT id, pattern FROM value_types;";
 
     const char mysql_value_type_data_access::kStmtGetId[] =
-        "SELECT id, identifier, pattern, name, description \
-         FROM value_types \
-         WHERE id = ?;";
+        "SELECT id, pattern FROM value_types WHERE id = ?;";
 
     const char mysql_value_type_data_access::kStmtRemove[] =
-        "DELETE FROM value_types \
-         WHERE id = ?;";
+        "DELETE FROM value_types WHERE id = ?;";
 
     // END Constants. ////////////////////////////////////////////////
 
@@ -140,8 +137,49 @@ namespace ias {
 
     std::vector<ias::value_type *> mysql_value_type_data_access::get_all(void) {
         std::vector<ias::value_type *> types;
+        MYSQL_BIND result[2];
 
-        // TODO Implement.
+        // Buffer variables.
+        std::size_t bufferId;
+        char bufferPattern[kDefaultStringSize + 1];
+
+        // Clear the parameter structures.
+        memset(result, 0, sizeof result);
+        // Prepare the result types.
+        // id
+        result[0].buffer_type     = MYSQL_TYPE_LONG;
+        result[0].buffer          = static_cast<void *>(&bufferId);
+        result[0].is_unsigned     = 1;
+        // pattern
+        result[1].buffer_type     = MYSQL_TYPE_VAR_STRING;
+        result[1].buffer          = static_cast<void *>(bufferPattern);
+        result[1].buffer_length   = kDefaultStringSize;
+
+        // Bind the result buffers.
+        mysql_stmt_bind_result(mStmtGetAll, result);
+        if(mysql_stmt_execute(mStmtGetAll) == 0) {
+            if(mysql_stmt_store_result(mStmtGetAll) == 0) {
+                // Retrieve all elements.
+                while(!mysql_stmt_fetch(mStmtGetAll)) {
+                    ias::value_type * type;
+
+                    // Type conversions to match class constructor.
+                    std::size_t id           = bufferId;
+                    std::string pattern      = bufferPattern;
+
+                    // Allocate a new value type instance.
+                    type = new ias::value_type(id, pattern);
+                    // Store the type in the local vector.
+                    types.push_back(type);
+                }
+                // Store all elements in the cache.
+                cache_store_fast(types);
+            } else {
+                loge(mysql_stmt_error(mStmtGetAll));
+            }
+        } else {
+            loge(mysql_stmt_error(mStmtGetAll));
+        }
 
         return types;
     }
