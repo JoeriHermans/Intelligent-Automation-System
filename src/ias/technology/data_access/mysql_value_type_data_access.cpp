@@ -46,7 +46,7 @@ namespace ias {
         "SELECT id, pattern FROM value_types;";
 
     const char mysql_value_type_data_access::kStmtGetId[] =
-        "SELECT id, pattern FROM value_types WHERE id = ?;";
+        "SELECT pattern FROM value_types WHERE id = ?;";
 
     const char mysql_value_type_data_access::kStmtRemove[] =
         "DELETE FROM value_types WHERE id = ?;";
@@ -124,6 +124,52 @@ namespace ias {
         mStmtRemove = nullptr;
     }
 
+    ias::value_type * mysql_value_type_data_access::fetch_value_type_from_db(const std::size_t id) {
+        ias::value_type * type = nullptr;
+        MYSQL_BIND result[1];
+        MYSQL_BIND param[1];
+
+        // Buffer variables.
+        std::size_t bufferId = id;
+        char bufferPattern[kDefaultStringSize + 1];
+
+        // Clear the parameter structures.
+        memset(result, 0, sizeof result);
+        memset(param, 0, sizeof param);
+        // Prepare the parameter structures.
+        param[0].buffer_type      = MYSQL_TYPE_LONG;
+        param[0].buffer           = static_cast<void *>(&bufferId);
+        param[0].is_unsigned      = 1;
+        // Prepare the result types.
+        // pattern
+        result[0].buffer_type     = MYSQL_TYPE_VAR_STRING;
+        result[0].buffer          = static_cast<void *>(bufferPattern);
+        result[0].buffer_length   = kDefaultStringSize;
+        // Bind the result and parameter buffers.
+        mysql_stmt_bind_param(mStmtGetId, param);
+        mysql_stmt_bind_result(mStmtGetId, result);
+        if(mysql_stmt_execute(mStmtGetId) == 0) {
+            if(mysql_stmt_store_result(mStmtGetId) == 0) {
+                // Retrieve all elements.
+                if(mysql_stmt_fetch(mStmtGetId) == 0) {
+                    // Type conversions to match class constructor.
+                    std::string pattern = bufferPattern;
+
+                    type = new ias::value_type(id, pattern);
+                    cache_store(type);
+                }
+            } else {
+                loge("mysql_stmt_store_result() failed.");
+                loge(mysql_stmt_error(mStmtGetId));
+            }
+        } else {
+            loge("mysql_stmt_execute() failed.");
+            loge(mysql_stmt_error(mStmtGetId));
+        }
+
+        return type;
+    }
+
     mysql_value_type_data_access::mysql_value_type_data_access(ias::database_connection * dbConn) {
         initialize();
         set_database_connection(dbConn);
@@ -185,9 +231,14 @@ namespace ias {
     }
 
     ias::value_type * mysql_value_type_data_access::get(const std::size_t id) {
-        ias::value_type * type = nullptr;
+        ias::value_type * type;
 
-        // TODO Implement.
+        // Check if we can fetch the type from the cache.
+        type = cache_get(id);
+        // Check if there is a cache hit.
+        if(type == nullptr)
+            // Try the MySQL storage.
+            type = fetch_value_type_from_db(id);
 
         return type;
     }

@@ -231,7 +231,7 @@ namespace ias {
         mysql_stmt_bind_param(mStmtGetId, param);
         mysql_stmt_bind_result(mStmtGetId, result);
         if(mysql_stmt_execute(mStmtGetId) == 0) {
-            if(mysql_stmt_store_result(mStmtGetId) == 0){
+            if(mysql_stmt_store_result(mStmtGetId) == 0) {
                 // Retrieve all elements.
                 if(mysql_stmt_fetch(mStmtGetId) == 0) {
                     // Type conversions to match class constructor.
@@ -247,9 +247,9 @@ namespace ias {
                     // Allocate a new user instance.
                     user = new ias::user(id, username, password, email, name,
                                          surname, gender, disabled);
+                    // Store all elements in cache.
+                    cache_store(user);
                 }
-                // Store all elements in cache.
-                cache_store(user);
             } else {
                 loge("mysql_stmt_store_result() failed.");
                 loge(mysql_stmt_error(mStmtGetId));

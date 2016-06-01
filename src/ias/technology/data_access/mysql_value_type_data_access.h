@@ -94,6 +94,8 @@ class mysql_value_type_data_access : public value_type_data_access {
 
     void close_statements(void);
 
+    ias::value_type * fetch_value_type_from_db(const std::size_t id);
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:
