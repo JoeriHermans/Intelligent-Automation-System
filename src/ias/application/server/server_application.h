@@ -33,6 +33,7 @@
 #include <ias/application/application.h>
 #include <ias/data_access/data_access.h>
 #include <ias/database/database_connection.h>
+#include <ias/technology/data_access/value_type_data_access.h>
 #include <ias/user/data_access/user_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -85,6 +86,7 @@ class server_application : public application {
      * @note By default, this will be equal to the null reference.
      */
     ias::user_data_access * mStorageUsers;
+    ias::value_type_data_access * mStorageValueTypes;
 
     /**
      * Holds the properties which have been read from the configuration file.
@@ -128,6 +130,10 @@ class server_application : public application {
     void allocate_user_storage(void);
 
     void cleanup_user_storage(void);
+
+    void allocate_value_type_storage(void);
+
+    void cleanup_value_type_storage(void);
 
     // END Private methods. //////////////////////////////////////////////////
 

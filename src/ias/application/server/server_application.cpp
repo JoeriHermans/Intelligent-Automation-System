@@ -41,6 +41,7 @@
 #include <ias/logger/console/console_logger.h>
 #include <ias/user/data_access/mysql_user_data_access.h>
 #include <ias/user/data_access/postgresql_user_data_access.h>
+#include <ias/technology/data_access/mysql_value_type_data_access.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -69,6 +70,7 @@ namespace ias {
     inline void server_application::initialize(void) {
         // Reset the default values of the members.
         mStorageUsers = nullptr;
+        mStorageValueTypes = nullptr;
         mDbConnection = nullptr;
         mFlagRunning = true;
         initialize_logger();
@@ -213,6 +215,7 @@ namespace ias {
     }
 
     void server_application::cleanup_storage(void) {
+        cleanup_value_type_storage();
         cleanup_user_storage();
     }
 
@@ -221,7 +224,7 @@ namespace ias {
     }
 
     void server_application::allocate_user_storage(void) {
-        std::string driver = mConfig[kConfigDatabaseDriver];
+        const std::string driver = mConfig[kConfigDatabaseDriver];
 
         // MySQL
         #ifdef IAS_DATABASE_DRIVER
@@ -247,6 +250,28 @@ namespace ias {
     void server_application::cleanup_user_storage(void) {
         delete mStorageUsers;
         mStorageUsers = nullptr;
+    }
+
+    void server_application::allocate_value_type_storage(void) {
+        const std::string driver = mConfig[kConfigDatabaseDriver];
+
+        // MySQL
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+        // Check if the specified driver is equal to the MySQL driver.
+        if(driver == ias::mysql_database_connection::kIdentifier)
+            mStorageValueTypes = new ias::mysql_value_type_data_access(mDbConnection);
+        #endif
+        #endif
+
+        // Fetch all the value types from the database and store
+        // them in the cache.
+        mStorageValueTypes->get_all();
+    }
+
+    void server_application::cleanup_value_type_storage(void) {
+        delete mStorageValueTypes;
+        mStorageValueTypes = nullptr;
     }
 
     server_application::server_application(const int argc, const char ** argv) {
