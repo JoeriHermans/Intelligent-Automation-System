@@ -140,7 +140,7 @@ namespace ias {
         MYSQL_BIND result[2];
 
         // Buffer variables.
-        std::size_t bufferId;
+        std::size_t bufferId = 0;
         char bufferPattern[kDefaultStringSize + 1];
 
         // Clear the parameter structures.

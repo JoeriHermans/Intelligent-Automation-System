@@ -185,6 +185,7 @@ namespace ias {
         assert(mDbConnection != nullptr);
 
         allocate_user_storage();
+        allocate_value_type_storage();
     }
 
     void server_application::analyze_arguments(const int argc, const char ** argv) {

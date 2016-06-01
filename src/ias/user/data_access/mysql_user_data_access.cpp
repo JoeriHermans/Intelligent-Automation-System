@@ -179,7 +179,7 @@ namespace ias {
         std::size_t copyId = id;
 
         // Buffer variables.
-        int bufferId;
+        std::size_t bufferId = 0;
         char bufferName[kDefaultStringSize + 1];
         char bufferSurName[kDefaultStringSize + 1];
         char bufferEmail[kDefaultStringSize + 1];
@@ -336,7 +336,7 @@ namespace ias {
         MYSQL_BIND result[8];
 
         // Buffer variables.
-        std::size_t bufferId;
+        std::size_t bufferId = 0;
         char bufferName[kDefaultStringSize + 1];
         char bufferSurName[kDefaultStringSize + 1];
         char bufferEmail[kDefaultStringSize + 1];
