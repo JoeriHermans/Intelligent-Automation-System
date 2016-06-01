@@ -160,10 +160,15 @@ namespace ias {
 
     void mysql_user_data_access::close_statements(void) {
         // mysql_stmt_close(mStmtAdd);
+        // mStmtAdd = nullptr;
         mysql_stmt_close(mStmtGetAll);
+        mStmtGetAll = nullptr;
         mysql_stmt_close(mStmtGetId);
+        mStmtGetId = nullptr;
         mysql_stmt_close(mStmtRemove);
+        mStmtRemove = nullptr;
         mysql_stmt_close(mStmtUpdate);
+        mStmtUpdate = nullptr;
     }
 
     ias::user * mysql_user_data_access::fetch_user_from_db(const std::size_t id) {
