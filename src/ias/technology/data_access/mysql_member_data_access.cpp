@@ -32,6 +32,7 @@
 // Application dependencies.
 #include <ias/database/database_connection.h>
 #include <ias/logger/logger.h>
+#include <ias/technology/feature.h>
 #include <ias/technology/data_access/mysql_member_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -44,13 +45,16 @@ namespace ias {
         "";
 
     const char mysql_member_data_access::kStmtGetAll[] =
-        "";
+        "SELECT id, value_type_id, identifier, default_value \
+         FROM technology_members;";
 
     const char mysql_member_data_access::kStmtGetId[] =
-        "";
+        "SELECT value_type_id, identifier, default_value \
+         FROM technology_members \
+         WHERE id = ?;";
 
     const char mysql_member_data_access::kStmtRemove[] =
-        "";
+        "DELETE FROM technology_members WHERE id = ?;";
 
     const char mysql_member_data_access::kStmtUpdate[] =
         "";
@@ -64,6 +68,7 @@ namespace ias {
         mStmtGetId = nullptr;
         mStmtRemove = nullptr;
         mStmtUpdate = nullptr;
+        mStorageValueTypes = nullptr;
     }
 
     void mysql_member_data_access::set_database_connection(ias::database_connection * dbConn) {
@@ -74,29 +79,29 @@ namespace ias {
     }
 
     void mysql_member_data_access::initialize_statements(void) {
-        mStmtAdd = mysql_stmt_init(mDbConnection);
-        prepare_statement_add();
+        // mStmtAdd = mysql_stmt_init(mDbConnection);
+        // prepare_statement_add();
         mStmtGetAll = mysql_stmt_init(mDbConnection);
         prepare_statement_get_all();
         mStmtGetId = mysql_stmt_init(mDbConnection);
         prepare_statement_get_id();
         mStmtRemove = mysql_stmt_init(mDbConnection);
         prepare_statement_remove();
-        mStmtUpdate = mysql_stmt_init(mDbConnection);
-        prepare_statement_update();
+        // mStmtUpdate = mysql_stmt_init(mDbConnection);
+        // prepare_statement_update();
     }
 
     void mysql_member_data_access::close_statements(void) {
-        mysql_stmt_close(mStmtAdd);
-        mStmtAdd = nullptr;
+        // mysql_stmt_close(mStmtAdd);
+        // mStmtAdd = nullptr;
         mysql_stmt_close(mStmtGetAll);
         mStmtGetAll = nullptr;
         mysql_stmt_close(mStmtGetId);
         mStmtGetId = nullptr;
         mysql_stmt_close(mStmtRemove);
         mStmtRemove = nullptr;
-        mysql_stmt_close(mStmtUpdate);
-        mStmtUpdate = nullptr;
+        // mysql_stmt_close(mStmtUpdate);
+        // mStmtUpdate = nullptr;
     }
 
     void mysql_member_data_access::prepare_statement_get_all(void) {
@@ -164,10 +169,82 @@ namespace ias {
             loge(mysql_stmt_error(mStmtAdd));
     }
 
-    mysql_member_data_access::mysql_member_data_access(ias::database_connection * dbConn) {
+    void mysql_member_data_access::set_value_type_da(ias::value_type_data_access * vtda) {
+        // Checking the precondition.
+        assert(vtda != nullptr);
+
+        mStorageValueTypes = vtda;
+    }
+
+    ias::member * mysql_member_data_access::fetch_member_from_db(const std::size_t id) {
+        ias::member * member = nullptr;
+        MYSQL_BIND result[3];
+        MYSQL_BIND param[1];
+
+        // Buffer variables.
+        std::size_t bufferValueTypeId = 0;
+        std::size_t copyId = id;
+        char bufferIdentifier[kDefaultStringSize + 1];
+        char bufferDefaultValue[kDefaultStringSize + 1];
+
+        // Clear the result structure.
+        memset(result, 0, sizeof result);
+        memset(param, 0, sizeof param);
+        // Prepare the result type.
+        // value type id
+        result[0].buffer_type     = MYSQL_TYPE_LONG;
+        result[0].buffer          = static_cast<void *>(&bufferValueTypeId);
+        result[0].is_unsigned     = 1;
+        // identifier
+        result[1].buffer_type     = MYSQL_TYPE_VAR_STRING;
+        result[1].buffer          = static_cast<void *>(bufferIdentifier);
+        result[1].buffer_length   = kDefaultStringSize;
+        // default value
+        result[2].buffer_type     = MYSQL_TYPE_VAR_STRING;
+        result[2].buffer          = static_cast<void *>(bufferDefaultValue);
+        result[2].buffer_length   = kDefaultStringSize;
+        // Prepare the parameter type.
+        // id
+        param[0].buffer_type      = MYSQL_TYPE_LONG;
+        param[0].buffer           = static_cast<void *>(&copyId);
+        param[0].is_unsigned      = 1;
+
+        // Bind the parameter buffer.
+        mysql_stmt_bind_param(mStmtGetId, param);
+        mysql_stmt_bind_result(mStmtGetId, result);
+        if(mysql_stmt_execute(mStmtGetAll) == 0) {
+            if(mysql_stmt_store_result(mStmtGetAll) == 0) {
+                // Retrieve all elements.
+                if(mysql_stmt_fetch(mStmtGetAll)) {
+                    ias::member * member;
+
+                    // Fetch the value type associated with this member.
+                    const ias::value_type * vt = mStorageValueTypes->get(bufferValueTypeId);
+                    // Type conversions to match class constructor.
+                    std::string identifier      = bufferIdentifier;
+                    std::string defaultValue    = bufferDefaultValue;
+                    // Allocate a new member.
+                    member = new ias::member(id, identifier,
+                                             defaultValue, vt);
+                    // Add the member to the cache.
+                    cache_store(member);
+                }
+            } else {
+                loge(mysql_stmt_error(mStmtGetAll));
+            }
+        } else {
+            loge(mysql_stmt_error(mStmtGetAll));
+        }
+
+        return member;
+    }
+
+    mysql_member_data_access::mysql_member_data_access(ias::database_connection * dbConn,
+                                                       ias::value_type_data_access * vtda) {
         initialize();
         set_database_connection(dbConn);
         initialize_statements();
+        set_value_type_da(vtda);
     }
 
     mysql_member_data_access::~mysql_member_data_access(void) {
@@ -177,16 +254,70 @@ namespace ias {
 
     std::vector<ias::member *> mysql_member_data_access::get_all(void) {
         std::vector<ias::member *> members;
+        MYSQL_BIND result[4];
 
-        // TODO Implement.
+        // Buffer variables.
+        std::size_t bufferId = 0;
+        std::size_t bufferValueTypeId = 0;
+        char bufferIdentifier[kDefaultStringSize + 1];
+        char bufferDefaultValue[kDefaultStringSize + 1];
+
+        // Clear the result structure.
+        memset(result, 0, sizeof result);
+        // Prepare the result types.
+        // id
+        result[0].buffer_type     = MYSQL_TYPE_LONG;
+        result[0].buffer          = static_cast<void *>(&bufferId);
+        result[0].is_unsigned     = 1;
+        // value type id
+        result[1].buffer_type     = MYSQL_TYPE_LONG;
+        result[1].buffer          = static_cast<void *>(&bufferValueTypeId);
+        result[1].is_unsigned     = 1;
+        // identifier
+        result[2].buffer_type     = MYSQL_TYPE_VAR_STRING;
+        result[2].buffer          = static_cast<void *>(bufferIdentifier);
+        result[2].buffer_length   = kDefaultStringSize;
+        // default value
+        result[3].buffer_type     = MYSQL_TYPE_VAR_STRING;
+        result[3].buffer          = static_cast<void *>(bufferDefaultValue);
+        result[3].buffer_length   = kDefaultStringSize;
+
+        // Bind the result buffers.
+        mysql_stmt_bind_result(mStmtGetAll, result);
+        if(mysql_stmt_execute(mStmtGetAll) == 0) {
+            if(mysql_stmt_store_result(mStmtGetAll) == 0) {
+                // Retrieve all elements.
+                while(!mysql_stmt_fetch(mStmtGetAll)) {
+                    ias::member * member;
+
+                    // Fetch the value type associated with this member.
+                    const ias::value_type * vt = mStorageValueTypes->get(bufferValueTypeId);
+                    // Type conversions to match class constructor.
+                    std::string identifier      = bufferIdentifier;
+                    std::string defaultValue    = bufferDefaultValue;
+                    // Allocate a new member.
+                    member = new ias::member(bufferId, identifier,
+                                             defaultValue, vt);
+                    // Add the members to the storage.
+                    members.push_back(member);
+                }
+                // Add the members to the cache.
+                cache_store_fast(members);
+            } else {
+                loge(mysql_stmt_error(mStmtGetAll));
+            }
+        } else {
+            loge(mysql_stmt_error(mStmtGetAll));
+        }
 
         return members;
     }
 
     ias::member * mysql_member_data_access::get(const std::size_t id) {
-        ias::member * member = nullptr;
-
-        // TODO Implement.
+        ias::member * member = cache_get(id);
+        // Check if there was a cache hit.
+        if(member == nullptr)
+            member = fetch_member_from_db(id);
 
         return member;
     }

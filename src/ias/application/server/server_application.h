@@ -34,6 +34,7 @@
 #include <ias/data_access/data_access.h>
 #include <ias/database/database_connection.h>
 #include <ias/technology/data_access/value_type_data_access.h>
+#include <ias/technology/data_access/member_data_access.h>
 #include <ias/user/data_access/user_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -72,6 +73,7 @@ class server_application : public application {
     static const char kMessageDatabaseConnectionSuccessful[];
     static const char kMessageDatabaseMysqlDriver[];
     static const char kMessageDatabasePostgresqlDriver[];
+    static const char kMessageFetchingTechnologyMembers[];
     static const char kMessageFetchingUsers[];
     static const char kMessageFetchingValueTypes[];
     static const char kMessageStoppingServer[];
@@ -89,6 +91,7 @@ class server_application : public application {
      */
     ias::user_data_access * mStorageUsers;
     ias::value_type_data_access * mStorageValueTypes;
+    ias::member_data_access * mStorageMembers;
 
     /**
      * Holds the properties which have been read from the configuration file.
@@ -136,6 +139,10 @@ class server_application : public application {
     void allocate_value_type_storage(void);
 
     void cleanup_value_type_storage(void);
+
+    void allocate_member_storage(void);
+
+    void cleanup_member_storage(void);
 
     // END Private methods. //////////////////////////////////////////////////
 

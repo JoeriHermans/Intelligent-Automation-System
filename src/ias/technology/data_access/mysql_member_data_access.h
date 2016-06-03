@@ -31,6 +31,8 @@
 
 // Application dependencies.
 #include <ias/database/database_connection.h>
+#include <ias/technology/member.h>
+#include <ias/technology/data_access/value_type_data_access.h>
 #include <ias/technology/data_access/member_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -79,6 +81,15 @@ class mysql_member_data_access : public member_data_access {
     MYSQL_STMT * mStmtRemove;
     MYSQL_STMT * mStmtUpdate;
 
+    /**
+     * Storage for value types. During the construction of members, value
+     * types are required in order to specify the type of a technology
+     * member.
+     *
+     * @note By default, this member will be equal to the null reference.
+     */
+    ias::value_type_data_access * mStorageValueTypes;
+
     // END Private members. //////////////////////////////////////////////////
 
     // BEGIN Private methods. ////////////////////////////////////////////////
@@ -86,6 +97,8 @@ class mysql_member_data_access : public member_data_access {
     inline void initialize(void);
 
     void set_database_connection(ias::database_connection * dbConn);
+
+    void set_value_type_da(ias::value_type_data_access * vtda);
 
     void initialize_statements(void);
 
@@ -101,6 +114,8 @@ class mysql_member_data_access : public member_data_access {
 
     void prepare_statement_add(void);
 
+    ias::member * fetch_member_from_db(const std::size_t id);
+
     // END Private methods. //////////////////////////////////////////////////
 
     protected:
@@ -112,7 +127,8 @@ class mysql_member_data_access : public member_data_access {
 
     // BEGIN Constructor. ////////////////////////////////////////////////////
 
-    mysql_member_data_access(ias::database_connection * dbConn);
+    mysql_member_data_access(ias::database_connection * dbConn,
+                             ias::value_type_data_access * vtda);
 
     // END Constructor. //////////////////////////////////////////////////////
 
