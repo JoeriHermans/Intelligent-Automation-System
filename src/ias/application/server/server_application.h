@@ -35,6 +35,7 @@
 #include <ias/database/database_connection.h>
 #include <ias/technology/data_access/value_type_data_access.h>
 #include <ias/technology/data_access/member_data_access.h>
+#include <ias/technology/data_access/feature_data_access.h>
 #include <ias/user/data_access/user_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -93,6 +94,7 @@ class server_application : public application {
     ias::user_data_access * mStorageUsers;
     ias::value_type_data_access * mStorageValueTypes;
     ias::member_data_access * mStorageMembers;
+    ias::feature_data_access * mStorageFeatures;
 
     /**
      * Holds the properties which have been read from the configuration file.
@@ -144,6 +146,10 @@ class server_application : public application {
     void allocate_member_storage(void);
 
     void cleanup_member_storage(void);
+
+    void allocate_feature_storage(void);
+
+    void cleanup_feature_storage(void);
 
     // END Private methods. //////////////////////////////////////////////////
 

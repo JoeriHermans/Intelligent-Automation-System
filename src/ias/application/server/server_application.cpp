@@ -39,10 +39,11 @@
 #include <ias/database/mysql/mysql_database_connection.h>
 #include <ias/database/postgresql/postgresql_database_connection.h>
 #include <ias/logger/console/console_logger.h>
+#include <ias/technology/data_access/mysql_feature_data_access.h>
+#include <ias/technology/data_access/mysql_member_data_access.h>
+#include <ias/technology/data_access/mysql_value_type_data_access.h>
 #include <ias/user/data_access/mysql_user_data_access.h>
 #include <ias/user/data_access/postgresql_user_data_access.h>
-#include <ias/technology/data_access/mysql_value_type_data_access.h>
-#include <ias/technology/data_access/mysql_member_data_access.h>
 #include <ias/util/util.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -77,6 +78,7 @@ namespace ias {
         mStorageUsers = nullptr;
         mStorageValueTypes = nullptr;
         mStorageMembers = nullptr;
+        mStorageFeatures = nullptr;
         mDbConnection = nullptr;
         mFlagRunning = true;
         initialize_logger();
@@ -191,6 +193,7 @@ namespace ias {
         allocate_user_storage();
         allocate_value_type_storage();
         allocate_member_storage();
+        allocate_feature_storage();
     }
 
     void server_application::analyze_arguments(const int argc, const char ** argv) {
@@ -223,6 +226,7 @@ namespace ias {
     }
 
     void server_application::cleanup_storage(void) {
+        cleanup_feature_storage();
         cleanup_member_storage();
         cleanup_value_type_storage();
         cleanup_user_storage();
@@ -306,6 +310,29 @@ namespace ias {
     void server_application::cleanup_member_storage(void) {
         delete mStorageMembers;
         mStorageMembers = nullptr;
+    }
+
+    void server_application::allocate_feature_storage(void) {
+        const std::string driver = mConfig[kConfigDatabaseDriver];
+
+        logi(kMessageFetchingTechnologyFeatures);
+        // MySQL
+        #ifdef IAS_DATABASE_DRIVER
+        #if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+        // Check if the specified driver is equal to the MySQL driver.
+        if(driver == ias::mysql_database_connection::kIdentifier)
+            mStorageFeatures = new ias::mysql_feature_data_access(mDbConnection, mStorageValueTypes);
+        #endif
+        #endif
+
+        // Fetch all the features from the database and store
+        // them in the cache.
+        mStorageFeatures->get_all();
+    }
+
+    void server_application::cleanup_feature_storage(void) {
+        delete mStorageFeatures;
+        mStorageFeatures = nullptr;
     }
 
     server_application::server_application(const int argc, const char ** argv) {

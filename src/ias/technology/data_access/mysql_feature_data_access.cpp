@@ -45,15 +45,15 @@ namespace ias {
 
     const char mysql_feature_data_access::kStmtGetAll[] =
         "SELECT id, parameter_value_type_id, identifier \
-         FROM technology_members;";
+         FROM technology_features;";
 
     const char mysql_feature_data_access::kStmtGetId[] =
         "SELECT parameter_value_type_id, identifier \
-         FROM technology_members \
+         FROM technology_features \
          WHERE id = ?;";
 
     const char mysql_feature_data_access::kStmtRemove[] =
-        "REMOVE FROM technology_members \
+        "DELETE FROM technology_features \
          WHERE id = ?;";
 
     const char mysql_feature_data_access::kStmtUpdate[] =
@@ -197,6 +197,47 @@ namespace ias {
 
     std::vector<ias::feature *> mysql_feature_data_access::get_all(void) {
         std::vector<ias::feature *> features;
+        MYSQL_BIND result[3];
+
+        // Buffer variables.
+        std::size_t bufferId = 0;
+        std::size_t bufferValueTypeId = 0;
+        char bufferIdentifier[kDefaultStringSize + 1];
+
+        // Clear the result structure.
+        memset(result, 0, sizeof result);
+        // Prepare the result types.
+        // id
+        result[0].buffer_type    = MYSQL_TYPE_LONG;
+        result[0].buffer         = static_cast<void *>(&bufferId);
+        result[0].is_unsigned    = 1;
+        // value type id
+        result[1].buffer_type    = MYSQL_TYPE_LONG;
+        result[1].buffer         = static_cast<void *>(&bufferValueTypeId);
+        result[1].is_unsigned    = 1;
+        // identifier
+        result[2].buffer_type    = MYSQL_TYPE_VAR_STRING;
+        result[2].buffer         = static_cast<void *>(&bufferIdentifier);
+        result[2].buffer_length  = kDefaultStringSize;
+
+        mysql_stmt_bind_result(mStmtGetAll, result);
+        if(mysql_stmt_execute(mStmtGetAll) == 0) {
+            if(mysql_stmt_store_result(mStmtGetAll) == 0) {
+                // Retrieve all elements.
+                while(!mysql_stmt_fetch(mStmtGetAll)) {
+                    ias::feature * feature;
+
+                    // Fetch the value type associated with this feature.
+                    const ias::value_type * vt = mStorageValueTypes->get(bufferValueTypeId);
+                    // Type conversions to match class constructor.
+                    std::string identifier = bufferIdentifier;
+                    feature = new ias::feature(bufferId, identifier, vt);
+                    features.push_back(feature);
+                }
+                // Store all the retrieve elements in the cache.
+                cache_store_fast(features);
+            }
+        }
 
         // TODO Implement.
 
