@@ -69,17 +69,17 @@ class feature_data_access : public data_access<ias::feature *> {
 
     // BEGIN Public methods. /////////////////////////////////////////////////
 
-    virtual std::vector<T> get_all(void) = 0;
+    virtual std::vector<ias::feature *> get_all(void) = 0;
 
-    virtual T get(const std::size_t id) = 0;
+    virtual ias::feature * get(const std::size_t id) = 0;
 
-    virtual void add(T element) = 0;
+    virtual void add(ias::feature * element) = 0;
 
-    virtual void remove(T element) = 0;
+    virtual void remove(ias::feature * element) = 0;
 
     virtual void remove(const std::size_t id) = 0;
 
-    virtual void update(T element) = 0;
+    virtual void update(ias::feature * element) = 0;
 
     // END Public methods. ///////////////////////////////////////////////////
 

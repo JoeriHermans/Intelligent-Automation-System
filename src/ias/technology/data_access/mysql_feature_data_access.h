@@ -1,5 +1,6 @@
 /**
- *
+ * A class which acts as a data access layer for technology
+ * features.
  *
  * @date                    03 06 2016
  * @author                  Joeri HERMANS
@@ -20,5 +21,147 @@
  * limitations under the License.
  */
 
+#ifdef IAS_DATABASE_DRIVER
+#if IAS_DATABASE_DRIVER == 'M' || IAS_DATABASE_DRIVER == 'A'
+
 // BEGIN Includes. ///////////////////////////////////////////////////
+
+// System dependencies.
+#include <mysql/mysql.h>
+#include <mysql/my_global.h>
+
+// Application dependencies.
+#include <ias/database/database_connection.h>
+#include <ias/technology/data_access/feature_data_access.h>
+#include <ias/technology/data_access/value_type_data_access.h>
+#include <ias/technology/feature.h>
+
 // END Includes. /////////////////////////////////////////////////////
+
+#ifndef IAS_MYSQL_FEATURE_DATA_ACCESS_H_
+#define IAS_MYSQL_FEATURE_DATA_ACCESS_H_
+
+namespace ias {
+
+class mysql_feature_data_access : public feature_data_access {
+
+    public:
+
+    // BEGIN Class constants. ////////////////////////////////////////////////
+
+    static const char kStmtAdd[];
+    static const char kStmtGetAll[];
+    static const char kStmtGetId[];
+    static const char kStmtRemove[];
+    static const char kStmtUpdate[];
+
+    static const std::size_t kDefaultStringSize = 80;
+
+    // END Class constants. //////////////////////////////////////////////////
+
+    private:
+
+    // BEGIN Private members. ////////////////////////////////////////////////
+
+    /**
+     * Holds the db-link object associated with the MySQL connection.
+     *
+     * @note By default, this member will be equal to the null reference.
+     */
+    MYSQL * mDbConnection;
+
+    /**
+     * Set of prepared statements in order to access the remote database
+     * in an efficient manner.
+     *
+     * @note By default, these members will be equal to the null reference.
+     */
+    MYSQL_STMT * mStmtAdd;
+    MYSQL_STMT * mStmtGetAll;
+    MYSQL_STMT * mStmtGetId;
+    MYSQL_STMT * mStmtRemove;
+    MYSQL_STMT * mStmtUpdate;
+
+    /**
+     * Storage for value types. During the construction of members, value
+     * types are required in order to specify the type of a technology
+     * member.
+     *
+     * @note By default, this member will be equal to the null reference.
+     */
+    ias::value_type_data_access * mStorageValueTypes;
+
+    // END Private members. //////////////////////////////////////////////////
+
+    // BEGIN Private methods. ////////////////////////////////////////////////
+
+    inline void initialize(void);
+
+    void set_database_connection(ias::database_connection * dbConn);
+
+    void set_value_type_da(ias::value_type_data_access * vtda);
+
+    void initialize_statements(void);
+
+    void close_statements(void);
+
+    void prepare_statement_get_all(void);
+
+    void prepare_statement_get_id(void);
+
+    void prepare_statement_remove(void);
+
+    void prepare_statement_update(void);
+
+    void prepare_statement_add(void);
+
+    ias::feature * fetch_feature_from_db(const std::size_t id);
+
+    // END Private methods. //////////////////////////////////////////////////
+
+    protected:
+
+    // BEGIN Protected methods. //////////////////////////////////////////////
+    // END Protected methods. ////////////////////////////////////////////////
+
+    public:
+
+    // BEGIN Constructor. ////////////////////////////////////////////////////
+
+    mysql_feature_data_access(ias::database_connection * dbConn,
+                              ias::value_type_data_access * vtda);
+
+    // END Constructor. //////////////////////////////////////////////////////
+
+    // BEGIN Destructor. /////////////////////////////////////////////////////
+
+    virtual ~mysql_feature_data_access(void);
+
+    // END Destructor. ///////////////////////////////////////////////////////
+
+    // BEGIN Public methods. /////////////////////////////////////////////////
+
+    virtual std::vector<ias::feature *> get_all(void);
+
+    virtual ias::feature * get(const std::size_t id);
+
+    virtual void add(ias::feature * element);
+
+    virtual void remove(ias::feature * element);
+
+    virtual void remove(const std::size_t id);
+
+    virtual void update(ias::feature * element);
+
+    // END Public methods. ///////////////////////////////////////////////////
+
+    // BEGIN Public static methods. //////////////////////////////////////////
+    // END Public static methods. ////////////////////////////////////////////
+
+};
+
+};
+
+#endif
+#endif
+#endif

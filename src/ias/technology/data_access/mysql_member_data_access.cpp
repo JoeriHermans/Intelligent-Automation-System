@@ -243,8 +243,8 @@ namespace ias {
                                                        ias::value_type_data_access * vtda) {
         initialize();
         set_database_connection(dbConn);
-        initialize_statements();
         set_value_type_da(vtda);
+        initialize_statements();
     }
 
     mysql_member_data_access::~mysql_member_data_access(void) {
@@ -343,7 +343,7 @@ namespace ias {
         std::size_t copyId = id;
         MYSQL_BIND param[1];
 
-        // Preparing the parameters.
+        // Preparing the parameter.
         memset(param, 0, sizeof param);
         param[0].buffer_type     = MYSQL_TYPE_LONG;
         param[0].buffer          = static_cast<void *>(&copyId);
