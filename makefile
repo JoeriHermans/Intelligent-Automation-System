@@ -1,5 +1,5 @@
-CC = clang
-LD = clang
+CC = g++
+LD = g++
 
 SHELL = bash
 
