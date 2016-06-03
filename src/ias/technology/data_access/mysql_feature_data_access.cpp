@@ -31,6 +31,7 @@
 #include <cstring>
 
 // Application dependencies.
+#include <ias/logger/logger.h>
 #include <ias/technology/data_access/mysql_feature_data_access.h>
 
 // END Includes. /////////////////////////////////////////////////////
@@ -83,31 +84,94 @@ namespace ias {
     }
 
     void mysql_feature_data_access::initialize_statements(void) {
-        // TODO Implement.
+        // mStmtAdd = mysql_stmt_init(mDbConnection);
+        // prepare_statement_add();
+        mStmtGetAll = mysql_stmt_init(mDbConnection);
+        prepare_statement_get_all();
+        mStmtGetId = mysql_stmt_init(mDbConnection);
+        prepare_statement_get_id();
+        mStmtRemove = mysql_stmt_init(mDbConnection);
+        prepare_statement_remove();
+        // mStmtUpdate = mysql_stmt_init(mDbConnection);
+        // prepare_statement_update();
     }
 
     void mysql_feature_data_access::close_statements(void) {
-        // TODO Implement.
+        // mysql_stmt_close(mStmtAdd);
+        // mStmtAdd = nullptr;
+        mysql_stmt_close(mStmtGetAll);
+        mStmtGetAll = nullptr;
+        mysql_stmt_close(mStmtGetId);
+        mStmtGetId = nullptr;
+        mysql_stmt_close(mStmtRemove);
+        mStmtRemove = nullptr;
+        // mysql_stmt_close(mStmtUpdate);
+        // mStmtUpdate = nullptr;
     }
 
     void mysql_feature_data_access::prepare_statement_get_all(void) {
-        // TODO Implement.
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtGetAll != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtGetAll, kStmtGetAll,
+                                strlen(kStmtGetAll));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtGetAll));
     }
 
     void mysql_feature_data_access::prepare_statement_get_id(void) {
-        // TODO Implement.
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtGetId != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtGetId, kStmtGetId,
+                                strlen(kStmtGetId));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtGetId));
     }
 
     void mysql_feature_data_access::prepare_statement_remove(void) {
-        // TODO Implement.
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtRemove != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtRemove, kStmtRemove,
+                                strlen(kStmtRemove));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtRemove));
     }
 
     void mysql_feature_data_access::prepare_statement_update(void) {
-        // TODO Implement.
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtUpdate != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtUpdate, kStmtUpdate,
+                                strlen(kStmtUpdate));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtUpdate));
     }
 
     void mysql_feature_data_access::prepare_statement_add(void) {
-        // TODO Implement.
+        int rc;
+
+        // Checking the precondition.
+        assert(mStmtAdd != nullptr);
+
+        rc = mysql_stmt_prepare(mStmtAdd, kStmtAdd,
+                                strlen(kStmtAdd));
+        // Check if the statement could be prepared.
+        if(rc != 0)
+            loge(mysql_stmt_error(mStmtAdd));
     }
 
     ias::feature * mysql_feature_data_access::fetch_feature_from_db(const std::size_t id) {
