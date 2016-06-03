@@ -75,6 +75,7 @@ namespace ias {
         // Reset the default values of the members.
         mStorageUsers = nullptr;
         mStorageValueTypes = nullptr;
+        mStorageMembers = nullptr;
         mDbConnection = nullptr;
         mFlagRunning = true;
         initialize_logger();
