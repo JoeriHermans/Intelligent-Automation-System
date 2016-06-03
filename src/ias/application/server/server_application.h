@@ -73,6 +73,7 @@ class server_application : public application {
     static const char kMessageDatabaseConnectionSuccessful[];
     static const char kMessageDatabaseMysqlDriver[];
     static const char kMessageDatabasePostgresqlDriver[];
+    static const char kMessageFetchingTechnologyFeatures[];
     static const char kMessageFetchingTechnologyMembers[];
     static const char kMessageFetchingUsers[];
     static const char kMessageFetchingValueTypes[];

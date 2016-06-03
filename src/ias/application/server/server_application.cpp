@@ -64,6 +64,7 @@ namespace ias {
     const char server_application::kMessageDatabaseConnectionSuccessful[] = "Connection established with remote database.";
     const char server_application::kMessageDatabaseMysqlDriver[] = "Selecting MySQL database driver.";
     const char server_application::kMessageDatabasePostgresqlDriver[] = "Select PostgreSQL database driver.";
+    const char server_application::kMessageFetchingTechnologyFeatures[] = "Fetching technology features from the database.";
     const char server_application::kMessageFetchingTechnologyMembers[] = "Fetching technology members from the database.";
     const char server_application::kMessageFetchingUsers[] = "Fetching users from the database.";
     const char server_application::kMessageFetchingValueTypes[] = "Fetching value types form the database.";
