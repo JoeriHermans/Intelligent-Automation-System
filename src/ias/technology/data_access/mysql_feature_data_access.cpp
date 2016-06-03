@@ -176,8 +176,49 @@ namespace ias {
 
     ias::feature * mysql_feature_data_access::fetch_feature_from_db(const std::size_t id) {
         ias::feature * feature = nullptr;
+        MYSQL_BIND result[2];
+        MYSQL_BIND param[1];
 
-        // TODO Implement.
+        // Buffer variables.
+        std::size_t bufferValueTypeId;
+        std::size_t copyId = id;
+        char bufferIdentifier[kDefaultStringSize + 1];
+
+        // Clear the result and parameter structure.
+        memset(result, 0, sizeof result);
+        memset(param, 0, sizeof param);
+        // Prepare the result type.
+        // value type id
+        result[0].buffer_type    = MYSQL_TYPE_LONG;
+        result[0].buffer         = static_cast<void *>(&bufferValueTypeId);
+        result[0].is_unsigned    = 1;
+        // identifier
+        result[1].buffer_type    = MYSQL_TYPE_VAR_STRING;
+        result[1].buffer         = static_cast<void *>(bufferIdentifier);
+        result[1].buffer_length  = kDefaultStringSize;
+        // Prepare the parameter structure.
+        // id
+        param[0].buffer_type     = MYSQL_TYPE_LONG;
+        param[0].buffer          = static_cast<void *>(&copyId);
+        param[0].is_unsigned     = 1;
+
+        mysql_stmt_bind_param(mStmtGetId, param);
+        mysql_stmt_bind_result(mStmtGetId, result);
+        if(mysql_stmt_execute(mStmtGetId) == 0) {
+            if(mysql_stmt_store_result(mStmtGetId) == 0) {
+                if(mysql_stmt_fetch(mStmtGetId)) {
+                    // Fetch the value type associated with this feature.
+                    const ias::value_type * vt = mStorageValueTypes->get(bufferValueTypeId);
+                    // Type conversions to match class constructor.
+                    std::string identifier = bufferIdentifier;
+                    feature = new ias::feature(id, identifier, vt);
+                }
+            } else {
+                loge(mysql_stmt_error(mStmtGetAll));
+            }
+        } else {
+            loge(mysql_stmt_error(mStmtGetAll));
+        }
 
         return feature;
     }
@@ -236,7 +277,11 @@ namespace ias {
                 }
                 // Store all the retrieve elements in the cache.
                 cache_store_fast(features);
+            } else {
+                loge(mysql_stmt_error(mStmtGetAll));
             }
+        } else {
+            loge(mysql_stmt_error(mStmtGetAll));
         }
 
         // TODO Implement.
